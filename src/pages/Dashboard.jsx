@@ -16,13 +16,11 @@ export default function Dashboard() {
       <div className="app-admin-wrap layout-sidebar-large">
         <Sidebar />
         <div className="main-content-wrap sidenav" style={{ width: "calc(100% - 78px)", marginTop: 0 }}>
-          <div className="main-content">
-
-          </div>
+          <div className="main-content"></div>
           <div className="flex-grow-1"></div>
+          <Footer />
         </div>
       </div>
-      <Footer />
     </>
   );
 }

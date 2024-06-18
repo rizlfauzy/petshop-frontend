@@ -612,6 +612,10 @@ video {
   position: sticky;
 }
 
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
 .block {
   display: block;
 }
@@ -654,6 +658,10 @@ video {
 
 .border {
   border-width: 1px;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .\!font-normal {

@@ -18,7 +18,7 @@ export default function FormContainer() {
     try {
       const form = e.target;
       const data = new FormData(form);
-      const { error, message, token } = await run(fetch_data({ url: "/login", data, method: "POST" }));
+      const { error, message, token } = await run(fetch_data({ url: "/login", data: Object.fromEntries(data), method: "POST" }));
       if (error) throw new Error(message);
       setSessionData({ token });
       swalAlert(message, "success")

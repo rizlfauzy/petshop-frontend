@@ -1,7 +1,7 @@
 {
   "name": "react-frontend",
   "private": true,
-  "proxy": "http://localhost:8080",
+  "proxy": "http://localhost:5000/api/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

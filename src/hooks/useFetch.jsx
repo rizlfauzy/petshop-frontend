@@ -1,4 +1,3 @@
-// env
 const { VITE_PREFIX_API} = import.meta.env;
 
 export function fetch_data({ url, method, data, headers = {}, host = VITE_PREFIX_API }) {

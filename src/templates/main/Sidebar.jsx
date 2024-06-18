@@ -1,10 +1,13 @@
 import useAsync from "../../hooks/useAsync";
-import { get_data } from "../../hooks/useFetch";
-import { useEffect, useLayoutEffect, useRef, useCallback } from "react";
-import { create_item } from "../../hooks/useStore";
+import { get_data, fetch_data } from "../../hooks/useFetch";
+import { useEffect, useLayoutEffect, useRef, useCallback, } from "react";
+import { create_item, set_show_modal } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import Modal from "../../components/Modal";
+import useAlert from "../../hooks/useAlert";
+import DataSaver from "../../components/main/DataSaver";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -12,12 +15,15 @@ export default function Sidebar() {
   const { run, isLoading, data } = useAsync();
   const dispatch = useDispatch();
   const item = useSelector((state) => state.conf.item);
+  const show_modal = useSelector((state) => state.conf.show_modal);
   const location = useLocation();
+  const navigate = useNavigate();
   const sidebar_ref = useRef(null);
   const sidebar_overlay_ref = useRef(null);
   const btn_sidebar = useRef(null);
   const path = location.pathname.split("/").pop();
-  const { session } = useSession();
+  const { session, setSessionData } = useSession();
+  const { swalAlert } = useAlert();
 
   useLayoutEffect(() => {
     run(
@@ -33,7 +39,11 @@ export default function Sidebar() {
   useEffect(() => {
     const obj = !isLoading ? data : {};
     dispatch(create_item(obj));
-  }, [data, isLoading, dispatch]);
+    if (!isLoading && data?.message == "Token expired") {
+      setSessionData(null);
+      navigate(`${VITE_PREFIX}login`, { replace: true });
+    }
+  }, [data, isLoading, dispatch, navigate, setSessionData]);
 
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");
@@ -47,20 +57,32 @@ export default function Sidebar() {
     }
   }, []);
 
+  const on_click_logout = useCallback(async () => {
+    dispatch(set_show_modal(!show_modal));
+    try {
+      const { error, message } = await run(
+        fetch_data({
+          url: "/logout",
+          data: { token: session.token },
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      setSessionData(null);
+      navigate(`${VITE_PREFIX}login`, { replace: true });
+    } catch (e) {
+      swalAlert(e.message, "error");
+    }
+  }, [dispatch, show_modal, run, session, setSessionData, swalAlert, navigate]);
+
   return (
     <>
       <div className="sidebar" ref={sidebar_ref}>
-        <input className="form-control" type="hidden" name="grup" id="grup" maxLength="50" value={item?.data?.mygrup} required />
-        <input className="form-control" type="hidden" name="username" id="username" maxLength="50" value={item?.data?.myusername} required />
-        <input className="form-control" type="hidden" name="cabang" id="cabang" maxLength="50" value={item?.data?.mycabang} required />
-        <input className="form-control" type="hidden" name="tglawal_periode" id="tglawal_periode" maxLength="50" value={item?.data?.tglawal_periode} required />
-        <input className="form-control" type="hidden" name="tglakhir_periode" id="tglakhir_periode" maxLength="50" value={item?.data?.tglakhir_periode} required />
-        <input type="hidden" name="fitur_add" id="fitur_add" value={item?.data?.cek_menu?.add ?? "f"} />
-        <input type="hidden" name="fitur_update" id="fitur_update" value={item?.data?.cek_menu?.update ?? "f"} />
-        <input type="hidden" name="fitur_cancel" id="fitur_cancel" value={item?.data?.cek_menu?.cancel ?? "f"} />
-        <input type="hidden" name="fitur_accept" id="fitur_accept" value={item?.data?.cek_menu?.accept ?? "f"} />
-        <input type="hidden" name="fitur_backdate" id="fitur_backdate" value={item?.data?.cek_menu?.backdate ?? "f"} />
-        <input type="hidden" name="fitur_open" id="fitur_open" value={item?.data?.cek_menu?.open ?? "f"} />
+        <DataSaver item={item} />
         <div className="logo-details">
           <img className="icon" src={`${VITE_PREFIX}assets/img/pet-shop.png`} width="45px" />
           <div className="ml-2 logo_name text-uppercase">PETSHOP</div>
@@ -86,35 +108,19 @@ export default function Sidebar() {
                   <div className="job">{item?.data?.mygrup}</div>
                 </div>
               </div>
-              <i className="bx bx-log-out btn-sidebar-logout" id="log_out" href="#logoutModal" data-toggle="modal"></i>
+              <i className="bx bx-log-out btn-sidebar-logout cursor-pointer" id="log_out" onClick={() => {
+                dispatch(set_show_modal(!show_modal));
+              }}></i>
             </li>
           </ul>
         </div>
       </div>
       <div className="sidebar-hoverlay" ref={sidebar_overlay_ref} onClick={on_click_menu}></div>
-      <div className="modal fade" id="logoutModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Apa Anda yakin ?
-              </h5>
-              <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div className="modal-body">Terima kasih sudah menggunakan layanan kami !!!</div>
-            <div className="modal-footer">
-              <button className="btn btn-info" type="button" data-dismiss="modal">
-                Cancel
-              </button>
-              <a className="btn btn-info" href="<?php echo base_url(); ?>api/logout">
-                Logout
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {show_modal && <Modal modal_title="Keluar Aplikasi" className={["modal-sm"]} btn={
+        <button type="button" className="p-2 bg-primary text-white rounded-md" onClick={on_click_logout}>
+          Log Out
+        </button>
+      }>Apakah Anda yakin ?</Modal>}
     </>
   );
 }

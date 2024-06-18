@@ -9,7 +9,7 @@ export default function Header({ title }) {
       <title>
         {title} - {VITE_TITLE_APPS}
       </title>
-      <link rel="stylesheet" href={`${VITE_PREFIX}assets/css/lite-purple.min.css`} />
+      {/* <link rel="stylesheet" href={`${VITE_PREFIX}assets/css/lite-purple.min.css`} /> */}
       <link rel="stylesheet" href={`${VITE_PREFIX}assets/css/font-awesome.css`} />
       <link rel="stylesheet" href={`${VITE_PREFIX}assets/fontawesome/css/all.min.css`} />
       <link rel="stylesheet" href={`${VITE_PREFIX}assets/boxicons/boxicons.min.css`} />

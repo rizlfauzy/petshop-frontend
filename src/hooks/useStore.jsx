@@ -3,7 +3,8 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 const conf = createSlice({
   name: "conf",
   initialState: {
-    item:{}
+    item: {},
+    show_modal: false
    },
   reducers: {
     create_item: (state, action) => {
@@ -13,6 +14,9 @@ const conf = createSlice({
         console.log(e.message);
       }
     },
+    set_show_modal: (state, action) => {
+      state.show_modal = action.payload;
+    }
   }
 })
 
@@ -22,5 +26,5 @@ const store = configureStore({
   }
 })
 
-export const { create_item } = conf.actions;
+export const { create_item, set_show_modal } = conf.actions;
 export default store;

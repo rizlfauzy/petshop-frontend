@@ -7,16 +7,14 @@ export default function HeaderPage({ icon, title, children }) {
         <div className="modal-header-main !p-[5px]">
           <div className="xl:max-w-full max-w-full flex-[0_0_100%]">
             <div className="row">
-              <div className="col-full md:flex-[0_0_40%] md:w-[40%]">
+              <div className="col-full sm:flex-[0_0_40%] sm:mb-0 mb-3">
                 <h2>
                   <span className="logo-menu">{icon}</span>
-                  <span className="text-uppercase">{title}</span>
+                  <span className="text-uppercase md:text-[1.7vw] !text-[1rem]">{title}</span>
                 </h2>
               </div>
-              <div className="col-full md:flex-[0_0_60%] md:w-[60%]">
-                <div className="form-group float-right">
-                  {children}
-                </div>
+              <div className="col-full sm:flex-[0_0_60%]">
+                <div className="form-group sm:float-right float-left">{children}</div>
               </div>
             </div>
           </div>

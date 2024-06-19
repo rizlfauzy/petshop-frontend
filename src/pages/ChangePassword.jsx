@@ -61,7 +61,7 @@ export default function ChangePassword({ icon, title }) {
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [swalAlert, run_update, session, username, password]);
+  }, [run_update, swalAlert, session, username, password]);
 
   return (
     <>
@@ -79,7 +79,7 @@ export default function ChangePassword({ icon, title }) {
               </div>
               <div className="modal-body-main">
                 <div className="row my-2">
-                  <div className="col-half input-group">
+                  <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="username" className="input-group-text">
                         USERNAME
@@ -91,7 +91,7 @@ export default function ChangePassword({ icon, title }) {
                       className="form-control col-half"
                       name="username"
                       id="username"
-                      value={username}
+                      value={username || ""}
                       onChange={(e) => {
                         setUsername(e.target.value);
                       }}
@@ -99,20 +99,20 @@ export default function ChangePassword({ icon, title }) {
                       readOnly
                     />
                   </div>
-                  <div className="col-half input-group">
+                  <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="password" className="input-group-text">
                         PASSWORD
                       </label>
                     </div>
-                    <div className="relative col-half !pr-0">
+                    <div className="relative col-half !px-0">
                       <input
                         type="password"
                         ref={input_password}
                         className="form-control w-full"
                         name="password"
                         id="password"
-                        value={password}
+                        value={password || ""}
                         onChange={(e) => {
                           setPassword(e.target.value);
                         }}

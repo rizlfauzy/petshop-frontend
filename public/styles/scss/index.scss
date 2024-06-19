@@ -1235,6 +1235,16 @@ p {
   @apply xl:w-1/2 w-1/2 relative min-h-[1px] px-[5px] flex-[0_0_50%];
 }
 
+@media (min-width: 640px) {
+  .sm\:col-half {
+    @apply xl:w-1/2 w-1/2 relative min-h-[1px] px-[5px] flex-[0_0_50%];
+  }
+}
+
+.col-quarter {
+  @apply xl:w-1/4 w-1/4 relative min-h-[1px] px-[5px] flex-[0_0_25%];
+}
+
 .modal-header-main {
   display: flex;
   align-items: flex-start;

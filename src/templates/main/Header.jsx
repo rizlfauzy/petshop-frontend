@@ -7,7 +7,7 @@ export default function Header({ title }) {
   return (
     <Helmet>
       <title>
-        {title} - {VITE_TITLE_APPS}
+        {title} | {VITE_TITLE_APPS}
       </title>
       {/* <link rel="stylesheet" href={`${VITE_PREFIX}assets/css/lite-purple.min.css`} /> */}
       <link rel="stylesheet" href={`${VITE_PREFIX}assets/css/font-awesome.css`} />

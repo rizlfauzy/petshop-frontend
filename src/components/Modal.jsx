@@ -6,7 +6,6 @@ export default function Modal({ children, modal_title, className, btn }) {
   const dispatch = useDispatch();
   const show_modal = useSelector((state) => state.conf.show_modal);
   const handle_close_modal = useCallback(() => {
-
     dispatch(set_show_modal(!show_modal));
   }, [dispatch, show_modal]);
   return (

@@ -14,16 +14,16 @@ function App() {
         <Route
           path={VITE_PREFIX}
           element={
-            <Main title={"Dashboard"}>
-              <Dashboard />
+            <Main title={"DASHBOARD"}>
+              <Dashboard icon={<i className="fal fa-chart-pie fa-lg text-[22px]"></i>} title={"DASHBOARD"} />
             </Main>
           }
         />
         <Route
           path={`${VITE_PREFIX}password`}
           element={
-            <Main title={"Ganti Password"}>
-              <ChangePassword icon={<i className="fal fa-chart-pie fa-lg text-[22px]"></i>} title={"Ganti Password"} />
+            <Main title={"GANTI PASSWORD"}>
+              <ChangePassword icon={<i className="fal fa-chart-pie fa-lg text-[22px]"></i>} title={"GANTI PASSWORD"} />
             </Main>
           }
         />

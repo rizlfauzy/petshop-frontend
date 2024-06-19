@@ -1,7 +1,15 @@
-export default function Dashboard() {
+import HeaderPage from "../components/HeaderPage";
+import PropTypes from "prop-types";
+
+export default function Dashboard({icon, title}) {
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <>
+      <HeaderPage icon={icon} title={title} />
+    </>
   );
 }
+
+Dashboard.propTypes = {
+  icon: PropTypes.node,
+  title: PropTypes.string,
+};

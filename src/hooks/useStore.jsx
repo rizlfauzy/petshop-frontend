@@ -4,7 +4,8 @@ const conf = createSlice({
   name: "conf",
   initialState: {
     item: {},
-    show_modal: false
+    show_modal: false,
+    show_loading: false
    },
   reducers: {
     create_item: (state, action) => {
@@ -16,6 +17,9 @@ const conf = createSlice({
     },
     set_show_modal: (state, action) => {
       state.show_modal = action.payload;
+    },
+    set_show_loading: (state, action) => {
+      state.show_loading = action.payload;
     }
   }
 })
@@ -26,5 +30,5 @@ const store = configureStore({
   }
 })
 
-export const { create_item, set_show_modal } = conf.actions;
+export const { create_item, set_show_modal, set_show_loading } = conf.actions;
 export default store;

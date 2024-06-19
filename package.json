@@ -13,6 +13,9 @@
     "tailwind": "npx tailwindcss -i public/styles/css/index.css -o public/styles/css/final.css compressed --watch"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@reduxjs/toolkit": "^2.2.5",
     "dotenv": "^16.4.5",
     "react": "^18.2.0",

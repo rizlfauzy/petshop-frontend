@@ -1,6 +1,6 @@
 import useAsync from "../../hooks/useAsync";
 import { get_data, fetch_data } from "../../hooks/useFetch";
-import { useEffect, useLayoutEffect, useRef, useCallback, } from "react";
+import { useEffect, useLayoutEffect, useRef, useCallback, useState } from "react";
 import { create_item, set_show_modal } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
@@ -24,6 +24,7 @@ export default function Sidebar() {
   const path = location.pathname.split("/").pop();
   const { session, setSessionData } = useSession();
   const { swalAlert } = useAlert();
+  const [count_menu, setCountMenu] = useState(null);
 
   useLayoutEffect(() => {
     run(
@@ -37,13 +38,19 @@ export default function Sidebar() {
   }, [run, session, path]);
 
   useEffect(() => {
-    const obj = !isLoading ? data : {};
+    const obj = !isLoading ? data : null;
     dispatch(create_item(obj));
     if (!isLoading && data?.message == "Token expired") {
       setSessionData(null);
       navigate(`${VITE_PREFIX}login`, { replace: true });
     }
   }, [data, isLoading, dispatch, navigate, setSessionData]);
+
+  useEffect(() => {
+    const arr = item?.data?.oto_menu?.map((it) => it.grupmenu);
+    const count_menu = arr?.reduce((acc, curr) => ((acc[curr] = (acc[curr] || 0) + 1), acc), {});
+    setCountMenu(count_menu);
+  }, [item]);
 
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");
@@ -90,16 +97,40 @@ export default function Sidebar() {
         </div>
         <div className="wrap-nav-list rtl-ps-none" data-perfect-scrollbar="" data-suppress-scroll-x="true">
           <ul className="nav-list">
-            {item?.data?.oto_menu?.map((it) => {
-              return (
-                <li className="nav-list-item" data-tooltip={`tooltip_${it.linkmenu}`} key={it.id}>
-                  <Link to={`${VITE_PREFIX}${it.linkmenu}`} className="list-item-menu">
-                    <i className={`links_icon ${it.iconmenu}`} style={{ fontSize: "20px" }}></i>
-                    <span className="links_name">{it.namamenu}</span>
-                  </Link>
-                  <span className="tooltip">{it.namamenu}</span>
-                </li>
-              );
+            {item?.data?.grup_menu?.map((gr) => {
+              if (count_menu?.[gr.grupmenu] > 1)
+                return (
+                  <li className="nav-list-item collapsed" data-tooltip={`tooltip_${gr.headermenu}`} data-toggle="collapse" data-target={`#${gr.headermenu}_menu`} key={gr.urut_global}>
+                    <a className="list-item-menu" href="#">
+                      <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>
+                      <span className="links_name">{gr.grupmenu}</span>
+                    </a>
+                    <div id={`${gr.headermenu}_menu`} className="collapse">
+                      <ul className="nav-sublist">
+                        {item?.data?.oto_menu
+                          ?.filter((it) => it.grupmenu == gr.grupmenu)
+                          .map((it) => (
+                            <li className={`nav-sublist-item nomenu_${gr.grupmenu}`} data-tooltip={`tooltip_${it.linkdetail}`} key={it.id}>
+                              <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
+                                <i className={`links_icon ${it.iconmenu}`} style={{ fontSize: "20px" }}></i>
+                                <span className="links_name">{it.namamenu}</span>
+                              </Link>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  </li>
+                );
+              else
+                return (
+                  <li className="nav-list-item" data-tooltip={`tooltip_${gr.linkmenu}`} key={gr.urut_global}>
+                    <Link to={`${VITE_PREFIX}${gr.linkmenu}`} className="list-item-menu">
+                      <i className={`links_icon ${gr.iconmenu}`} style={{ fontSize: "20px" }}></i>
+                      <span className="links_name">{gr.grupmenu}</span>
+                    </Link>
+                    <span className="tooltip">{gr.grupmenu}</span>
+                  </li>
+                );
             })}
             <li className="profile">
               <div className="profile-details">
@@ -108,19 +139,31 @@ export default function Sidebar() {
                   <div className="job">{item?.data?.mygrup}</div>
                 </div>
               </div>
-              <i className="bx bx-log-out btn-sidebar-logout cursor-pointer" id="log_out" onClick={() => {
-                dispatch(set_show_modal(!show_modal));
-              }}></i>
+              <i
+                className="bx bx-log-out btn-sidebar-logout cursor-pointer"
+                id="log_out"
+                onClick={() => {
+                  dispatch(set_show_modal(!show_modal));
+                }}
+              ></i>
             </li>
           </ul>
         </div>
       </div>
       <div className="sidebar-hoverlay" ref={sidebar_overlay_ref} onClick={on_click_menu}></div>
-      {show_modal && <Modal modal_title="Keluar Aplikasi" className={["modal-sm"]} btn={
-        <button type="button" className="p-2 bg-primary text-white rounded-md" onClick={on_click_logout}>
-          Log Out
-        </button>
-      }>Apakah Anda yakin ?</Modal>}
+      {show_modal && (
+        <Modal
+          modal_title="Keluar Aplikasi"
+          className={["modal-sm"]}
+          btn={
+            <button type="button" className="p-2 bg-primary text-white rounded-md" onClick={on_click_logout}>
+              Log Out
+            </button>
+          }
+        >
+          Apakah Anda yakin ?
+        </Modal>
+      )}
     </>
   );
 }

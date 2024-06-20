@@ -16,7 +16,7 @@ div.container {
   box-sizing: border-box;
 }
 
-body{
+body {
   font-family: "Poppins", bahnschrift;
 }
 
@@ -365,9 +365,17 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
   font-size: 12px;
 }
 
-:is(.nav-list-item.collapsed[data-toggle="collapse"] .list-item-menu, .sublist-item-menu.collapsed[data-toggle="collapse"]):after {
+.sidebar .nav-list-item a.list-item-menu:hover ::after {
+  color: $primary-color !important;
+}
+
+:is(.nav-list-item.collapsed[data-toggle="collapse"] .list-item-menu, .sublist-item-menu.collapsed[data-toggle="collapse"])::after {
   /* content: '\f078'; */
   content: "\f054";
+  color: white;
+  &:hover {
+    color: $primary-color !important;
+  }
 }
 
 .sublist-item-menu:hover {
@@ -432,6 +440,7 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
   margin-right: 10px;
   margin-left: auto;
   font-size: 10px;
+  color: #fff;
 }
 
 .dropdown.show .sublist-item-menu::after {

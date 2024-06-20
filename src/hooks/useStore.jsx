@@ -6,10 +6,7 @@ const conf = createSlice({
     item: {},
     show_modal: false,
     show_loading: false,
-    graph: {
-      data: {},
-      options: {}
-    }
+    graph: null
    },
   reducers: {
     create_item: (state, action) => {

@@ -16,6 +16,10 @@ div.container {
   box-sizing: border-box;
 }
 
+body{
+  font-family: "Poppins", bahnschrift;
+}
+
 .mc-picker {
   width: 85% !important;
   height: 85% !important;
@@ -1239,6 +1243,10 @@ p {
   .sm\:col-half {
     @apply xl:w-1/2 w-1/2 relative min-h-[1px] px-[5px] flex-[0_0_50%];
   }
+
+  .sm\:col-quarter {
+    @apply xl:w-1/4 w-1/4 relative min-h-[1px] px-[5px] flex-[0_0_25%];
+  }
 }
 
 .col-quarter {
@@ -1304,10 +1312,34 @@ p {
   cursor: pointer;
 }
 
+.notif {
+  margin-bottom: 8px;
+  // cek class notif terakhir atau bukan
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
 .table-responsive {
   display: block;
   width: 100%;
   overflow-x: auto;
+}
+
+.card {
+  border-radius: 0px;
+  box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
+  border: 0;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  .card-body {
+    flex: 1 1 auto;
+    padding: 0.5rem;
+  }
 }
 
 /* Safari */

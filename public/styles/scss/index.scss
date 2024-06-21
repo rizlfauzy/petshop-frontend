@@ -57,9 +57,14 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
       .tooltip {
         display: none;
       }
-      .list-item-menu .links_name {
-        opacity: 1;
-        pointer-events: auto;
+      .list-item-menu {
+        &::after {
+          opacity: 1;
+        }
+        .links_name {
+          opacity: 1;
+          pointer-events: auto;
+        }
       }
     }
     input {
@@ -185,6 +190,9 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
       text-decoration: none;
       transition: all 0.4s ease;
       background: $primary-color;
+      &::after {
+        opacity: 0;
+      }
       &:hover {
         background: #fff;
         color: $primary-color;
@@ -365,21 +373,19 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
   font-size: 12px;
 }
 
-.sidebar .nav-list-item a.list-item-menu:hover ::after {
-  color: $primary-color !important;
-}
-
-:is(.nav-list-item.collapsed[data-toggle="collapse"] .list-item-menu, .sublist-item-menu.collapsed[data-toggle="collapse"])::after {
+:is(.nav-list-item.collapsed[data-toggle="collapse"] .list-item-menu, .sublist-item-menu.collapsed[data-toggle="collapse"]) {
   /* content: '\f078'; */
-  content: "\f054";
-  color: white;
-  &:hover {
-    color: $primary-color !important;
+  &::after {
+    content: "\f054";
   }
 }
 
 .sublist-item-menu:hover {
   background: #402218 !important;
+}
+
+.dropdown_menu {
+  font-size: 12px;
 }
 
 .sublist-item-menu:hover::after,

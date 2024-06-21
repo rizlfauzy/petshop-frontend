@@ -31,7 +31,7 @@ export default function Informasi() {
     const value = text_area.value;
     btn_submit.current.disabled = value.length > 0 ? false : true;
     btn_submit.current.innerHTML = value.length > 0 ? "Ubah" : "Simpan";
-  }, []);
+  }, [info]);
 
   const on_input_text = () => {
     const { current: text_area } = textarea_info;

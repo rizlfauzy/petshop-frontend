@@ -1,56 +1,30 @@
 import useAsync from "../../hooks/useAsync";
-import { get_data, fetch_data } from "../../hooks/useFetch";
-import { useEffect, useLayoutEffect, useRef, useCallback, useState } from "react";
-import { create_item, set_show_modal } from "../../hooks/useStore";
+import { fetch_data } from "../../hooks/useFetch";
+import { useRef, useCallback, useState } from "react";
+import { set_show_modal } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
 import useAlert from "../../hooks/useAlert";
 import DataSaver from "../../components/main/DataSaver";
+import SidebarMenu from "../../components/main/SidebarMenu";
 
 const { VITE_PREFIX } = import.meta.env;
 
 export default function Sidebar() {
-  const { run, isLoading, data } = useAsync();
+  const { run } = useAsync();
   const dispatch = useDispatch();
   const item = useSelector((state) => state.conf.item);
   const show_modal = useSelector((state) => state.conf.show_modal);
-  const location = useLocation();
   const navigate = useNavigate();
   const sidebar_ref = useRef(null);
   const sidebar_overlay_ref = useRef(null);
   const btn_sidebar = useRef(null);
-  const path = location.pathname.split("/").pop();
+  const li_header = useRef(null);
   const { session, setSessionData } = useSession();
   const { swalAlert } = useAlert();
-  const [count_menu, setCountMenu] = useState(null);
-
-  useLayoutEffect(() => {
-    run(
-      get_data({
-        url: "/sidebar?path=" + path,
-        headers: {
-          authorization: `Bearer ${session.token}`,
-        },
-      })
-    );
-  }, [run, session, path]);
-
-  useEffect(() => {
-    const obj = !isLoading ? data : null;
-    dispatch(create_item(obj));
-    if (!isLoading && data?.message == "Token expired") {
-      setSessionData(null);
-      navigate(`${VITE_PREFIX}login`, { replace: true });
-    }
-  }, [data, isLoading, dispatch, navigate, setSessionData]);
-
-  useEffect(() => {
-    const arr = item?.data?.oto_menu?.map((it) => it.grupmenu);
-    const count_menu = arr?.reduce((acc, curr) => ((acc[curr] = (acc[curr] || 0) + 1), acc), {});
-    setCountMenu(count_menu);
-  }, [item]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");
@@ -61,6 +35,8 @@ export default function Sidebar() {
     } else {
       btn_sidebar.current.classList.remove("bx-menu-alt-right");
       btn_sidebar.current.classList.add("bx-menu");
+      li_header.current.classList.add("collapsed");
+      setShowDropdown(false);
     }
   }, []);
 
@@ -97,41 +73,7 @@ export default function Sidebar() {
         </div>
         <div className="wrap-nav-list rtl-ps-none" data-perfect-scrollbar="" data-suppress-scroll-x="true">
           <ul className="nav-list">
-            {item?.data?.grup_menu?.map((gr) => {
-              if (count_menu?.[gr.grupmenu] > 1)
-                return (
-                  <li className="nav-list-item collapsed" data-tooltip={`tooltip_${gr.headermenu}`} data-toggle="collapse" data-target={`#${gr.headermenu}_menu`} key={gr.urut_global}>
-                    <a className="list-item-menu" href="#">
-                      <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>
-                      <span className="links_name">{gr.grupmenu}</span>
-                    </a>
-                    <div id={`${gr.headermenu}_menu`} className="collapse">
-                      <ul className="nav-sublist">
-                        {item?.data?.oto_menu
-                          ?.filter((it) => it.grupmenu == gr.grupmenu)
-                          .map((it) => (
-                            <li className={`nav-sublist-item nomenu_${gr.grupmenu}`} data-tooltip={`tooltip_${it.linkdetail}`} key={it.id}>
-                              <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
-                                <i className={`links_icon ${it.iconmenu}`} style={{ fontSize: "20px" }}></i>
-                                <span className="links_name">{it.namamenu}</span>
-                              </Link>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </li>
-                );
-              else
-                return (
-                  <li className="nav-list-item" data-tooltip={`tooltip_${gr.linkmenu}`} key={gr.urut_global}>
-                    <Link to={`${VITE_PREFIX}${gr.linkmenu}`} className="list-item-menu">
-                      <i className={`links_icon ${gr.iconmenu}`} style={{ fontSize: "20px" }}></i>
-                      <span className="links_name">{gr.grupmenu}</span>
-                    </Link>
-                    <span className="tooltip">{gr.grupmenu}</span>
-                  </li>
-                );
-            })}
+            <SidebarMenu sidebar_ref={sidebar_ref} sidebar_overlay_ref={sidebar_overlay_ref} btn_sidebar={btn_sidebar} li_header={li_header} showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
             <li className="profile">
               <div className="profile-details">
                 <div className="name_job">

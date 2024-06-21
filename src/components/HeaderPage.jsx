@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export default function HeaderPage({ icon, title, children }) {
   return (
@@ -14,7 +14,7 @@ export default function HeaderPage({ icon, title, children }) {
                 </h2>
               </div>
               <div className="col-full sm:flex-[0_0_60%]">
-                <div className="form-group sm:float-right float-left">{children}</div>
+                <div className="form-group sm:float-right float-left flex gap-3">{children}</div>
               </div>
             </div>
           </div>

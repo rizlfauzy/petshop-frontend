@@ -43,27 +43,29 @@ export default function NotifikasiStok() {
             <div className="row mb-1">
               <span className="text-[12px] font-semibold">Barang yang akan habis</span>
             </div>
-            {goods && goods?.data?.length > 0 ? (
-              goods?.data?.map((item) => {
-                const msg = item.stock <= 0 ? `${item.nama} habis silahkan repurchase` : `${item.nama} sisa ${item.stock} ${item.satuan} silahkan repurchase`;
-                return (
-                  <div className="row notif" key={item.barcode}>
-                    <div className="relative !px-0 w-full">
-                      <div className="border-b-2 border-b-primary">
-                        <p className="text-[11px] p-3 rounded-md">{msg}</p>
+            <div className="max-h-screen overflow-auto">
+              {goods && goods?.data?.length > 0 ? (
+                goods?.data?.map((item) => {
+                  const msg = item.stock <= 0 ? `${item.nama} habis silahkan repurchase` : `${item.nama} sisa ${item.stock} ${item.satuan} silahkan repurchase`;
+                  return (
+                    <div className="row notif" key={item.barcode}>
+                      <div className="relative !px-0 w-full">
+                        <div className="border-b-2 border-b-primary">
+                          <p className="text-[11px] p-3 rounded-md">{msg}</p>
+                        </div>
+                        <button className="btn_absolute_right hover:text-red-600 active:text-red-900" onClick={on_delete_notif.bind(this, item.barcode)}>
+                          <FontAwesomeIcon icon={faXmark} />
+                        </button>
                       </div>
-                      <button className="btn_absolute_right hover:text-red-600 active:text-red-900" onClick={on_delete_notif.bind(this, item.barcode)}>
-                        <FontAwesomeIcon icon={faXmark} />
-                      </button>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="row">
-                <span className="text-[12px] font-semibold">Tidak ada barang yang akan habis</span>
-              </div>
-            )}
+                  );
+                })
+              ) : (
+                <div className="row">
+                  <span className="text-[12px] font-semibold">Tidak ada barang yang akan habis</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

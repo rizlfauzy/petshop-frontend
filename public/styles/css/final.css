@@ -670,6 +670,22 @@ video {
   margin-top: 0.5rem;
 }
 
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mr-10 {
+  margin-right: 2.5rem;
+}
+
 .block {
   display: block;
 }
@@ -694,7 +710,23 @@ video {
   height: 2px;
 }
 
+.max-h-10 {
+  max-height: 2.5rem;
+}
+
+.max-h-3 {
+  max-height: 0.75rem;
+}
+
 .max-h-\[100vh\] {
+  max-height: 100vh;
+}
+
+.max-h-full {
+  max-height: 100%;
+}
+
+.max-h-screen {
   max-height: 100vh;
 }
 
@@ -780,6 +812,14 @@ video {
 
 .gap-2 {
   gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .rounded {
@@ -893,6 +933,10 @@ video {
   font-size: 1rem !important;
 }
 
+.\!text-\[22px\] {
+  font-size: 22px !important;
+}
+
 .text-\[11px\] {
   font-size: 11px;
 }
@@ -909,13 +953,13 @@ video {
   font-size: 18px;
 }
 
-.text-\[22px\] {
-  font-size: 22px;
-}
-
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
+}
+
+.\!text-\[19px\] {
+  font-size: 19px !important;
 }
 
 .\!font-normal {
@@ -932,6 +976,10 @@ video {
 
 .leading-\[1\.5\] {
   line-height: 1.5;
+}
+
+.leading-\[1\] {
+  line-height: 1;
 }
 
 .text-gray-400 {
@@ -1039,6 +1087,10 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
 
 .sidebar.open .nav-list-item .tooltip{
   display:none
+}
+
+.sidebar.open .nav-list-item .list-item-menu::after{
+  opacity:1
 }
 
 .sidebar.open .nav-list-item .list-item-menu .links_name{
@@ -1180,6 +1232,10 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
   text-decoration:none;
   transition:all .4s ease;
   background:#402218
+}
+
+.sidebar .nav-list-item .list-item-menu::after{
+  opacity:0
 }
 
 .sidebar .nav-list-item .list-item-menu:hover{
@@ -1362,21 +1418,16 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
   font-size:12px
 }
 
-.sidebar .nav-list-item a.list-item-menu:hover ::after{
-  color:#402218 !important
-}
-
 :is(.nav-list-item.collapsed[data-toggle=collapse] .list-item-menu,.sublist-item-menu.collapsed[data-toggle=collapse])::after{
-  content:"";
-  color:#fff
-}
-
-:is(.nav-list-item.collapsed[data-toggle=collapse] .list-item-menu,.sublist-item-menu.collapsed[data-toggle=collapse])::after:hover{
-  color:#402218 !important
+  content:""
 }
 
 .sublist-item-menu:hover{
   background:#402218 !important
+}
+
+.dropdown_menu{
+  font-size:12px
 }
 
 .sublist-item-menu:hover::after,.sublist-item-menu:hover .links_icon,.sublist-item-menu:hover .links_name{

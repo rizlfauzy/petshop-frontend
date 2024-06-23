@@ -5,6 +5,8 @@ const conf = createSlice({
   initialState: {
     item: {},
     show_modal: false,
+    show_modal_logout: false,
+    show_modal_grup: false,
     show_loading: false,
     graph: null
    },
@@ -18,6 +20,17 @@ const conf = createSlice({
     },
     set_show_modal: (state, action) => {
       state.show_modal = action.payload;
+    },
+    set_show_logout: (state, action) => {
+      state.show_modal_logout = action.payload;
+    },
+    set_show_grup: (state, action) => {
+      state.show_modal_grup = action.payload;
+    },
+    set_hide_all_modal: (state) => {
+      state.show_modal = false;
+      state.show_modal_logout = false;
+      state.show_modal_grup = false;
     },
     set_show_loading: (state, action) => {
       state.show_loading = action.payload;
@@ -34,5 +47,5 @@ const store = configureStore({
   }
 })
 
-export const { create_item, set_show_modal, set_show_loading, set_graph } = conf.actions;
+export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_grup, set_hide_all_modal } = conf.actions;
 export default store;

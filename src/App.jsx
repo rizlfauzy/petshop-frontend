@@ -31,8 +31,8 @@ function App() {
         <Route
           path={`${VITE_PREFIX}master-grup`}
           element={
-            <Main title={"Master Grup"}>
-              <MasterGrup icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"Master Grup"} />
+            <Main title={"MASTER GRUP"}>
+              <MasterGrup icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER GRUP"} />
             </Main>
           }
         />

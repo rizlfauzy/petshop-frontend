@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
-import { set_show_modal } from "../hooks/useStore";
-import { useDispatch, useSelector } from "react-redux";
+import { set_hide_all_modal } from "../hooks/useStore";
+import { useDispatch } from "react-redux";
 import { useCallback } from "react";
 export default function Modal({ children, modal_title, className, btn }) {
   const dispatch = useDispatch();
-  const show_modal = useSelector((state) => state.conf.show_modal);
   const handle_close_modal = useCallback(() => {
-    dispatch(set_show_modal(!show_modal));
-  }, [dispatch, show_modal]);
+    dispatch(set_hide_all_modal())
+  }, [dispatch,]);
   return (
     <div id="myModal" className="modal" onClick={(e) => {
       if (e.target.id === "myModal") handle_close_modal();

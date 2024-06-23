@@ -1,7 +1,7 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
 import { useRef, useCallback, useState } from "react";
-import { set_show_modal } from "../../hooks/useStore";
+import { set_show_modal, set_show_logout } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const item = useSelector((state) => state.conf.item);
   const show_modal = useSelector((state) => state.conf.show_modal);
+  const show_modal_logout = useSelector((state) => state.conf.show_modal_logout);
   const navigate = useNavigate();
   const sidebar_ref = useRef(null);
   const sidebar_overlay_ref = useRef(null);
@@ -41,7 +42,8 @@ export default function Sidebar() {
   }, []);
 
   const on_click_logout = useCallback(async () => {
-    dispatch(set_show_modal(!show_modal));
+    dispatch(set_show_modal(false));
+    dispatch(set_show_logout(false));
     try {
       const { error, message } = await run(
         fetch_data({
@@ -85,7 +87,8 @@ export default function Sidebar() {
                 className="bx bx-log-out btn-sidebar-logout cursor-pointer"
                 id="log_out"
                 onClick={() => {
-                  dispatch(set_show_modal(!show_modal));
+                  dispatch(set_show_modal(true));
+                  dispatch(set_show_logout(true));
                 }}
               ></i>
             </li>
@@ -93,7 +96,7 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="sidebar-hoverlay" ref={sidebar_overlay_ref} onClick={on_click_menu}></div>
-      {show_modal && (
+      {(show_modal && show_modal_logout) && (
         <Modal
           modal_title="Keluar Aplikasi"
           className={["modal-sm"]}

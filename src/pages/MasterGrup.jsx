@@ -1,20 +1,148 @@
 import PropTypes from "prop-types";
 import HeaderPage from "../components/HeaderPage";
+import { useDispatch, useSelector } from "react-redux";
+import { set_show_modal, set_show_grup } from "../hooks/useStore";
+import { useCallback, useEffect, useState, useRef } from "react";
+import useAsync from "../hooks/useAsync";
+import { get_data, fetch_data } from "../hooks/useFetch";
+import Modal from "../components/Modal";
+import ModalGrup from "../components/main/MasterGrup/ModalGrup";
+import useSession from "../hooks/useSession";
+import useAlert from "../hooks/useAlert";
 
 export default function MasterGrup({ icon, title }) {
+  const dispatch = useDispatch();
+  const show_modal = useSelector((state) => state.conf.show_modal);
+  const show_modal_grup = useSelector((state) => state.conf.show_modal_grup);
+  const input_kode = useRef(null);
+  const btn_save = useRef(null);
+  const btn_update = useRef(null);
+  const aktif_row = useRef(null);
+  const [kode_grup, set_kode_grup] = useState("");
+  const [is_selected, set_is_selected] = useState(false);
+  const { run } = useAsync();
+  const { session } = useSession();
+  const { swalAlert } = useAlert();
+  const [grup, set_grup] = useState({
+    kode: "",
+    nama: "",
+    aktif: true,
+  });
+
+  useEffect(() => {
+    async function get_grup() {
+      try {
+        const { error, message, data } = await run(
+          get_data({
+            url: "/grup?kode=" + kode_grup,
+            headers: { authorization: `Bearer ${session.token}` },
+          })
+        );
+        if (error) throw new Error(message);
+        set_grup((state) => ({ ...state, ...data }));
+      } catch (e) {
+        swalAlert(e.message, "error");
+      }
+    }
+
+    if (is_selected) {
+      get_grup();
+      input_kode.current.disabled = true;
+      btn_save.current.disabled = true;
+      btn_update.current.disabled = false;
+      aktif_row.current.classList.remove("!hidden");
+    } else {
+      input_kode.current.disabled = false;
+      btn_save.current.disabled = false;
+      btn_update.current.disabled = true;
+      aktif_row.current.classList.add("!hidden");
+    }
+  }, [is_selected, kode_grup]);
+
+  const handle_modal = useCallback(async () => {
+    dispatch(set_show_modal(true));
+    dispatch(set_show_grup(true));
+  }, [dispatch]);
+
+  const handle_change = useCallback((e) => {
+    const { name, value } = e.target;
+    set_grup((state) => ({ ...state, [name]: value == "true" ? true : value == "false" ? false : value }));
+  }, []);
+
+  const handle_clear = useCallback(() => {
+    set_grup({
+      kode: "",
+      nama: "",
+      aktif: true,
+    });
+    input_kode.current.disabled = false;
+    btn_save.current.disabled = false;
+    btn_update.current.disabled = true;
+    aktif_row.current.classList.add("!hidden");
+    set_is_selected(false);
+  }, []);
+
+  const handle_save = useCallback(async () => {
+    try {
+      const { error, message } = await run(
+        fetch_data({
+          url: "/grup",
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+          data: {
+            kode: grup.kode.toUpperCase(),
+            nama: grup.nama.toUpperCase(),
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      swalAlert(e.message, "error");
+    }
+  }, [grup, run, session, swalAlert, handle_clear]);
+
+  const handle_update = useCallback(async () => {
+    try {
+      const { error, message } = await run(
+        fetch_data({
+          url: "/grup",
+          method: "PUT",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+          data: {
+            kode: grup.kode.toUpperCase(),
+            nama: grup.nama.toUpperCase(),
+            aktif: grup.aktif,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      swalAlert(e.message, "error");
+    }
+
+  },[grup, run, session, swalAlert, handle_clear])
+
   return (
     <>
       <HeaderPage icon={icon} title={title}>
-        <button id="save" className="btn-sm bg-primary text-white">
+        <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
           <i className="far fa-save mr-[10px]"></i>Save
         </button>
-        <button id="update" type="button" className="btn-sm bg-primary text-white">
+        <button ref={btn_update} id="update" type="button" className="btn-sm bg-primary text-white" onClick={handle_update}>
           <i className="far fa-money-check-edit mr-[10px]"></i>Update
         </button>
-        <button id="find" className="btn-sm bg-primary text-white">
+        <button id="find" className="btn-sm bg-primary text-white" onClick={handle_modal}>
           <i className="far fa-file-search mr-[10px]"></i>Find
         </button>
-        <button id="clear" className="btn-sm bg-primary text-white">
+        <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
           <i className="far fa-refresh mr-[10px]"></i>Clear
         </button>
       </HeaderPage>
@@ -33,7 +161,7 @@ export default function MasterGrup({ icon, title }) {
                         KODE GRUP
                       </label>
                     </div>
-                    <input type="text" defaultValue={""} className="form-control col-half" name="kode" id="username" required />
+                    <input type="text" value={grup.kode} className="form-control col-half" name="kode" id="kode" onChange={handle_change} ref={input_kode} required />
                   </div>
                   <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
@@ -41,7 +169,30 @@ export default function MasterGrup({ icon, title }) {
                         NAMA GRUP
                       </label>
                     </div>
-                    <input type="text" defaultValue={""} className="form-control col-half" name="nama" id="username" required />
+                    <input type="text" value={grup.nama} className="form-control col-half" name="nama" id="nama" onChange={handle_change} required />
+                  </div>
+                </div>
+                <div className="row my-2 !hidden" ref={aktif_row}>
+                  <div className="sm:col-half col-full input-group">
+                    <div className="col-half p-0 input-group-prepend">
+                      <span className="input-group-text">AKTIF</span>
+                    </div>
+                    <div className="col-quarter flex items-center">
+                      <input type="radio" value={!grup.aktif} className="form-control" name="aktif" id="aktif_radio" onChange={handle_change} checked={grup.aktif} required />
+                      <div className="input-group-prepend">
+                        <label htmlFor="aktif_radio" className="input-group-text">
+                          YA
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-quarter flex items-center">
+                      <input type="radio" value={!grup.aktif} className="form-control" name="aktif" id="non_aktif_radio" onChange={handle_change} checked={grup.aktif ? false : true} required />
+                      <div className="input-group-prepend">
+                        <label htmlFor="non_aktif_radio" className="input-group-text">
+                          TIDAK
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -49,6 +200,34 @@ export default function MasterGrup({ icon, title }) {
           </div>
         </div>
       </div>
+      {show_modal && show_modal_grup && (
+        <Modal modal_title="Grup" className={["modal-lg"]} btn={<></>}>
+          <ModalGrup
+            set={set_kode_grup}
+            is_selected={set_is_selected}
+            conf={{
+              name: "grup",
+              limit: 5,
+              page: 1,
+              select: ["kode", "nama", "aktif"],
+              order: [["kode", "ASC"]],
+              where: "kode <> 'ITS'",
+              likes: ["kode", "nama"],
+              keyword: "",
+              func_item: {
+                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
+              },
+            }}
+          >
+            <>
+              <th className="text-left align-middle">Action</th>
+              <th className="text-left align-middle">Kode</th>
+              <th className="text-left align-middle">Nama</th>
+              <th className="text-left align-middle">Aktif</th>
+            </>
+          </ModalGrup>
+        </Modal>
+      )}
     </>
   );
 }

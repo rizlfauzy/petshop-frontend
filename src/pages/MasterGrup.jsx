@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import useAsync from "../hooks/useAsync";
 import { get_data, fetch_data } from "../hooks/useFetch";
 import Modal from "../components/Modal";
-import ModalGrup from "../components/main/MasterGrup/ModalGrup";
+import ModalMain from "../components/main/ModalMain";
 import useSession from "../hooks/useSession";
 import useAlert from "../hooks/useAlert";
 
@@ -127,8 +127,7 @@ export default function MasterGrup({ icon, title }) {
     } catch (e) {
       swalAlert(e.message, "error");
     }
-
-  },[grup, run, session, swalAlert, handle_clear])
+  }, [grup, run, session, swalAlert, handle_clear]);
 
   return (
     <>
@@ -202,7 +201,7 @@ export default function MasterGrup({ icon, title }) {
       </div>
       {show_modal && show_modal_grup && (
         <Modal modal_title="Grup" className={["modal-lg"]} btn={<></>}>
-          <ModalGrup
+          <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected}
             conf={{
@@ -225,7 +224,7 @@ export default function MasterGrup({ icon, title }) {
               <th className="text-left align-middle">Nama</th>
               <th className="text-left align-middle">Aktif</th>
             </>
-          </ModalGrup>
+          </ModalMain>
         </Modal>
       )}
     </>

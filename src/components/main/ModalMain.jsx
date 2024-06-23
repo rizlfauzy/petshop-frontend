@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import useAlert from "../../../hooks/useAlert";
-import useAsync from "../../../hooks/useAsync";
-import { fetch_data } from "../../../hooks/useFetch";
-import useSession from "../../../hooks/useSession";
+import useAlert from "../../hooks/useAlert";
+import useAsync from "../../hooks/useAsync";
+import { fetch_data } from "../../hooks/useFetch";
+import useSession from "../../hooks/useSession";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { set_show_modal, set_show_grup } from "../../../hooks/useStore";
+import { set_hide_all_modal } from "../../hooks/useStore";
 
-export default function ModalGrup({ set, is_selected, conf, children }) {
+export default function ModalMain({ set, is_selected, conf, children }) {
   const { session } = useSession();
   const { swalAlert } = useAlert();
   const { run } = useAsync();
@@ -79,15 +79,18 @@ export default function ModalGrup({ set, is_selected, conf, children }) {
     [on_find_data, keyword, page]
   );
 
-  const handle_page = useCallback((page) => {
-    set_page(page);
-    set_konf((prev) => ({ ...prev, page }));
-    on_find_data(keyword, limit, page);
-  }, [on_find_data, keyword, limit]);
+  const handle_page = useCallback(
+    (page) => {
+      set_page(page);
+      set_konf((prev) => ({ ...prev, page }));
+      on_find_data(keyword, limit, page);
+    },
+    [on_find_data, keyword, limit]
+  );
 
   const handle_clear = useCallback(() => {
     set_keyword("");
-    set_konf(prev => ({ ...prev, keyword: "" }));
+    set_konf((prev) => ({ ...prev, keyword: "" }));
     input_list.current.focus();
     on_find_data("", limit, page);
   }, [on_find_data, limit, page]);
@@ -142,17 +145,16 @@ export default function ModalGrup({ set, is_selected, conf, children }) {
               </tr>
             ) : data?.list?.length > 0 ? (
               data?.list?.map((item) => (
-                <tr key={item.kode}>
+                <tr key={item[Object.keys(item)[0]]}>
                   <td className="text-center">
                     <button
                       type="button"
                       className="btn-sm !p-[.25rem_.9rem] bg-primary text-white"
-                      data-id={item.kode}
+                      data-id={item[Object.keys(item)[0]]}
                       onClick={() => {
-                        set(item.kode);
+                        set(item[Object.keys(item)[0]]);
                         is_selected(true);
-                        dispatch(set_show_modal(false));
-                        dispatch(set_show_grup(false));
+                        dispatch(set_hide_all_modal());
                       }}
                     >
                       <i className="far fa-check"></i>
@@ -200,7 +202,7 @@ export default function ModalGrup({ set, is_selected, conf, children }) {
   );
 }
 
-ModalGrup.propTypes = {
+ModalMain.propTypes = {
   set: PropTypes.func,
   is_selected: PropTypes.func,
   conf: PropTypes.object,

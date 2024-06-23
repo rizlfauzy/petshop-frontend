@@ -26,7 +26,7 @@ export default function ChangePassword({ icon, title }) {
   useLayoutEffect(() => {
     run(
       get_data({
-        url: "/user",
+        url: "/password",
         headers: {
           authorization: `Bearer ${session.token}`,
         },
@@ -48,7 +48,7 @@ export default function ChangePassword({ icon, title }) {
     try {
       const { error, message } = await run_update(
         fetch_data({
-          url: "/user",
+          url: "/password",
           headers: {
             authorization: `Bearer ${session.token}`,
           },

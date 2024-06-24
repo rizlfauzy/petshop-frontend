@@ -71,10 +71,17 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
                   ?.filter((it) => it.grupmenu == gr.grupmenu)
                   .map((it) => (
                     <li className={`nav-sublist-item nomenu_${gr.grupmenu}`} data-tooltip={`tooltip_${it.linkdetail}`} key={it.nomenu}>
-                      <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
-                        <i className={`links_icon ${it.icondetail}`}></i>
-                        <span className="links_name">{it.namamenu}</span>
-                      </Link>
+                      {path == "" ? (
+                        <a href={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
+                          <i className={`links_icon ${it.icondetail}`}></i>
+                          <span className="links_name">{it.namamenu}</span>
+                        </a>
+                      ) : (
+                        <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
+                          <i className={`links_icon ${it.icondetail}`}></i>
+                          <span className="links_name">{it.namamenu}</span>
+                        </Link>
+                      )}
                     </li>
                   ))}
               </ul>
@@ -85,10 +92,17 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
     else
       return (
         <li className="nav-list-item" data-tooltip={`tooltip_${gr.linkmenu}`} key={gr.urut_global}>
-          <Link to={`${VITE_PREFIX}${gr.linkmenu}`} className="list-item-menu">
-            <i className={`links_icon ${gr.iconmenu}`} style={{ fontSize: "20px" }}></i>
-            <span className="links_name">{gr.grupmenu}</span>
-          </Link>
+          {path == "" ? (
+            <a href={`${VITE_PREFIX}${gr.linkmenu}`} className="list-item-menu">
+              <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>
+              <span className="links_name">{gr.grupmenu}</span>
+            </a>
+          ) : (
+            <Link to={`${VITE_PREFIX}${gr.linkmenu}`} className="list-item-menu">
+              <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>
+              <span className="links_name">{gr.grupmenu}</span>
+            </Link>
+          )}
           <span className="tooltip">{gr.grupmenu}</span>
         </li>
       );

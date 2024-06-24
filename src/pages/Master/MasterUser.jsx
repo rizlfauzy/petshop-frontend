@@ -23,14 +23,14 @@ export default function MasterUser({ icon, title }) {
   const [username, set_username] = useState("");
   const [kode_grup, set_kode_grup] = useState("");
   const [grup, set_grup] = useState({
-    kode: "",
-    nama: "",
+    kode_grup: "",
+    nama_grup: "",
   });
   const [user, set_user] = useState({
     username: "",
     password: "",
-    kode_grup: grup.kode,
-    nama_grup: grup.nama,
+    kode_grup: grup.kode_grup,
+    nama_grup: grup.nama_grup,
     aktif: true,
   });
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ export default function MasterUser({ icon, title }) {
           })
         );
         if (error) throw new Error(message);
-        set_grup((state) => ({ ...state, ...data }));
+        set_grup((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
         set_user((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
       } catch (e) {
         swalAlert(e.message, "error");
@@ -66,7 +66,7 @@ export default function MasterUser({ icon, title }) {
         );
         if (error) throw new Error(message);
         set_user((state) => ({ ...state, ...data }));
-        set_grup((state) => ({ ...state, kode: data.kode_grup, nama: data.nama_grup }));
+        set_grup((state) => ({ ...state, ...data }));
       } catch (e) {
         swalAlert(e.message, "error");
       }
@@ -99,7 +99,7 @@ export default function MasterUser({ icon, title }) {
 
   const handle_change_grup = useCallback((e) => {
     const { name, value } = e.target;
-    set_grup((state) => ({ ...state, [name]: value == "true" ? true : value == "false" ? false : value }));
+    set_grup((state) => ({ ...state, [name]: value }));
     set_user((state) => ({ ...state, [name]: value }));
   }, []);
 
@@ -117,8 +117,8 @@ export default function MasterUser({ icon, title }) {
       aktif: true,
     });
     set_grup({
-      kode: "",
-      nama: "",
+      kode_grup: "",
+      nama_grup: "",
     });
     set_kode_grup("");
     set_username("");
@@ -236,7 +236,7 @@ export default function MasterUser({ icon, title }) {
                         NAMA GRUP
                       </label>
                     </div>
-                    <input value={grup.nama} type="text" className="form-control col-half" name="nama_grup" id="nama_grup" placeholder="nama grup" onChange={handle_change_grup} required readOnly />
+                    <input value={grup.nama_grup} type="text" className="form-control col-half" name="nama_grup" id="nama_grup" placeholder="nama grup" onChange={handle_change_grup} required readOnly />
                   </div>
                   <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
@@ -245,7 +245,7 @@ export default function MasterUser({ icon, title }) {
                       </label>
                     </div>
                     <div className="relative col-half !px-0">
-                      <input value={grup.kode} type="text" className="form-control" name="kode_grup" id="kode_grup" placeholder="tekan tombol cari" onChange={handle_change_grup} required readOnly />
+                      <input value={grup.kode_grup} type="text" className="form-control" name="kode_grup" id="kode_grup" placeholder="tekan tombol cari" onChange={handle_change_grup} required readOnly />
                       <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_find_grup}>
                         <FontAwesomeIcon icon={faSearch} />
                       </button>

@@ -3,7 +3,7 @@ import useSocketIo from "../../../hooks/useSocketIo";
 import { useDispatch, useSelector } from "react-redux";
 import Chart from "./Chart";
 import { set_show_loading, set_graph } from "../../../hooks/useStore";
-import { format_rupiah } from "../../../hooks/useFormat";
+import useFormating from "../../../hooks/useFormating";
 import moment from "moment";
 
 export default function DataOmset() {
@@ -14,6 +14,7 @@ export default function DataOmset() {
   const { run_socket, is_loading_socket, data_socket } = useSocketIo();
   const dispatch = useDispatch();
   const graph = useSelector((state) => state.conf.graph);
+  const { format_rupiah } = useFormating();
 
   useLayoutEffect(() => {
     run_socket("graph", {

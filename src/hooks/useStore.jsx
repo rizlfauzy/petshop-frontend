@@ -10,9 +10,10 @@ const conf = createSlice({
     show_modal_user: false,
     show_modal_satuan: false,
     show_modal_kategori: false,
+    show_modal_barang: false,
     show_loading: false,
-    graph: null
-   },
+    graph: null,
+  },
   reducers: {
     create_item: (state, action) => {
       try {
@@ -39,6 +40,9 @@ const conf = createSlice({
     set_show_kategori: (state, action) => {
       state.show_modal_kategori = action.payload;
     },
+    set_show_barang: (state, action) => {
+      state.show_modal_barang = action.payload;
+    },
     set_hide_all_modal: (state) => {
       state.show_modal = false;
       state.show_modal_logout = false;
@@ -46,21 +50,22 @@ const conf = createSlice({
       state.show_modal_user = false;
       state.show_modal_satuan = false;
       state.show_modal_kategori = false;
+      state.show_modal_barang = false;
     },
     set_show_loading: (state, action) => {
       state.show_loading = action.payload;
     },
     set_graph: (state, action) => {
       state.graph = action.payload;
-    }
-  }
-})
+    },
+  },
+});
 
 const store = configureStore({
   reducer: {
-    conf: conf.reducer
-  }
-})
+    conf: conf.reducer,
+  },
+});
 
-export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori } = conf.actions;
+export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang } = conf.actions;
 export default store;

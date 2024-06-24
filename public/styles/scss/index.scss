@@ -1283,6 +1283,10 @@ p {
   @apply xl:w-1/4 w-1/4 relative min-h-[1px] px-[5px] flex-[0_0_25%];
 }
 
+.col-thirdperfour {
+  @apply xl:w-3/4 w-3/4 relative min-h-[1px] px-[5px] flex-[0_0_75%];
+}
+
 .col-sixth {
   @apply xl:w-1/6 w-1/6 relative min-h-[1px] px-[5px] flex-[0_0_16.666667%];
 }
@@ -1294,6 +1298,14 @@ p {
 
   .sm\:col-quarter {
     @apply xl:w-1/4 w-1/4 relative min-h-[1px] px-[5px] flex-[0_0_25%];
+  }
+
+  .sm\:col-sixth {
+    @apply xl:w-1/6 w-1/6 relative min-h-[1px] px-[5px] flex-[0_0_16.666667%];
+  }
+
+  .sm\:col-thirdperfour {
+    @apply xl:w-3/4 w-3/4 relative min-h-[1px] px-[5px] flex-[0_0_75%];
   }
 }
 

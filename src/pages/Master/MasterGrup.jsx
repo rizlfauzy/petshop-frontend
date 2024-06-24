@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
-import HeaderPage from "../components/HeaderPage";
+import HeaderPage from "../../components/HeaderPage";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_modal, set_show_grup } from "../hooks/useStore";
+import { set_show_modal, set_show_grup } from "../../hooks/useStore";
 import { useCallback, useEffect, useState, useRef } from "react";
-import useAsync from "../hooks/useAsync";
-import { get_data, fetch_data } from "../hooks/useFetch";
-import Modal from "../components/Modal";
-import ModalMain from "../components/main/ModalMain";
-import useSession from "../hooks/useSession";
-import useAlert from "../hooks/useAlert";
+import useAsync from "../../hooks/useAsync";
+import { get_data, fetch_data } from "../../hooks/useFetch";
+import Modal from "../../components/Modal";
+import ModalMain from "../../components/main/ModalMain";
+import useSession from "../../hooks/useSession";
+import useAlert from "../../hooks/useAlert";
 
 export default function MasterGrup({ icon, title }) {
   const dispatch = useDispatch();
@@ -70,6 +70,7 @@ export default function MasterGrup({ icon, title }) {
   }, []);
 
   const handle_clear = useCallback(() => {
+    set_kode_grup("");
     set_grup({
       kode: "",
       nama: "",

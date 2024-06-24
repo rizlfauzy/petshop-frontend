@@ -950,18 +950,6 @@ video {
   line-height: 1.75rem;
 }
 
-.text-\[5px\] {
-  font-size: 5px;
-}
-
-.\!text-\[5px\] {
-  font-size: 5px !important;
-}
-
-.\!text-\[15px\] {
-  font-size: 15px !important;
-}
-
 .\!font-normal {
   font-weight: 400 !important;
 }
@@ -2515,14 +2503,14 @@ input.form-control[type=radio]{
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
-.hover\:text-red-600:hover {
-  --tw-text-opacity: 1;
-  color: rgb(220 38 38 / var(--tw-text-opacity));
-}
-
 .hover\:text-primary:hover {
   --tw-text-opacity: 1;
   color: rgb(64 34 24 / var(--tw-text-opacity));
+}
+
+.hover\:text-red-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 
 .active\:bg-green-800:active {

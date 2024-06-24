@@ -1,16 +1,16 @@
-import HeaderPage from "../components/HeaderPage";
+import HeaderPage from "../../components/HeaderPage";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_modal, set_show_grup, set_show_user } from "../hooks/useStore";
-import Modal from "../components/Modal";
-import ModalMain from "../components/main/ModalMain";
-import useAsync from "../hooks/useAsync";
-import useAlert from "../hooks/useAlert";
-import { get_data, fetch_data } from "../hooks/useFetch";
-import useSession from "../hooks/useSession";
+import { set_show_modal, set_show_grup, set_show_user } from "../../hooks/useStore";
+import Modal from "../../components/Modal";
+import ModalMain from "../../components/main/ModalMain";
+import useAsync from "../../hooks/useAsync";
+import useAlert from "../../hooks/useAlert";
+import { get_data, fetch_data } from "../../hooks/useFetch";
+import useSession from "../../hooks/useSession";
 
 export default function MasterUser({ icon, title }) {
   const input_password = useRef(null);
@@ -24,14 +24,14 @@ export default function MasterUser({ icon, title }) {
   const [kode_grup, set_kode_grup] = useState("");
   const [grup, set_grup] = useState({
     kode: "",
-    nama: ""
+    nama: "",
   });
   const [user, set_user] = useState({
     username: "",
     password: "",
     kode_grup: grup.kode,
     nama_grup: grup.nama,
-    aktif: true
+    aktif: true,
   });
   const dispatch = useDispatch();
   const { show_modal, show_modal_grup, show_modal_user } = useSelector((state) => state.conf);
@@ -67,8 +67,6 @@ export default function MasterUser({ icon, title }) {
         if (error) throw new Error(message);
         set_user((state) => ({ ...state, ...data }));
         set_grup((state) => ({ ...state, kode: data.kode_grup, nama: data.nama_grup }));
-        // set_kode_grup(data.kode_grup);
-        // set_is_selected_grup(true);
       } catch (e) {
         swalAlert(e.message, "error");
       }
@@ -87,23 +85,17 @@ export default function MasterUser({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-    // return () => {
-    //   set_is_selected_user(false);
-    //   set_is_selected_grup(false);
-    // }
-  }, [is_selected_grup, is_selected_user])
+  }, [is_selected_grup, is_selected_user, kode_grup, username]);
 
   const handle_find_grup = useCallback(() => {
     dispatch(set_show_grup(true));
     dispatch(set_show_modal(true));
-    set_is_selected_grup(false);
-  }, [dispatch])
+  }, [dispatch]);
 
   const handle_find_user = useCallback(() => {
     dispatch(set_show_user(true));
     dispatch(set_show_modal(true));
-    set_is_selected_user(false);
-  }, [dispatch])
+  }, [dispatch]);
 
   const handle_change_grup = useCallback((e) => {
     const { name, value } = e.target;
@@ -168,7 +160,7 @@ export default function MasterUser({ icon, title }) {
             authorization: `Bearer ${session.token}`,
           },
           method: "PUT",
-          data: {...user, old_username: username},
+          data: { ...user, old_username: username },
         })
       );
       if (error) throw new Error(message);

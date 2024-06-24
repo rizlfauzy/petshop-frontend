@@ -3,8 +3,9 @@ import Login from "./pages/Login";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import ChangePassword from "./pages/ChangePassword";
-import MasterGrup from "./pages/MasterGrup";
-import MasterUser from "./pages/MasterUser";
+import MasterGrup from "./pages/Master/MasterGrup";
+import MasterUser from "./pages/Master/MasterUser";
+import MasterSatuan from "./pages/Master/MasterSatuan";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -42,6 +43,14 @@ function App() {
           element={
             <Main title={"MASTER USER"}>
               <MasterUser icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER USER"} />
+            </Main>
+          }
+        />
+        <Route
+          path={`${VITE_PREFIX}master-satuan`}
+          element={
+            <Main title={"MASTER SATUAN"}>
+              <MasterSatuan icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER SATUAN"} />
             </Main>
           }
         />

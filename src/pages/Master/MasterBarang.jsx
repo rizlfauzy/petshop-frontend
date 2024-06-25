@@ -6,7 +6,7 @@ import useAlert from "../../hooks/useAlert";
 import { get_data, fetch_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faPercent, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { set_show_modal, set_show_kategori, set_show_satuan, set_show_barang } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
@@ -17,6 +17,7 @@ export default function MasterBarang({ icon, title }) {
   const aktif_row = useRef(null);
   const btn_save = useRef(null);
   const btn_update = useRef(null);
+  const textarea_keterangan = useRef(null);
   const [kode_satuan, set_kode_satuan] = useState("");
   const [kode_kategori, set_kode_kategori] = useState("");
   const [barcode, set_barcode] = useState("");
@@ -98,7 +99,7 @@ export default function MasterBarang({ icon, title }) {
           })
         );
         if (error) throw new Error(message);
-        set_barang((prev) => ({ ...prev, ...data }));
+        set_barang((prev) => ({ ...prev, ...data, disc: format_disc(data.disc), harga_jual: format_rupiah(data.harga_jual), harga_modal: format_rupiah(data.harga_modal), min_stock: format_rupiah(data.min_stock, {}) }));
         set_satuan((prev) => ({ ...prev, kode_satuan: data.kode_satuan, nama_satuan: data.nama_satuan }));
         set_kategori((prev) => ({ ...prev, kode_kategori: data.kode_kategori, nama_kategori: data.nama_kategori }));
       } catch (e) {
@@ -122,11 +123,28 @@ export default function MasterBarang({ icon, title }) {
 
   const handle_change_barang = useCallback((e) => {
     const { name, value } = e.target;
+    if (name == "min_stock" || name == "disc" || name == "harga_jual" || name == "harga_modal") {
+      if (isNaN(Number(value))) e.target.value = value.substr(0, value.length - 1);
+      const arr_value = value.split("");
+      const first_val = arr_value[0];
+      if (first_val == 0) {
+        arr_value.shift();
+        e.target.value = arr_value.join("");
+      }
+      const result_value = arr_value.map((e) => Number(e)).join("");
+      e.target.value = result_value.replace(/NaN/gi, "");
+      if (e.target.value.length < 1) e.target.value = 0;
+      set_barang((prev) => ({
+        ...prev,
+        [name]: name == "disc" ? format_disc(e.target.value) : name == "min_stock" ? format_rupiah(e.target.value, {}) : format_rupiah(e.target.value),
+      }));
+      return;
+    }
     set_barang((prev) => ({
       ...prev,
       [name]: value === "true" ? true : value === "false" ? false : value,
     }));
-  }, []);
+  }, [format_rupiah, format_disc]);
 
   const handle_change_satuan = useCallback((e) => {
     const { name, value } = e.target;
@@ -222,7 +240,7 @@ export default function MasterBarang({ icon, title }) {
             authorization: `Bearer ${session.token}`,
           },
           method: "PUT",
-          data: barang,
+          data: {...barang, old_barcode: barcode},
         })
       );
       if (error) throw new Error(message);
@@ -231,11 +249,68 @@ export default function MasterBarang({ icon, title }) {
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [run, session, barang, swalAlert, handle_clear]);
+  }, [run, session, barang, swalAlert, handle_clear, barcode]);
+
+  const handle_export = useCallback(async () => {
+    // set json to array on array
+    const data = [
+      [
+        "Barcode",
+        "Nama",
+        "Kode Satuan",
+        "Nama Satuan",
+        "Kode Kategori",
+        "Nama Kategori",
+        "Min Stock",
+        "Disc",
+        "Harga Jual",
+        "Harga Modal",
+        "Keterangan",
+        "Aktif",
+      ]
+    ];
+    try {
+      const { error, message, data:res } = await run(get_data({
+        url: "/goods",
+        headers: {
+          authorization: `Bearer ${session.token}`,
+        },
+      }))
+      if (error) throw new Error(message);
+      res.forEach(item => {
+        data.push([
+          item.barcode,
+          item.nama,
+          item.kode_satuan,
+          item.nama_satuan,
+          item.kode_kategori,
+          item.nama_kategori,
+          item.min_stock,
+          item.disc,
+          item.harga_jual,
+          item.harga_modal,
+          item.keterangan,
+          item.aktif,
+        ]);
+      });
+      console.log(data);
+    } catch (e) {
+      swalAlert(e.message, "error")
+    }
+   }, [run, session, swalAlert]);
+
+  const handle_keterangan = useCallback((e) => {
+    const textarea = e.target;
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }, []);
 
   return (
     <>
       <HeaderPage icon={icon} title={title}>
+        <button id="export" className="btn-sm bg-green-600 hover:bg-green-800 active:bg-green-950 text-white" onClick={handle_export}>
+          <FontAwesomeIcon icon={faFileExcel} className="mr-[10px]" />Export
+        </button>
         <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
           <i className="far fa-save mr-[10px]"></i>Save
         </button>
@@ -312,7 +387,7 @@ export default function MasterBarang({ icon, title }) {
                         MIN. STOK
                       </label>
                     </div>
-                    <input value={format_rupiah(barang.min_stock, {})} onChange={handle_change_barang} type="text" className="form-control col-half" name="min_stock" id="min_stock" required placeholder="MINIMAL STOCK" />
+                    <input value={barang.min_stock} onChange={handle_change_barang} type="text" className="form-control col-half" name="min_stock" id="min_stock" required placeholder="MINIMAL STOCK" />
                   </div>
                   <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
@@ -320,7 +395,12 @@ export default function MasterBarang({ icon, title }) {
                         DISC. ITEM
                       </label>
                     </div>
-                    <input value={format_disc(barang.disc)} onChange={handle_change_barang} type="text" className="form-control col-half" name="disc" id="disc" required placeholder="DISKON ITEM" />
+                    <div className="relative col-half !px-0">
+                      <input value={barang.disc} onChange={handle_change_barang} type="text" className="form-control" name="disc" id="disc" required placeholder="DISKON ITEM" />
+                      <button className="btn_absolute_right hover:text-primary !cursor-auto" type="button">
+                        <FontAwesomeIcon icon={faPercent} />
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="row my-2">
@@ -330,7 +410,7 @@ export default function MasterBarang({ icon, title }) {
                         HARGA JUAL
                       </label>
                     </div>
-                    <input value={format_rupiah(barang.harga_jual)} onChange={handle_change_barang} type="text" className="form-control col-half" name="harga_jual" id="harga_jual" required placeholder="HARGA JUAL" />
+                    <input value={barang.harga_jual} onChange={handle_change_barang} type="text" className="form-control col-half" name="harga_jual" id="harga_jual" required placeholder="HARGA JUAL" />
                   </div>
                   <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
@@ -338,7 +418,7 @@ export default function MasterBarang({ icon, title }) {
                         HARGA MODAL
                       </label>
                     </div>
-                    <input value={format_rupiah(barang.harga_modal)} onChange={handle_change_barang} type="text" className="form-control col-half" name="harga_modal" id="harga_modal" required placeholder="HARGA MODAL" />
+                    <input value={barang.harga_modal} onChange={handle_change_barang} type="text" className="form-control col-half" name="harga_modal" id="harga_modal" required placeholder="HARGA MODAL" />
                   </div>
                 </div>
                 <div className="row my-2">
@@ -348,7 +428,17 @@ export default function MasterBarang({ icon, title }) {
                         Keterengan
                       </label>
                     </div>
-                    <textarea name="keterangan" id="keterangan" className="form-control col-thirdperfour" placeholder="Informasi ..." value={barang.keterangan} onInput={handle_change_barang}></textarea>
+                    <textarea
+                      ref={textarea_keterangan}
+                      name="keterangan"
+                      id="keterangan"
+                      className="form-control col-thirdperfour"
+                      rows={5}
+                      placeholder="Informasi ..."
+                      value={barang.keterangan}
+                      onInput={handle_change_barang}
+                      onKeyDown={handle_keterangan}
+                    ></textarea>
                   </div>
                 </div>
                 <div className="row my-2 !hidden" ref={aktif_row}>
@@ -451,7 +541,7 @@ export default function MasterBarang({ icon, title }) {
               keyword: "",
               func_item: {
                 aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
-                disc: (item) => format_rupiah(item.disc, {}) + "%",
+                disc: (item) => format_disc(item.disc) + "%",
                 harga_jual: (item) => format_rupiah(item.harga_jual),
                 harga_modal: (item) => format_rupiah(item.harga_modal),
                 min_stock: (item) => format_rupiah(item.min_stock, {}),

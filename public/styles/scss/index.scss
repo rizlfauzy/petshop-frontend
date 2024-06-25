@@ -489,7 +489,7 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
   flex-wrap: wrap;
   align-items: stretch;
   width: 100%;
-  .form-control {
+  .form-control:not(textarea) {
     height: 29px;
   }
 }
@@ -762,7 +762,9 @@ select.form-control,
 .form-control {
   display: block;
   width: 100%;
-  height: calc(1.5rem + 2px);
+  &:not(textarea) {
+    height: calc(1.5rem + 2px);
+  }
   padding: 0.375rem 0.75rem;
   font-size: 0.813rem;
   line-height: 1.5;

@@ -782,16 +782,16 @@ video {
   cursor: pointer;
 }
 
+.\!cursor-auto {
+  cursor: auto !important;
+}
+
 .resize {
   resize: both;
 }
 
 .flex-wrap {
   flex-wrap: wrap;
-}
-
-.items-start {
-  align-items: flex-start;
 }
 
 .\!items-start {
@@ -869,6 +869,11 @@ video {
 .bg-slate-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+}
+
+.bg-green-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
 .\!p-2 {
@@ -1532,7 +1537,7 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
   width:100%
 }
 
-.input-group .form-control{
+.input-group .form-control:not(textarea){
   height:29px
 }
 
@@ -1764,7 +1769,6 @@ input.form-control,select.form-control,.select2{
 .form-control{
   display:block;
   width:100%;
-  height:calc(1.5rem + 2px);
   padding:.375rem .75rem;
   font-size:.813rem;
   line-height:1.5;
@@ -1774,6 +1778,10 @@ input.form-control,select.form-control,.select2{
   border:1px solid #ced4da;
   border-radius:.25rem;
   transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out
+}
+
+.form-control:not(textarea){
+  height:calc(1.5rem + 2px)
 }
 
 textarea.form-control{
@@ -2563,6 +2571,11 @@ input.form-control[type=radio]{
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-green-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 101 52 / var(--tw-bg-opacity));
+}
+
 .hover\:text-gray-900:hover {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
@@ -2581,6 +2594,11 @@ input.form-control[type=radio]{
 .active\:bg-green-800:active {
   --tw-bg-opacity: 1;
   background-color: rgb(22 101 52 / var(--tw-bg-opacity));
+}
+
+.active\:bg-green-950:active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(5 46 22 / var(--tw-bg-opacity));
 }
 
 .active\:text-red-900:active {

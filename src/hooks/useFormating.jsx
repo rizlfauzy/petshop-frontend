@@ -30,5 +30,9 @@ export default function useFormating() {
     return prefix === undefined ? rupiah : rupiah ? prefix + rupiah : "";
   };
 
-  return { format_rupiah, format_disc, val_format_rupiah };
+  const ext_exclude = (text, ...exts) => {
+    return exts.some((ext) => text.endsWith(ext));
+  }
+
+  return { format_rupiah, format_disc, val_format_rupiah, ext_exclude };
 }

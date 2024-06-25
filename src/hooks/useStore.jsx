@@ -11,6 +11,7 @@ const conf = createSlice({
     show_modal_satuan: false,
     show_modal_kategori: false,
     show_modal_barang: false,
+    show_modal_import: false,
     show_loading: false,
     graph: null,
   },
@@ -43,6 +44,9 @@ const conf = createSlice({
     set_show_barang: (state, action) => {
       state.show_modal_barang = action.payload;
     },
+    set_show_import: (state, action) => {
+      state.show_modal_import = action.payload;
+    },
     set_hide_all_modal: (state) => {
       state.show_modal = false;
       state.show_modal_logout = false;
@@ -51,6 +55,7 @@ const conf = createSlice({
       state.show_modal_satuan = false;
       state.show_modal_kategori = false;
       state.show_modal_barang = false;
+      state.show_modal_import = false;
     },
     set_show_loading: (state, action) => {
       state.show_loading = action.payload;
@@ -67,5 +72,5 @@ const store = configureStore({
   },
 });
 
-export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang } = conf.actions;
+export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang, set_show_import } = conf.actions;
 export default store;

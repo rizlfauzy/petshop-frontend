@@ -6,13 +6,14 @@ import useAlert from "../../hooks/useAlert";
 import { get_data, fetch_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPercent, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faPercent, faFileExcel, faFileImport } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_modal, set_show_kategori, set_show_satuan, set_show_barang } from "../../hooks/useStore";
+import { set_show_modal, set_show_kategori, set_show_satuan, set_show_barang, set_show_import } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
 import useFormating from "../../hooks/useFormating";
-
+import ModalImport from "../../components/main/ModalImport";
+const { VITE_BACKEND } = import.meta.env;
 export default function MasterBarang({ icon, title }) {
   const aktif_row = useRef(null);
   const btn_save = useRef(null);
@@ -50,7 +51,7 @@ export default function MasterBarang({ icon, title }) {
   const { run } = useAsync();
   const { swalAlert } = useAlert();
   const dispatch = useDispatch();
-  const { show_modal_satuan, show_modal_kategori, show_modal_barang, show_modal } = useSelector((state) => state.conf);
+  const { show_modal_satuan, show_modal_kategori, show_modal_barang, show_modal, show_modal_import } = useSelector((state) => state.conf);
   const { format_rupiah, format_disc } = useFormating();
 
   useEffect(() => {
@@ -121,30 +122,33 @@ export default function MasterBarang({ icon, title }) {
     }
   }, [is_selected_satuan, is_selected_kategori, is_selected_barang, kode_satuan, kode_kategori, barcode]);
 
-  const handle_change_barang = useCallback((e) => {
-    const { name, value } = e.target;
-    if (name == "min_stock" || name == "disc" || name == "harga_jual" || name == "harga_modal") {
-      if (isNaN(Number(value))) e.target.value = value.substr(0, value.length - 1);
-      const arr_value = value.split("");
-      const first_val = arr_value[0];
-      if (first_val == 0) {
-        arr_value.shift();
-        e.target.value = arr_value.join("");
+  const handle_change_barang = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      if (name == "min_stock" || name == "disc" || name == "harga_jual" || name == "harga_modal") {
+        if (isNaN(Number(value))) e.target.value = value.substr(0, value.length - 1);
+        const arr_value = value.split("");
+        const first_val = arr_value[0];
+        if (first_val == 0) {
+          arr_value.shift();
+          e.target.value = arr_value.join("");
+        }
+        const result_value = arr_value.map((e) => Number(e)).join("");
+        e.target.value = result_value.replace(/NaN/gi, "");
+        if (e.target.value.length < 1) e.target.value = 0;
+        set_barang((prev) => ({
+          ...prev,
+          [name]: name == "disc" ? format_disc(e.target.value) : name == "min_stock" ? format_rupiah(e.target.value, {}) : format_rupiah(e.target.value),
+        }));
+        return;
       }
-      const result_value = arr_value.map((e) => Number(e)).join("");
-      e.target.value = result_value.replace(/NaN/gi, "");
-      if (e.target.value.length < 1) e.target.value = 0;
       set_barang((prev) => ({
         ...prev,
-        [name]: name == "disc" ? format_disc(e.target.value) : name == "min_stock" ? format_rupiah(e.target.value, {}) : format_rupiah(e.target.value),
+        [name]: value === "true" ? true : value === "false" ? false : value,
       }));
-      return;
-    }
-    set_barang((prev) => ({
-      ...prev,
-      [name]: value === "true" ? true : value === "false" ? false : value,
-    }));
-  }, [format_rupiah, format_disc]);
+    },
+    [format_rupiah, format_disc]
+  );
 
   const handle_change_satuan = useCallback((e) => {
     const { name, value } = e.target;
@@ -240,7 +244,7 @@ export default function MasterBarang({ icon, title }) {
             authorization: `Bearer ${session.token}`,
           },
           method: "PUT",
-          data: {...barang, old_barcode: barcode},
+          data: { ...barang, old_barcode: barcode },
         })
       );
       if (error) throw new Error(message);
@@ -252,52 +256,30 @@ export default function MasterBarang({ icon, title }) {
   }, [run, session, barang, swalAlert, handle_clear, barcode]);
 
   const handle_export = useCallback(async () => {
-    // set json to array on array
-    const data = [
-      [
-        "Barcode",
-        "Nama",
-        "Kode Satuan",
-        "Nama Satuan",
-        "Kode Kategori",
-        "Nama Kategori",
-        "Min Stock",
-        "Disc",
-        "Harga Jual",
-        "Harga Modal",
-        "Keterangan",
-        "Aktif",
-      ]
-    ];
     try {
-      const { error, message, data:res } = await run(get_data({
-        url: "/goods",
-        headers: {
-          authorization: `Bearer ${session.token}`,
-        },
-      }))
+      const { error, message, file } = await run(
+        get_data({
+          url: "/goods/excel",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
       if (error) throw new Error(message);
-      res.forEach(item => {
-        data.push([
-          item.barcode,
-          item.nama,
-          item.kode_satuan,
-          item.nama_satuan,
-          item.kode_kategori,
-          item.nama_kategori,
-          item.min_stock,
-          item.disc,
-          item.harga_jual,
-          item.harga_modal,
-          item.keterangan,
-          item.aktif,
-        ]);
-      });
-      console.log(data);
+      const a = document.createElement("a");
+      a.href = `${VITE_BACKEND}/${file}`;
+      a.download = file.split("/").pop();
+      a.target = "_blank";
+      a.click();
     } catch (e) {
-      swalAlert(e.message, "error")
+      swalAlert(e.message, "error");
     }
-   }, [run, session, swalAlert]);
+  }, [run, session, swalAlert]);
+
+  const handle_modal_import = useCallback(() => {
+    dispatch(set_show_import(true));
+    dispatch(set_show_modal(true));
+  }, [dispatch]);
 
   const handle_keterangan = useCallback((e) => {
     const textarea = e.target;
@@ -309,7 +291,11 @@ export default function MasterBarang({ icon, title }) {
     <>
       <HeaderPage icon={icon} title={title}>
         <button id="export" className="btn-sm bg-green-600 hover:bg-green-800 active:bg-green-950 text-white" onClick={handle_export}>
-          <FontAwesomeIcon icon={faFileExcel} className="mr-[10px]" />Export
+          <FontAwesomeIcon icon={faFileExcel} className="mr-[10px]" />
+          Export
+        </button>
+        <button id="import" className="btn-sm bg-yellow-600 hover:bg-yellow-800 active:bg-yellow-950 text-white" onClick={handle_modal_import}>
+          <FontAwesomeIcon icon={faFileImport} className="mr-[10px]" /> Import
         </button>
         <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
           <i className="far fa-save mr-[10px]"></i>Save
@@ -562,6 +548,9 @@ export default function MasterBarang({ icon, title }) {
             </>
           </ModalMain>
         </Modal>
+      )}
+      {show_modal && show_modal_import && (
+        <ModalImport />
       )}
     </>
   );

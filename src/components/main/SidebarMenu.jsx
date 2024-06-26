@@ -35,9 +35,14 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
     dispatch(create_item(obj));
     if (!isLoading && data?.message == "Token expired") {
       setSessionData(null);
-      navigate(`${VITE_PREFIX}login`, { replace: true });
+      if (path != '') navigate(`${VITE_PREFIX}login`, { replace: true });
+      else {
+        const a = document.createElement("a");
+        a.href = `${VITE_PREFIX}login`;
+        a.click();
+      }
     }
-  }, [data, isLoading, dispatch, navigate, setSessionData]);
+  }, [data, isLoading, dispatch, navigate, setSessionData, path]);
 
   useEffect(() => {
     const arr = item?.data?.oto_menu?.map((it) => it.grupmenu);

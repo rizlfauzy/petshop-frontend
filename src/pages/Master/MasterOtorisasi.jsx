@@ -1,0 +1,127 @@
+import PropTypes from "prop-types";
+import HeaderPage from "../../components/HeaderPage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useState, useLayoutEffect, useCallback } from "react";
+import ModalSec from "../../components/ModalSec";
+import ModalMain from "../../components/main/ModalMain";
+import useAsync from "../../hooks/useAsync";
+import { get_data } from "../../hooks/useFetch";
+import useSession from "../../hooks/useSession";
+import ListMenu from "../../components/main/MasterOtorisasi/ListMenu";
+
+export default function MasterOtorisasi({ icon, title }) {
+  const [show_modal_grup, set_show_modal_grup] = useState(false);
+  const [kode_grup, set_kode_grup] = useState("");
+  const [is_selected_grup, set_is_selected_grup] = useState(false);
+  const { run } = useAsync();
+  const { session } = useSession();
+  const [grup, set_grup] = useState({
+    kode_grup: "",
+    nama_grup: "",
+  });
+
+  useLayoutEffect(() => {
+    async function get_grup() {
+      const { error, message, data } = await run(
+        get_data({
+          url: "/grup?kode=" + kode_grup,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      set_grup((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
+    }
+
+    if (is_selected_grup) {
+      get_grup();
+      set_show_modal_grup(false);
+    }
+  }, [is_selected_grup, kode_grup, run, session]);
+
+  const handle_change_grup = useCallback((e) => {
+    const { name, value } = e.target;
+    set_grup((state) => ({ ...state, [name]: value == "true" ? true : value == "false" ? false : value }));
+    set_is_selected_grup(false);
+  }, []);
+
+  return (
+    <>
+      <HeaderPage icon={icon} title={title}>
+        <button id="save" className="btn-sm bg-primary text-white">
+          <i className="far fa-save mr-[10px]"></i>Save
+        </button>
+        <button id="update" type="button" className="btn-sm bg-primary text-white">
+          <i className="far fa-money-check-edit mr-[10px]"></i>Update
+        </button>
+        <button id="clear" className="btn-sm bg-primary text-white">
+          <i className="far fa-refresh mr-[10px]"></i>Clear
+        </button>
+      </HeaderPage>
+      <div className="col-full table-responsive">
+        <div className="row">
+          <div className="sm:col-half col-full">
+            <div className="modal-content-main mb-2">
+              <div className="modal-header-main !p-2">
+                <h5 className="mb-0 text-md">OTORISASI</h5>
+              </div>
+              <div className="modal-body-main">
+                <div className="row my-2">
+                  <div className="col-full input-group">
+                    <div className="col-quarter p-0 input-group-prepend">
+                      <label htmlFor="nama_grup" className="input-group-text">
+                        NAMA GRUP
+                      </label>
+                    </div>
+                    <div className="relative col-thirdperfour !px-0">
+                      <input type="text" value={grup.nama_grup} className="form-control" name="nama_grup" id="nama_grup" placeholder="tekan tombol cari" required readOnly onChange={handle_change_grup} />
+                      <button className="btn_absolute_right hover:text-primary" type="button" onClick={set_show_modal_grup.bind(this, true)}>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="sm:col-half col-full">
+            <ListMenu />
+          </div>
+        </div>
+      </div>
+      {show_modal_grup && (
+        <ModalSec modal_title="Grup" className={["modal-md"]} btn={<></>} set_modal={set_show_modal_grup}>
+          <ModalMain
+            set={set_kode_grup}
+            is_selected={set_is_selected_grup}
+            conf={{
+              name: "grup",
+              limit: 5,
+              page: 1,
+              select: ["kode", "nama", "aktif"],
+              order: [["kode", "ASC"]],
+              where: "kode <> 'ITS' and aktif = 't'",
+              likes: ["kode", "nama"],
+              keyword: "",
+              func_item: {
+                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
+              },
+            }}
+          >
+            <th className="text-left align-middle">Action</th>
+            <th className="text-left align-middle">Kode</th>
+            <th className="text-left align-middle">Nama</th>
+            <th className="text-left align-middle">Aktif</th>
+          </ModalMain>
+        </ModalSec>
+      )}
+    </>
+  );
+}
+
+MasterOtorisasi.propTypes = {
+  icon: PropTypes.node,
+  title: PropTypes.string,
+};

@@ -8,6 +8,7 @@ import MasterUser from "./pages/Master/MasterUser";
 import MasterSatuan from "./pages/Master/MasterSatuan";
 import MasterKategori from "./pages/Master/MasterKategori";
 import MasterBarang from "./pages/Master/MasterBarang";
+import MasterOtorisasi from "./pages/Master/MasterOtorisasi";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -37,6 +38,14 @@ function App() {
           element={
             <Main title={"MASTER GRUP"}>
               <MasterGrup icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER GRUP"} />
+            </Main>
+          }
+        />
+        <Route
+          path={`${VITE_PREFIX}master-otorisasi`}
+          element={
+            <Main title={"MASTER OTORISASI"}>
+              <MasterOtorisasi icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER OTORISASI"} />
             </Main>
           }
         />

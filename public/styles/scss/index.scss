@@ -1075,7 +1075,7 @@ button.btn_alert_block.btn_deny:hover {
   width: 100%;
   font-family: sans-serif;
   margin: 25px 30px;
-  padding: 50px;
+  padding: 100px 50px;
   cursor: pointer;
 }
 #drop-area:is(.highlight, :hover) {
@@ -1367,6 +1367,7 @@ p {
 }
 
 .btn-modal {
+  background-color: $primary-color;
   &:hover {
     background: $hover-color;
     box-shadow: 0 8px 25px -8px $hover-color;

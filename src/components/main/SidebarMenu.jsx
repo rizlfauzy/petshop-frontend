@@ -35,12 +35,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
     dispatch(create_item(obj));
     if (!isLoading && data?.message == "Token expired") {
       setSessionData(null);
-      if (path != '') navigate(`${VITE_PREFIX}login`, { replace: true });
-      else {
-        const a = document.createElement("a");
-        a.href = `${VITE_PREFIX}login`;
-        a.click();
-      }
+      navigate(`${VITE_PREFIX}login`, { replace: true });
     }
   }, [data, isLoading, dispatch, navigate, setSessionData, path]);
 
@@ -76,17 +71,10 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
                   ?.filter((it) => it.grupmenu == gr.grupmenu)
                   .map((it) => (
                     <li className={`nav-sublist-item nomenu_${gr.grupmenu}`} data-tooltip={`tooltip_${it.linkdetail}`} key={it.nomenu}>
-                      {path == "" ? (
-                        <a href={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
-                          <i className={`links_icon ${it.icondetail}`}></i>
-                          <span className="links_name">{it.namamenu}</span>
-                        </a>
-                      ) : (
-                        <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
-                          <i className={`links_icon ${it.icondetail}`}></i>
-                          <span className="links_name">{it.namamenu}</span>
-                        </Link>
-                      )}
+                      <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu">
+                        <i className={`links_icon ${it.icondetail}`}></i>
+                        <span className="links_name">{it.namamenu}</span>
+                      </Link>
                     </li>
                   ))}
               </ul>

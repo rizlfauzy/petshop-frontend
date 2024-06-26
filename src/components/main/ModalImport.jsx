@@ -27,9 +27,9 @@ export default function ModalImport() {
     const gallery = gallery_ref.current;
     const btn_import = btn_import_ref.current;
 
-    file_xlsx.value = '';
-    gallery.innerHTML = '';
-    name_file.innerHTML = '';
+    file_xlsx.value = "";
+    gallery.innerHTML = "";
+    name_file.innerHTML = "";
     btn_import.disabled = true;
 
     const preview_file = (file) => {
@@ -94,11 +94,17 @@ export default function ModalImport() {
         const file = file_xlsx.files[0];
         if (!file) throw new Error("File belum tersedia !!!");
         const formData = new FormData();
-        formData.append("file", file);
-        const { error, message } = await run(fetch_file({
-          url: "/goods/import", method: "POST", headers: {
-            authorization: `Bearer ${session.token}`,
-        }, data: formData }));
+        formData.append("file_xlsx", file);
+        const { error, message } = await run(
+          fetch_file({
+            url: "/goods/import",
+            method: "POST",
+            headers: {
+              authorization: `Bearer ${session.token}`,
+            },
+            data: formData,
+          })
+        );
         if (error) throw new Error(message);
         swalAlert("Data berhasil diimport !!!", "success");
         name_file.innerHTML = "";
@@ -113,38 +119,28 @@ export default function ModalImport() {
     events.forEach((event) => {
       drop_area.addEventListener(event, event_drag, false);
     });
-
     ["dragenter", "dragover"].forEach((event) => {
       drop_area.addEventListener(event, event_enter, false);
     });
-
     ["dragleave", "drop"].forEach((event) => {
       drop_area.addEventListener(event, event_leave, false);
     });
-
     drop_area.addEventListener("drop", event_drop);
-
     file_xlsx.addEventListener("change", file_xlsx_change);
-
     btn_import.addEventListener("click", event_import);
 
     return () => {
       events.forEach((event) => {
         drop_area.removeEventListener(event, event_drag, false);
       });
-
       ["dragenter", "dragover"].forEach((event) => {
         drop_area.removeEventListener(event, event_enter, false);
       });
-
       ["dragleave", "drop"].forEach((event) => {
         drop_area.removeEventListener(event, event_leave, false);
       });
-
       drop_area.removeEventListener("drop", event_drop);
-
       file_xlsx.removeEventListener("change", file_xlsx_change);
-
       btn_import.removeEventListener("click", event_import);
     };
   });
@@ -154,7 +150,7 @@ export default function ModalImport() {
       modal_title={"Import"}
       className={["modal-md"]}
       btn={
-        <button id="import_file" className="p-2 bg-yellow-600 hover:bg-yellow-800 active:bg-yellow-950 disabled:hover:bg-yellow-400 disabled:bg-yellow-400 text-white rounded-md" disabled ref={btn_import_ref}>
+        <button id="import_file" className="p-2 text-white rounded-md btn-modal" disabled ref={btn_import_ref}>
           <FontAwesomeIcon icon={faFileImport} className="mr-[10px]" /> Import
         </button>
       }
@@ -162,23 +158,16 @@ export default function ModalImport() {
       <div className="table-responsive">
         <div className="row">
           <div className="col-full">
-            <div className="modal-content-main mb-2">
-              <div className="modal-header-main !p-2">
-                <h5 className="mb-0 text-md">Import Barang</h5>
-              </div>
-              <div className="modal-body-main">
-                <div className="row my-2">
-                  <div className="col-full input-group">
-                    <label htmlFor="file_xlsx" id="drop-area" ref={drop_area_ref}>
-                      <div className="my-form">
-                        <p>Drag dan drop file excel untuk import data barang di kotak ini atau klik kotak ini !!!</p>
-                        <input type="file" name="file_xlsx" id="file_xlsx" ref={file_xlsx_ref} />
-                      </div>
-                      <div id="gallery" ref={gallery_ref}></div>
-                      <div className="name_file" ref={name_file_ref}></div>
-                    </label>
+            <div className="row my-2">
+              <div className="col-full input-group">
+                <label htmlFor="file_xlsx" id="drop-area" ref={drop_area_ref}>
+                  <div className="my-form">
+                    <p>Drag dan drop file excel untuk import data barang di kotak ini atau klik kotak ini !!!</p>
+                    <input type="file" name="file_xlsx" id="file_xlsx" ref={file_xlsx_ref} />
                   </div>
-                </div>
+                  <div id="gallery" ref={gallery_ref}></div>
+                  <div className="name_file" ref={name_file_ref}></div>
+                </label>
               </div>
             </div>
           </div>

@@ -1366,6 +1366,21 @@ p {
   }
 }
 
+.btn-modal {
+  &:hover {
+    background: $hover-color;
+    box-shadow: 0 8px 25px -8px $hover-color;
+    border-color: $hover-color;
+  }
+  &:active {
+    box-shadow: 0 0 0 0.2rem rgba(71, 64, 79, 0.5);
+  }
+  &:disabled {
+    background-color: $disabled-color !important;
+    border-color: $disabled-color !important;
+  }
+}
+
 .btn_absolute_right {
   position: absolute;
   right: 0;

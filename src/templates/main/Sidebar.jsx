@@ -4,7 +4,7 @@ import { useRef, useCallback, useState } from "react";
 import { set_show_modal, set_show_logout } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
 import useAlert from "../../hooks/useAlert";
 import DataSaver from "../../components/main/DataSaver";
@@ -26,8 +26,6 @@ export default function Sidebar() {
   const { session, setSessionData } = useSession();
   const { swalAlert } = useAlert();
   const [showDropdown, setShowDropdown] = useState(false);
-  const location = useLocation();
-  const path = location.pathname.split("/").pop();
 
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");
@@ -60,16 +58,11 @@ export default function Sidebar() {
       if (error) throw new Error(message);
       swalAlert(message, "success");
       setSessionData(null);
-      if (path != "") navigate(`${VITE_PREFIX}login`, { replace: true });
-      else {
-        const a = document.createElement("a");
-        a.href = `${VITE_PREFIX}login`;
-        a.click();
-      }
+      navigate(`${VITE_PREFIX}login`, { replace: true });
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [dispatch, run, session, setSessionData, swalAlert, navigate, path]);
+  }, [dispatch, run, session, setSessionData, swalAlert, navigate]);
 
   return (
     <>

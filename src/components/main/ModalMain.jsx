@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback, useLayoutEffect } from "react";
 import useAlert from "../../hooks/useAlert";
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
@@ -95,7 +95,7 @@ export default function ModalMain({ set, is_selected, conf, children }) {
     on_find_data("", limit, page);
   }, [on_find_data, limit, page]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     set_colspan(tr_head?.current?.children.length);
     set_keyword("");
     input_list?.current?.focus();

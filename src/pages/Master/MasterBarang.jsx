@@ -71,6 +71,7 @@ export default function MasterBarang({ icon, title }) {
         );
         if (error) throw new Error(message);
         set_satuan((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
+        set_barang((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
       } catch (e) {
         swalAlert(e.message, "error");
       }
@@ -88,6 +89,7 @@ export default function MasterBarang({ icon, title }) {
         );
         if (error) throw new Error(message);
         set_kategori((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
+        set_barang((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
       } catch (e) {
         swalAlert(e.message, "error");
       }
@@ -119,7 +121,7 @@ export default function MasterBarang({ icon, title }) {
       btn_save.current.disabled = true;
       btn_update.current.disabled = false;
       aktif_row.current.classList.remove("!hidden");
-    } else {
+    } else if (!is_selected_barang) {
       btn_save.current.disabled = false;
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");

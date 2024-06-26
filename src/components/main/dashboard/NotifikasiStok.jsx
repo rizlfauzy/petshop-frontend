@@ -1,27 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import useSocketIo from "../../../hooks/useSocketIo";
-import { useState, useLayoutEffect, useEffect, useCallback } from "react";
+import { useState, useLayoutEffect, useCallback } from "react";
 import useAlert from "../../../hooks/useAlert";
+import useSocket from "../../../hooks/useSocket";
 
 export default function NotifikasiStok() {
   moment.locale("id");
   const [goods, setGoods] = useState(null);
-  const { run_socket, is_loading_socket, data_socket } = useSocketIo();
   const periode = moment().format("YYYYMM");
-  const {swalAlert} = useAlert();
+  const { swalAlert } = useAlert();
+  const socket = useSocket("notif", (res) => {
+    setGoods(res);
+  });
 
   useLayoutEffect(() => {
-    run_socket("notif", {
-      periode,
-    });
-  }, []);
-
-  useEffect(() => {
-    const obj = !is_loading_socket ? data_socket : null;
-    setGoods(obj);
-  }, [data_socket, is_loading_socket]);
+    socket.emit("notif", { periode });
+  }, [periode, socket]);
 
   const on_delete_notif = useCallback((barcode) => {
     try {

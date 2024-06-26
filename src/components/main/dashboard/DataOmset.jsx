@@ -1,31 +1,26 @@
-import { useEffect, useLayoutEffect, useCallback, useState, useRef } from "react";
-import useSocketIo from "../../../hooks/useSocketIo";
+import { useEffect, useCallback, useState, useRef, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chart from "./Chart";
 import { set_show_loading, set_graph } from "../../../hooks/useStore";
 import useFormating from "../../../hooks/useFormating";
 import moment from "moment";
+import useSocket from "../../../hooks/useSocket";
 
 export default function DataOmset() {
   const span_year = useRef(null);
   const btn_prev = useRef(null);
   const btn_next = useRef(null);
   const [graphState, setGraphState] = useState(null);
-  const { run_socket, is_loading_socket, data_socket } = useSocketIo();
   const dispatch = useDispatch();
   const graph = useSelector((state) => state.conf.graph);
   const { format_rupiah } = useFormating();
+  const socket = useSocket("graph", (res) => {
+    setGraphState(res);
+  })
 
   useLayoutEffect(() => {
-    run_socket("graph", {
-      year: span_year.current.innerText,
-    });
-  }, []);
-
-  useEffect(() => {
-    const obj = !is_loading_socket ? data_socket : null;
-    setGraphState(obj);
-  }, [is_loading_socket, data_socket, setGraphState]);
+    socket.emit("graph", { year: span_year.current.innerText })
+  }, [socket])
 
   useEffect(() => {
     dispatch(set_show_loading(true));
@@ -78,10 +73,11 @@ export default function DataOmset() {
 
     if (span_year.current.innerHTML == new Date().getFullYear()) btn_next.current.disabled = true;
     else btn_next.current.disabled = false;
-    run_socket("graph", {
-      year: span_year.current.innerHTML,
-    });
-  }, [run_socket]);
+    // run_socket("graph", {
+    //   year: span_year.current.innerHTML,
+    // });
+    socket.emit("graph", { year: span_year.current.innerHTML });
+  }, [socket]);
 
   return (
     <div className="modal-content-main mb-2">

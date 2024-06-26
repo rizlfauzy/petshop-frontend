@@ -1,27 +1,24 @@
-import useSocketIo from "../../hooks/useSocketIo";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect,useLayoutEffect, useRef, useCallback } from "react";
 import useAsync from "../../hooks/useAsync";
 import useAlert from "../../hooks/useAlert";
 import { fetch_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
+import useSocket from "../../hooks/useSocket";
 
 export default function Informasi() {
   const [info, setInfo] = useState(null);
-  const { run_socket, is_loading_socket, data_socket } = useSocketIo();
   const { swalAlert } = useAlert();
   const textarea_info = useRef(null);
   const btn_submit = useRef(null);
   const { run } = useAsync();
   const { session } = useSession();
+  const socket = useSocket("info", (res) => {
+    setInfo(res);
+  });
 
-  useEffect(() => {
-    run_socket("info", {});
-  }, []);
-
-  useEffect(() => {
-    const obj = !is_loading_socket ? data_socket : null;
-    setInfo(obj);
-  }, [data_socket, is_loading_socket]);
+  useLayoutEffect(() => {
+    socket.emit("info");
+  }, [socket]);
 
   useEffect(() => {
     if (!info) return;

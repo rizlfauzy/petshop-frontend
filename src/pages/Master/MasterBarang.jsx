@@ -13,7 +13,10 @@ import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
 import useFormating from "../../hooks/useFormating";
 import ModalImport from "../../components/main/ModalImport";
+import useSocket from "../../hooks/useSocket";
+import moment from "moment";
 const { VITE_BACKEND } = import.meta.env;
+
 export default function MasterBarang({ icon, title }) {
   const aktif_row = useRef(null);
   const btn_save = useRef(null);
@@ -53,6 +56,7 @@ export default function MasterBarang({ icon, title }) {
   const dispatch = useDispatch();
   const { show_modal_satuan, show_modal_kategori, show_modal_barang, show_modal, show_modal_import } = useSelector((state) => state.conf);
   const { format_rupiah, format_disc } = useFormating();
+  const socket = useSocket("notif");
 
   useEffect(() => {
     async function get_satuan() {
@@ -229,11 +233,12 @@ export default function MasterBarang({ icon, title }) {
       );
       if (error) throw new Error(message);
       swalAlert(message, "success");
+      socket.emit("notif", { periode: moment().format("YYYYMM") });
       handle_clear();
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [run, session, barang, swalAlert, handle_clear]);
+  }, [run, session, barang, swalAlert, handle_clear, socket]);
 
   const handle_update = useCallback(async () => {
     try {
@@ -249,11 +254,12 @@ export default function MasterBarang({ icon, title }) {
       );
       if (error) throw new Error(message);
       swalAlert(message, "success");
+      socket.emit("notif", { periode: moment().format("YYYYMM") });
       handle_clear();
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [run, session, barang, swalAlert, handle_clear, barcode]);
+  }, [run, session, barang, swalAlert, handle_clear, barcode, socket]);
 
   const handle_export = useCallback(async () => {
     try {
@@ -312,7 +318,7 @@ export default function MasterBarang({ icon, title }) {
       </HeaderPage>
       <div className="col-full table-responsive">
         <div className="row">
-          <div className="col-half">
+          <div className="sm:col-half col-full">
             <div className="modal-content-main mb-2">
               <div className="modal-header-main !p-2">
                 <h5 className="mb-0 text-lg">BARANG</h5>

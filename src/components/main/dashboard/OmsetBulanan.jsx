@@ -1,27 +1,21 @@
 import moment from "moment";
-import useSocketIo from "../../../hooks/useSocketIo";
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import useFormating from "../../../hooks/useFormating";
+import useSocket from "../../../hooks/useSocket";
 
 export default function OmsetBulanan() {
   moment.locale("id");
   const [dataOmset, setDataOmset] = useState(null);
-  const { run_socket, is_loading_socket, data_socket } = useSocketIo();
   const firstDay = moment().startOf("month").format("YYYY-MM-DD");
   const today = moment().format("YYYY-MM-DD");
   const { format_rupiah } = useFormating();
+  const socket = useSocket("omset", (res) => {
+    setDataOmset(res);
+  });
 
   useLayoutEffect(() => {
-    run_socket("omset", {
-      start: firstDay,
-      end: today,
-    });
-  }, []);
-
-  useEffect(() => {
-    const obj = !is_loading_socket ? data_socket : null;
-    setDataOmset(obj);
-  }, [data_socket, is_loading_socket]);
+    socket.emit("omset", { start: firstDay, end: today });
+  }, [firstDay, socket, today]);
 
   return (
     <div className="modal-content-main mb-2">

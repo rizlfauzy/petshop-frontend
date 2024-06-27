@@ -5,6 +5,8 @@
 $primary-color: #402218;
 $secondary-color: #16c7ff;
 $hover-color: #47404f;
+$hover-table-color: #f99371;
+$clicked-table-color: #884d3a;
 $disabled-color: #a7a7a7;
 
 div.container {
@@ -1120,11 +1122,11 @@ p {
 
 .tr_checkbox:hover {
   cursor: pointer;
-  background-color: #f99371 !important;
+  background-color: $hover-table-color !important;
 }
 
 .clicked-event {
-  background: #884d3a !important;
+  background: $clicked-table-color!important;
   color: #ffffff !important;
   /* Add more styles as desired */
   border-bottom: 1px solid #eaeaea !important;
@@ -1480,7 +1482,7 @@ p {
   }
 }
 
-input.form-control[type="radio"] {
+input.form-control:is([type="radio"], [type="checkbox"]) {
   width: 20px;
   height: 20px;
   accent-color: $primary-color;

@@ -2567,7 +2567,7 @@ p{
   border-bottom-right-radius:.25rem
 }
 
-input.form-control[type=radio]{
+input.form-control:is([type=radio],[type=checkbox]){
   width:20px;
   height:20px;
   accent-color:#402218;

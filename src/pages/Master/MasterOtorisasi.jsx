@@ -6,16 +6,19 @@ import { useState, useLayoutEffect, useCallback } from "react";
 import ModalSec from "../../components/ModalSec";
 import ModalMain from "../../components/main/ModalMain";
 import useAsync from "../../hooks/useAsync";
-import { get_data } from "../../hooks/useFetch";
+import { fetch_data, get_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
+import useAlert from "../../hooks/useAlert";
 import ListMenu from "../../components/main/MasterOtorisasi/ListMenu";
 
 export default function MasterOtorisasi({ icon, title }) {
   const [show_modal_grup, set_show_modal_grup] = useState(false);
   const [kode_grup, set_kode_grup] = useState("");
   const [is_selected_grup, set_is_selected_grup] = useState(false);
+  const [list_menu, set_list_menu] = useState([]);
   const { run } = useAsync();
   const { session } = useSession();
+  const {swalAlert} = useAlert();
   const [grup, set_grup] = useState({
     kode_grup: "",
     nama_grup: "",
@@ -33,8 +36,21 @@ export default function MasterOtorisasi({ icon, title }) {
       set_grup((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
     }
 
+    async function get_menu() {
+      const { error, message, data } = await run(
+        get_data({
+          url: "/otority/menu?grup=" + kode_grup,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      if (data.length > 0) set_list_menu([...data]);
+      else set_list_menu([]);
+    }
+
     if (is_selected_grup) {
       get_grup();
+      get_menu();
       set_show_modal_grup(false);
     }
   }, [is_selected_grup, kode_grup, run, session]);
@@ -45,14 +61,26 @@ export default function MasterOtorisasi({ icon, title }) {
     set_is_selected_grup(false);
   }, []);
 
+  const handle_save = useCallback(async () => {
+    try {
+      const { error, message } = await run(fetch_data({
+        url: "/otority/menu",
+        method: "POST",
+        headers: { authorization: `Bearer ${session.token}` },
+        data: { kode_grup, menus: JSON.stringify(list_menu)}
+      }))
+      if (error) throw new Error(message);
+      swalAlert("success", "Data berhasil disimpan");
+    } catch (error) {
+      swalAlert("error", error.message);
+    }
+  },[list_menu, swalAlert, run, session, kode_grup]);
+
   return (
     <>
       <HeaderPage icon={icon} title={title}>
-        <button id="save" className="btn-sm bg-primary text-white">
+        <button id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
           <i className="far fa-save mr-[10px]"></i>Save
-        </button>
-        <button id="update" type="button" className="btn-sm bg-primary text-white">
-          <i className="far fa-money-check-edit mr-[10px]"></i>Update
         </button>
         <button id="clear" className="btn-sm bg-primary text-white">
           <i className="far fa-refresh mr-[10px]"></i>Clear
@@ -87,7 +115,7 @@ export default function MasterOtorisasi({ icon, title }) {
         </div>
         <div className="row">
           <div className="sm:col-half col-full">
-            <ListMenu />
+            <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} />
           </div>
         </div>
       </div>

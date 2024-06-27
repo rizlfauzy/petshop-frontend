@@ -1,12 +1,14 @@
 import useAsync from "../../../hooks/useAsync";
 import { get_data } from "../../../hooks/useFetch";
 import useSession from "../../../hooks/useSession";
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useLayoutEffect, useEffect, useCallback } from "react";
+import PropTypes from "prop-types";
 
-export default function ListMenu() {
+export default function ListMenu({list_menu,set_list_menu}) {
   const { run, isLoading, data } = useAsync();
   const { session } = useSession();
   const [menu, setMenu] = useState(null);
+  const [keyword, set_keyword] = useState('');
 
   useLayoutEffect(() => {
     run(
@@ -21,6 +23,40 @@ export default function ListMenu() {
     const obj = isLoading ? null : data;
     setMenu(obj);
   }, [data, isLoading]);
+
+  const checked_menu = useCallback(e => {
+    const tr = e.target.parentElement;
+    if (!tr.classList.contains('tr_checkbox')) return;
+    tr.classList.toggle('clicked-event')
+    const nomenu = tr.children[1].innerHTML;
+    const namamenu = tr.children[2].innerHTML;
+    const grupmenu = tr.children[3].innerHTML;
+    const add = tr.children[4].children[0].children[0].children[0].checked;
+    const update = tr.children[5].children[0].children[0].children[0].checked;
+    const cancel = tr.children[6].children[0].children[0].children[0].checked;
+    if (tr.classList.contains('clicked-event')) set_list_menu((prev) => [...prev, { nomenu, namamenu, grupmenu, add, update, cancel }]);
+    else set_list_menu((prev) => prev.filter((item) => item.nomenu !== nomenu));
+  }, [set_list_menu])
+
+  const handle_search = useCallback(async (e) => {
+    set_keyword(e.target.value);
+    const { error, message } = await run(get_data({
+      url: "/otority/find-menu?q=" + e.target.value,
+      headers: {
+        authorization: `Bearer ${session.token}`
+      }
+    }));
+    if (error) throw new Error(message);
+  }, [run, session])
+
+  const handle_change_checkbox = useCallback((e) => {
+    const tr = e.target.parentElement.parentElement.parentElement.parentElement;
+    const nomenu = tr.children[1].innerHTML;
+    const add = tr.children[4].children[0].children[0].children[0].checked;
+    const update = tr.children[5].children[0].children[0].children[0].checked;
+    const cancel = tr.children[6].children[0].children[0].children[0].checked;
+    set_list_menu((prev) => prev.map((item) => item.nomenu === nomenu ? { ...item, add, update, cancel } : item));
+  }, [set_list_menu]);
 
   return (
     <div className="modal-content-main mb-2">
@@ -39,7 +75,7 @@ export default function ListMenu() {
                     </label>
                   </div>
                   <div className="relative col-half !px-0">
-                    <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." required />
+                    <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} required />
                     <button className="btn_absolute_right hover:text-primary" type="button">
                       <i className="far fa-times"></i>
                     </button>
@@ -48,31 +84,62 @@ export default function ListMenu() {
               </div>
             </div>
             <div className="row table-scroll mb-2">
-              <table className="table-modal table-bordered table-striped">
+              <table className="table-modal table-bordered table-striped penomoran">
                 <thead className="thead-dark">
                   <tr className="tr_head">
                     <th className="text-left align-middle">Nomor</th>
                     <th className="text-left align-middle">Kode Menu</th>
                     <th className="text-left align-middle">Nama Menu</th>
                     <th className="text-left align-middle">Grup Menu</th>
+                    <th className="text-left align-middle">Add</th>
+                    <th className="text-left align-middle">Update</th>
+                    <th className="text-left align-middle">Cancel</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {!isLoading ?
-                    menu?.data?.map((item, index) => (
-                      <tr key={item.nomenu}>
-                        <td className="text-left align-middle">{index + 1}</td>
-                        <td className="text-left align-middle">{item.nomenu}</td>
-                        <td className="text-left align-middle">{item.namamenu}</td>
-                        <td className="text-left align-middle">{item.grupmenu}</td>
-                      </tr>
-                    )) : (
-                      <tr>
-                        <td colSpan={4} className="text-center">
-                          loading...
-                        </td>
-                      </tr>
-                    )}
+                  {!isLoading ? (
+                    menu?.data?.map((item) => {
+                      const is_checked = list_menu.some((menu) => menu.nomenu === item.nomenu);
+                      const checked_add = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).add : false;
+                      const checked_update = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).update : false;
+                      const checked_cancel = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).cancel : false;
+                      return (
+                        <tr key={item.nomenu} className={`tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
+                          <td className="text-left align-middle"></td>
+                          <td className="text-left align-middle">{item.nomenu}</td>
+                          <td className="text-left align-middle">{item.namamenu}</td>
+                          <td className="text-left align-middle">{item.grupmenu}</td>
+                          <td className="text-center align-middle">
+                            <div className="row">
+                              <div className="col-full flex items-center justify-center">
+                                <input type="checkbox" className="form-control" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} required />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text-left align-middle">
+                            <div className="row">
+                              <div className="col-full flex items-center justify-center">
+                                <input type="checkbox" className="form-control" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} required />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text-left align-middle">
+                            <div className="row">
+                              <div className="col-full flex items-center justify-center">
+                                <input type="checkbox" className="form-control" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} required />
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="text-center">
+                        loading...
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -82,3 +149,8 @@ export default function ListMenu() {
     </div>
   );
 }
+
+ListMenu.propTypes = {
+  set_list_menu: PropTypes.func,
+  list_menu: PropTypes.array,
+};

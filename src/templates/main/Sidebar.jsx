@@ -1,6 +1,6 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback } from "react";
 import { set_show_modal, set_show_logout } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
@@ -25,7 +25,6 @@ export default function Sidebar() {
   const li_header = useRef(null);
   const { session, setSessionData } = useSession();
   const { swalAlert } = useAlert();
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");
@@ -36,8 +35,8 @@ export default function Sidebar() {
     } else {
       btn_sidebar.current.classList.remove("bx-menu-alt-right");
       btn_sidebar.current.classList.add("bx-menu");
-      li_header.current.classList.add("collapsed");
-      setShowDropdown(false);
+      document.querySelectorAll(".nav-list-item").forEach(item => item.classList.add("collapsed"));
+      document.querySelectorAll(".dropdown_menu").forEach(item => item.classList.add("hidden"));
     }
   }, []);
 
@@ -75,7 +74,7 @@ export default function Sidebar() {
         </div>
         <div className="wrap-nav-list rtl-ps-none" data-perfect-scrollbar="" data-suppress-scroll-x="true">
           <ul className="nav-list">
-            <SidebarMenu sidebar_ref={sidebar_ref} sidebar_overlay_ref={sidebar_overlay_ref} btn_sidebar={btn_sidebar} li_header={li_header} showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
+            <SidebarMenu sidebar_ref={sidebar_ref} sidebar_overlay_ref={sidebar_overlay_ref} btn_sidebar={btn_sidebar} li_header={li_header} />
             <li className="profile">
               <div className="profile-details">
                 <div className="name_job">

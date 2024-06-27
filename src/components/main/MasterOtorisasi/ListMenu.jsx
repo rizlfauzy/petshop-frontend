@@ -1,14 +1,14 @@
 import useAsync from "../../../hooks/useAsync";
 import { get_data } from "../../../hooks/useFetch";
 import useSession from "../../../hooks/useSession";
-import { useState, useLayoutEffect, useEffect, useCallback } from "react";
+import {  useLayoutEffect, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 
-export default function ListMenu({list_menu,set_list_menu}) {
+export default function ListMenu({ list_menu, set_list_menu, keyword, set_keyword, menu, setMenu}) {
   const { run, isLoading, data } = useAsync();
   const { session } = useSession();
-  const [menu, setMenu] = useState(null);
-  const [keyword, set_keyword] = useState('');
+  // const [menu, setMenu] = useState(null);
+  const delay = useRef(null);
 
   useLayoutEffect(() => {
     run(
@@ -22,41 +22,68 @@ export default function ListMenu({list_menu,set_list_menu}) {
   useEffect(() => {
     const obj = isLoading ? null : data;
     setMenu(obj);
-  }, [data, isLoading]);
+  }, [data, isLoading, setMenu]);
 
-  const checked_menu = useCallback(e => {
-    const tr = e.target.parentElement;
-    if (!tr.classList.contains('tr_checkbox')) return;
-    tr.classList.toggle('clicked-event')
-    const nomenu = tr.children[1].innerHTML;
-    const namamenu = tr.children[2].innerHTML;
-    const grupmenu = tr.children[3].innerHTML;
-    const add = tr.children[4].children[0].children[0].children[0].checked;
-    const update = tr.children[5].children[0].children[0].children[0].checked;
-    const cancel = tr.children[6].children[0].children[0].children[0].checked;
-    if (tr.classList.contains('clicked-event')) set_list_menu((prev) => [...prev, { nomenu, namamenu, grupmenu, add, update, cancel }]);
-    else set_list_menu((prev) => prev.filter((item) => item.nomenu !== nomenu));
-  }, [set_list_menu])
+  const checked_menu = useCallback(
+    (e) => {
+      const tr = e.target.parentElement;
+      if (!tr.classList.contains("tr_checkbox")) return;
+      tr.classList.toggle("clicked-event");
+      const nomenu = tr.children[1].innerHTML;
+      const namamenu = tr.children[2].innerHTML;
+      const grupmenu = tr.children[3].innerHTML;
+      const add = tr.children[4].children[0].checked;
+      const update = tr.children[5].children[0].checked;
+      const cancel = tr.children[6].children[0].checked;
+      if (tr.classList.contains("clicked-event")) set_list_menu((prev) => [...prev, { nomenu, namamenu, grupmenu, add, update, cancel }]);
+      else set_list_menu((prev) => prev.filter((item) => item.nomenu !== nomenu));
+    },
+    [set_list_menu]
+  );
 
-  const handle_search = useCallback(async (e) => {
-    set_keyword(e.target.value);
-    const { error, message } = await run(get_data({
-      url: "/otority/find-menu?q=" + e.target.value,
-      headers: {
-        authorization: `Bearer ${session.token}`
-      }
-    }));
+  const handle_search = useCallback(
+    async (e) => {
+      clearTimeout(delay.current);
+      set_keyword(e.target.value);
+      delay.current = setTimeout(async () => {
+        const { error, message } = await run(
+        get_data({
+          url: "/otority/find-menu?q=" + e.target.value,
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      }, 500);
+    },
+    [run, session, set_keyword]
+  );
+
+  const handle_change_checkbox = useCallback(
+    (e) => {
+      const tr = e.target.parentElement.parentElement;
+      const nomenu = tr.children[1].innerHTML;
+      const add = tr.children[4].children[0].checked;
+      const update = tr.children[5].children[0].checked;
+      const cancel = tr.children[6].children[0].checked;
+      set_list_menu((prev) => prev.map((item) => (item.nomenu === nomenu ? { ...item, add, update, cancel } : item)));
+    },
+    [set_list_menu]
+  );
+
+  const handle_clear_keyword = useCallback(async () => {
+    set_keyword("");
+    const { error, message } = await run(
+      get_data({
+        url: "/otority/find-menu?q=",
+        headers: {
+          authorization: `Bearer ${session.token}`,
+        },
+      })
+    );
     if (error) throw new Error(message);
-  }, [run, session])
-
-  const handle_change_checkbox = useCallback((e) => {
-    const tr = e.target.parentElement.parentElement.parentElement.parentElement;
-    const nomenu = tr.children[1].innerHTML;
-    const add = tr.children[4].children[0].children[0].children[0].checked;
-    const update = tr.children[5].children[0].children[0].children[0].checked;
-    const cancel = tr.children[6].children[0].children[0].children[0].checked;
-    set_list_menu((prev) => prev.map((item) => item.nomenu === nomenu ? { ...item, add, update, cancel } : item));
-  }, [set_list_menu]);
+  }, [run, session, set_keyword]);
 
   return (
     <div className="modal-content-main mb-2">
@@ -76,7 +103,7 @@ export default function ListMenu({list_menu,set_list_menu}) {
                   </div>
                   <div className="relative col-half !px-0">
                     <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} required />
-                    <button className="btn_absolute_right hover:text-primary" type="button">
+                    <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_clear_keyword}>
                       <i className="far fa-times"></i>
                     </button>
                   </div>
@@ -97,7 +124,7 @@ export default function ListMenu({list_menu,set_list_menu}) {
                   </tr>
                 </thead>
                 <tbody>
-                  {!isLoading ? (
+                  {!isLoading ? menu?.data?.length > 0 ? (
                     menu?.data?.map((item) => {
                       const is_checked = list_menu.some((menu) => menu.nomenu === item.nomenu);
                       const checked_add = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).add : false;
@@ -110,32 +137,27 @@ export default function ListMenu({list_menu,set_list_menu}) {
                           <td className="text-left align-middle">{item.namamenu}</td>
                           <td className="text-left align-middle">{item.grupmenu}</td>
                           <td className="text-center align-middle">
-                            <div className="row">
-                              <div className="col-full flex items-center justify-center">
-                                <input type="checkbox" className="form-control" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} required />
-                              </div>
-                            </div>
+                            <input type="checkbox" className="form-control m-auto" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} required />
                           </td>
                           <td className="text-left align-middle">
-                            <div className="row">
-                              <div className="col-full flex items-center justify-center">
-                                <input type="checkbox" className="form-control" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} required />
-                              </div>
-                            </div>
+                            <input type="checkbox" className="form-control m-auto" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} required />
                           </td>
                           <td className="text-left align-middle">
-                            <div className="row">
-                              <div className="col-full flex items-center justify-center">
-                                <input type="checkbox" className="form-control" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} required />
-                              </div>
-                            </div>
+                            <input type="checkbox" className="form-control m-auto" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} required />
                           </td>
                         </tr>
                       );
                     })
                   ) : (
                     <tr>
-                      <td colSpan={4} className="text-center">
+                      <td colSpan={7} className="text-center">
+                        data tidak ditemukan
+                      </td>
+                    </tr>
+
+                  ) : (
+                    <tr>
+                      <td colSpan={7} className="text-center">
                         loading...
                       </td>
                     </tr>
@@ -153,4 +175,8 @@ export default function ListMenu({list_menu,set_list_menu}) {
 ListMenu.propTypes = {
   set_list_menu: PropTypes.func,
   list_menu: PropTypes.array,
+  keyword: PropTypes.string,
+  set_keyword: PropTypes.func,
+  menu: PropTypes.object,
+  setMenu: PropTypes.func,
 };

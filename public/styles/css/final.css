@@ -632,6 +632,10 @@ video {
   float: left;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -2140,7 +2144,7 @@ p{
 .modal{
   display:block;
   position:fixed;
-  z-index:999;
+  z-index:9999;
   padding-top:100px;
   left:0;
   top:0;

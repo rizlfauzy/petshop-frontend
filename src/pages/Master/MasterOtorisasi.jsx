@@ -16,9 +16,11 @@ export default function MasterOtorisasi({ icon, title }) {
   const [kode_grup, set_kode_grup] = useState("");
   const [is_selected_grup, set_is_selected_grup] = useState(false);
   const [list_menu, set_list_menu] = useState([]);
+  const [keyword, set_keyword] = useState("");
+  const [menu, setMenu] = useState(null);
   const { run } = useAsync();
   const { session } = useSession();
-  const {swalAlert} = useAlert();
+  const { swalAlert } = useAlert();
   const [grup, set_grup] = useState({
     kode_grup: "",
     nama_grup: "",
@@ -63,18 +65,37 @@ export default function MasterOtorisasi({ icon, title }) {
 
   const handle_save = useCallback(async () => {
     try {
-      const { error, message } = await run(fetch_data({
-        url: "/otority/menu",
-        method: "POST",
-        headers: { authorization: `Bearer ${session.token}` },
-        data: { kode_grup, menus: JSON.stringify(list_menu)}
-      }))
+      const { error, message } = await run(
+        fetch_data({
+          url: "/otority",
+          method: "POST",
+          headers: { authorization: `Bearer ${session.token}` },
+          data: { kode_grup, menus: JSON.stringify(list_menu) },
+        })
+      );
       if (error) throw new Error(message);
-      swalAlert("success", "Data berhasil disimpan");
+      swalAlert(message, "success");
     } catch (error) {
-      swalAlert("error", error.message);
+      swalAlert(error.message, "error");
     }
-  },[list_menu, swalAlert, run, session, kode_grup]);
+  }, [list_menu, swalAlert, run, session, kode_grup]);
+
+  const handle_clear = useCallback(async () => {
+    set_list_menu([]);
+    set_grup((state) => ({ ...state, kode_grup: "", nama_grup: "" }));
+    set_keyword("");
+    const { error, message, data } = await run(
+      get_data({
+        url: "/otority/find-menu?q=",
+        headers: {
+          authorization: `Bearer ${session.token}`,
+        },
+      })
+    );
+    if (error) throw new Error(message);
+    setMenu({ data });
+    set_is_selected_grup(false);
+  }, [run, session]);
 
   return (
     <>
@@ -82,7 +103,7 @@ export default function MasterOtorisasi({ icon, title }) {
         <button id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
           <i className="far fa-save mr-[10px]"></i>Save
         </button>
-        <button id="clear" className="btn-sm bg-primary text-white">
+        <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
           <i className="far fa-refresh mr-[10px]"></i>Clear
         </button>
       </HeaderPage>
@@ -103,7 +124,10 @@ export default function MasterOtorisasi({ icon, title }) {
                     </div>
                     <div className="relative col-thirdperfour !px-0">
                       <input type="text" value={grup.nama_grup} className="form-control" name="nama_grup" id="nama_grup" placeholder="tekan tombol cari" required readOnly onChange={handle_change_grup} />
-                      <button className="btn_absolute_right hover:text-primary" type="button" onClick={set_show_modal_grup.bind(this, true)}>
+                      <button className="btn_absolute_right hover:text-primary" type="button" onClick={() => {
+                        set_show_modal_grup(true);
+                        set_is_selected_grup(false);
+                      }}>
                         <FontAwesomeIcon icon={faSearch} />
                       </button>
                     </div>
@@ -115,7 +139,7 @@ export default function MasterOtorisasi({ icon, title }) {
         </div>
         <div className="row">
           <div className="sm:col-half col-full">
-            <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} />
+            <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} keyword={keyword} set_keyword={set_keyword} menu={menu} setMenu={setMenu} />
           </div>
         </div>
       </div>

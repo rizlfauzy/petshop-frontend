@@ -1,13 +1,13 @@
 import useAsync from "../../../hooks/useAsync";
 import { get_data } from "../../../hooks/useFetch";
 import useSession from "../../../hooks/useSession";
-import {  useLayoutEffect, useEffect, useCallback, useRef, useState } from "react";
+import {  useLayoutEffect, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 
-export default function ListMenu({ list_menu, set_list_menu, keyword, set_keyword, menu, setMenu}) {
+export default function ListMenu({ list_menu, set_list_menu, keyword, set_keyword, menu, setMenu, check_all, set_check_all}) {
   const { run, isLoading, data } = useAsync();
   const { session } = useSession();
-  const [check_all, set_check_all] = useState(false);
+  // const [check_all, set_check_all] = useState(false);
   const delay = useRef(null);
 
   useLayoutEffect(() => {
@@ -56,8 +56,9 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       );
       if (error) throw new Error(message);
       }, 500);
+      set_check_all(false);
     },
-    [run, session, set_keyword]
+    [run, session, set_keyword, set_check_all]
   );
 
   const handle_change_checkbox = useCallback(
@@ -83,7 +84,8 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       })
     );
     if (error) throw new Error(message);
-  }, [run, session, set_keyword]);
+    set_check_all(false);
+  }, [run, session, set_keyword, set_check_all]);
 
   const handle_check_all = useCallback((e) => {
     const checkboxes = document.querySelectorAll(".tr_checkbox");
@@ -99,7 +101,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       else set_list_menu((prev) => prev.filter((item) => item.nomenu !== nomenu));
     });
     set_check_all(e.target.checked);
-  }, [set_list_menu]);
+  }, [set_list_menu, set_check_all]);
 
   return (
     <div className="modal-content-main mb-2">
@@ -208,4 +210,6 @@ ListMenu.propTypes = {
   set_keyword: PropTypes.func,
   menu: PropTypes.object,
   setMenu: PropTypes.func,
+  check_all: PropTypes.bool,
+  set_check_all: PropTypes.func,
 };

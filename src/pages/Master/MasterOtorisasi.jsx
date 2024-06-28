@@ -18,6 +18,7 @@ export default function MasterOtorisasi({ icon, title }) {
   const [list_menu, set_list_menu] = useState([]);
   const [keyword, set_keyword] = useState("");
   const [menu, setMenu] = useState(null);
+  const [check_all, set_check_all] = useState(false);
   const { run } = useAsync();
   const { session } = useSession();
   const { swalAlert } = useAlert();
@@ -95,6 +96,7 @@ export default function MasterOtorisasi({ icon, title }) {
     if (error) throw new Error(message);
     setMenu({ data });
     set_is_selected_grup(false);
+    set_check_all(false);
   }, [run, session]);
 
   return (
@@ -139,7 +141,7 @@ export default function MasterOtorisasi({ icon, title }) {
         </div>
         <div className="row">
           <div className="md:col-half col-full">
-            <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} keyword={keyword} set_keyword={set_keyword} menu={menu} setMenu={setMenu} />
+            <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} keyword={keyword} set_keyword={set_keyword} menu={menu} setMenu={setMenu} check_all={check_all} set_check_all={set_check_all} />
           </div>
         </div>
       </div>

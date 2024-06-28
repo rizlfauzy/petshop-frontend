@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback, useLayoutEffect } from "react";
-import useAlert from "../../hooks/useAlert";
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
@@ -9,7 +8,6 @@ import { set_hide_all_modal } from "../../hooks/useStore";
 
 export default function ModalMain({ set, is_selected, conf, children }) {
   const { session } = useSession();
-  const { swalAlert } = useAlert();
   const { run } = useAsync();
   const dispatch = useDispatch();
   const tr_head = useRef(null);
@@ -18,7 +16,7 @@ export default function ModalMain({ set, is_selected, conf, children }) {
   const [colspan, set_colspan] = useState(0);
   const [data, set_data] = useState(null);
   const [limit, set_limit] = useState(5);
-  const [page, set_page] = useState(1);
+  const [, set_page] = useState(1);
   const [keyword, set_keyword] = useState("");
   const [konf, set_konf] = useState(conf);
   const option_content = ["5", "10", "25", "50"].map((item) => (
@@ -29,33 +27,29 @@ export default function ModalMain({ set, is_selected, conf, children }) {
 
   const on_find_data = useCallback(
     async (keyword = "", limit = 5, page = 1) => {
-      try {
-        const { error, message, data } = await run(
-          fetch_data({
-            url: "/page",
-            method: "POST",
-            headers: {
-              authorization: `Bearer ${session.token}`,
-            },
-            data: {
-              name: konf.name,
-              limit,
-              page,
-              select: JSON.stringify(konf.select),
-              order: JSON.stringify(konf.order),
-              where: JSON.stringify(konf.where),
-              likes: JSON.stringify(konf.likes),
-              keyword,
-            },
-          })
-        );
-        if (error) throw new Error(message);
-        set_data(data);
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        fetch_data({
+          url: "/page",
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+          data: {
+            name: konf.name,
+            limit,
+            page,
+            select: JSON.stringify(konf.select),
+            order: JSON.stringify(konf.order),
+            where: JSON.stringify(konf.where),
+            likes: JSON.stringify(konf.likes),
+            keyword,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      set_data(data);
     },
-    [konf, run, session, swalAlert]
+    [konf, run, session]
   );
 
   const handle_keyword = useCallback(
@@ -64,19 +58,19 @@ export default function ModalMain({ set, is_selected, conf, children }) {
       set_keyword(e.target.value);
       set_konf((prev) => ({ ...prev, keyword: e.target.value }));
       delay.current = setTimeout(() => {
-        on_find_data(e.target.value, limit, page);
+        on_find_data(e.target.value, limit, 1);
       }, 500);
     },
-    [on_find_data, limit, page]
+    [on_find_data, limit]
   );
 
   const handle_limit = useCallback(
     (e) => {
       set_limit(e.target.value);
       set_konf((prev) => ({ ...prev, limit: e.target.value }));
-      on_find_data(keyword, e.target.value, page);
+      on_find_data(keyword, e.target.value, 1);
     },
-    [on_find_data, keyword, page]
+    [on_find_data, keyword]
   );
 
   const handle_page = useCallback(
@@ -92,8 +86,8 @@ export default function ModalMain({ set, is_selected, conf, children }) {
     set_keyword("");
     set_konf((prev) => ({ ...prev, keyword: "" }));
     input_list.current.focus();
-    on_find_data("", limit, page);
-  }, [on_find_data, limit, page]);
+    on_find_data("", limit, 1);
+  }, [on_find_data, limit]);
 
   useLayoutEffect(() => {
     set_colspan(tr_head?.current?.children.length);

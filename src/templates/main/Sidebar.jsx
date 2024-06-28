@@ -1,6 +1,6 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useLayoutEffect } from "react";
 import { set_show_modal, set_show_logout } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
@@ -25,6 +25,18 @@ export default function Sidebar() {
   const li_header = useRef(null);
   const { session, setSessionData } = useSession();
   const { swalAlert } = useAlert();
+
+  useLayoutEffect(() => {
+    const save_btn = document.querySelector("#save");
+    const update_btn = document.querySelector("#update");
+    const cancel_btn = document.querySelector("#cancel");
+    if (save_btn && item?.data?.cek_menu?.add) save_btn.classList.remove("hidden");
+    else if (save_btn) save_btn.classList.add("hidden");
+    if (update_btn && item?.data?.cek_menu?.update) update_btn.classList.remove("hidden");
+    else if (update_btn) update_btn.classList.add("hidden");
+    if (cancel_btn && item?.data?.cek_menu?.cancel) cancel_btn.classList.remove("hidden");
+    else if (cancel_btn) cancel_btn.classList.add("hidden");
+  }, [item]);
 
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");

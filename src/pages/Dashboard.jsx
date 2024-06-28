@@ -13,14 +13,14 @@ export default function Dashboard({ icon, title }) {
       <Loading />
       <div className="col-full table-responsive">
         <div className="row">
-          <div className="sm:col-half col-full">
+          <div className="md:col-half col-full">
             <DataOmset />
           </div>
-          <div className="sm:col-quarter col-full">
+          <div className="md:col-quarter col-full">
             <OmsetBulanan />
             <NotifikasiStok />
           </div>
-          <div className="sm:col-quarter col-full">
+          <div className="md:col-quarter col-full">
             <Informasi />
           </div>
         </div>

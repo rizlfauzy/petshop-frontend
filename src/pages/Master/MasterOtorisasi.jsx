@@ -109,7 +109,7 @@ export default function MasterOtorisasi({ icon, title }) {
       </HeaderPage>
       <div className="col-full table-responsive">
         <div className="row">
-          <div className="sm:col-half col-full">
+          <div className="md:col-half col-full">
             <div className="modal-content-main mb-2">
               <div className="modal-header-main !p-2">
                 <h5 className="mb-0 text-md">OTORISASI</h5>
@@ -138,7 +138,7 @@ export default function MasterOtorisasi({ icon, title }) {
           </div>
         </div>
         <div className="row">
-          <div className="sm:col-half col-full">
+          <div className="md:col-half col-full">
             <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} keyword={keyword} set_keyword={set_keyword} menu={menu} setMenu={setMenu} />
           </div>
         </div>

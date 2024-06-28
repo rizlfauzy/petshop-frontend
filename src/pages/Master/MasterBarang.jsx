@@ -21,7 +21,6 @@ export default function MasterBarang({ icon, title }) {
   const aktif_row = useRef(null);
   const btn_save = useRef(null);
   const btn_update = useRef(null);
-  const textarea_keterangan = useRef(null);
   const [kode_satuan, set_kode_satuan] = useState("");
   const [kode_kategori, set_kode_kategori] = useState("");
   const [barcode, set_barcode] = useState("");
@@ -60,58 +59,46 @@ export default function MasterBarang({ icon, title }) {
 
   useEffect(() => {
     async function get_satuan() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/satuan?kode=" + kode_satuan,
-            headers: {
-              authorization: `Bearer ${session.token}`,
-            },
-          })
-        );
-        if (error) throw new Error(message);
-        set_satuan((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
-        set_barang((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/satuan?kode=" + kode_satuan,
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      set_satuan((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
+      set_barang((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
     }
 
     async function get_kategori() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/kategori?kode=" + kode_kategori,
-            headers: {
-              authorization: `Bearer ${session.token}`,
-            },
-          })
-        );
-        if (error) throw new Error(message);
-        set_kategori((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
-        set_barang((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/kategori?kode=" + kode_kategori,
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      set_kategori((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
+      set_barang((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
     }
 
     async function get_barang() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/barang?barcode=" + barcode,
-            headers: {
-              authorization: `Bearer ${session.token}`,
-            },
-          })
-        );
-        if (error) throw new Error(message);
-        set_barang((prev) => ({ ...prev, ...data, disc: format_disc(data.disc), harga_jual: format_rupiah(data.harga_jual), harga_modal: format_rupiah(data.harga_modal), min_stock: format_rupiah(data.min_stock, {}) }));
-        set_satuan((prev) => ({ ...prev, kode_satuan: data.kode_satuan, nama_satuan: data.nama_satuan }));
-        set_kategori((prev) => ({ ...prev, kode_kategori: data.kode_kategori, nama_kategori: data.nama_kategori }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/barang?barcode=" + barcode,
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      set_barang((prev) => ({ ...prev, ...data, disc: format_disc(data.disc), harga_jual: format_rupiah(data.harga_jual), harga_modal: format_rupiah(data.harga_modal), min_stock: format_rupiah(data.min_stock, {}) }));
+      set_satuan((prev) => ({ ...prev, kode_satuan: data.kode_satuan, nama_satuan: data.nama_satuan }));
+      set_kategori((prev) => ({ ...prev, kode_kategori: data.kode_kategori, nama_kategori: data.nama_kategori }));
     }
 
     if (is_selected_satuan) get_satuan();
@@ -126,7 +113,7 @@ export default function MasterBarang({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-  }, [is_selected_satuan, is_selected_kategori, is_selected_barang, kode_satuan, kode_kategori, barcode]);
+  }, [is_selected_satuan, is_selected_kategori, is_selected_barang, kode_satuan, kode_kategori, barcode, format_disc, format_rupiah, run, session]);
 
   const handle_change_barang = useCallback(
     (e) => {
@@ -320,7 +307,7 @@ export default function MasterBarang({ icon, title }) {
       </HeaderPage>
       <div className="col-full table-responsive">
         <div className="row">
-          <div className="sm:col-half col-full">
+          <div className="md:col-half col-full">
             <div className="modal-content-main mb-2">
               <div className="modal-header-main !p-2">
                 <h5 className="mb-0 text-lg">BARANG</h5>
@@ -423,7 +410,6 @@ export default function MasterBarang({ icon, title }) {
                       </label>
                     </div>
                     <textarea
-                      ref={textarea_keterangan}
                       name="keterangan"
                       id="keterangan"
                       className="form-control col-thirdperfour"

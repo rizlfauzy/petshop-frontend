@@ -1,13 +1,13 @@
 import useAsync from "../../../hooks/useAsync";
 import { get_data } from "../../../hooks/useFetch";
 import useSession from "../../../hooks/useSession";
-import {  useLayoutEffect, useEffect, useCallback, useRef } from "react";
+import {  useLayoutEffect, useEffect, useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 
 export default function ListMenu({ list_menu, set_list_menu, keyword, set_keyword, menu, setMenu}) {
   const { run, isLoading, data } = useAsync();
   const { session } = useSession();
-  // const [menu, setMenu] = useState(null);
+  const [check_all, set_check_all] = useState(false);
   const delay = useRef(null);
 
   useLayoutEffect(() => {
@@ -85,6 +85,22 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
     if (error) throw new Error(message);
   }, [run, session, set_keyword]);
 
+  const handle_check_all = useCallback((e) => {
+    const checkboxes = document.querySelectorAll(".tr_checkbox");
+    checkboxes.forEach((checkbox) => {
+      checkbox.classList.toggle("clicked-event", e.target.checked);
+      const nomenu = checkbox.children[1].innerHTML;
+      const namamenu = checkbox.children[2].innerHTML;
+      const grupmenu = checkbox.children[3].innerHTML;
+      const add = true;
+      const update = true;
+      const cancel = true;
+      if (e.target.checked) set_list_menu((prev) => [...prev, { nomenu, namamenu, grupmenu, add, update, cancel }]);
+      else set_list_menu((prev) => prev.filter((item) => item.nomenu !== nomenu));
+    });
+    set_check_all(e.target.checked);
+  }, [set_list_menu]);
+
   return (
     <div className="modal-content-main mb-2">
       <div className="modal-header-main !p-2">
@@ -101,7 +117,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                       Cari Data
                     </label>
                   </div>
-                  <div className="relative col-half !px-0">
+                  <div className="relative col-thirdperfour !px-0">
                     <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} required />
                     <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_clear_keyword}>
                       <i className="far fa-times"></i>
@@ -109,9 +125,21 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                   </div>
                 </div>
               </div>
+              <div className="col-half">
+                <div className="input-group justify-end">
+                  <div className="col-quarter p-0 input-group-prepend">
+                    <input type="checkbox" className="form-control ml-auto" name="check_all" id="check_all" checked={check_all} onChange={handle_check_all} required />
+                  </div>
+                  <div className="relative col-quarter">
+                    <label htmlFor="check_all" className="input-group-text justify-end cursor-pointer">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="row table-scroll mb-2">
-              <table className="table-modal table-bordered table-striped penomoran">
+              <table className={`table-modal table-bordered table-striped ${!isLoading ? (menu?.data?.length > 0 ? "penomoran" : "") : ""}`}>
                 <thead className="thead-dark">
                   <tr className="tr_head">
                     <th className="text-left align-middle">Nomor</th>
@@ -124,37 +152,38 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                   </tr>
                 </thead>
                 <tbody>
-                  {!isLoading ? menu?.data?.length > 0 ? (
-                    menu?.data?.map((item) => {
-                      const is_checked = list_menu.some((menu) => menu.nomenu === item.nomenu);
-                      const checked_add = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).add : false;
-                      const checked_update = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).update : false;
-                      const checked_cancel = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).cancel : false;
-                      return (
-                        <tr key={item.nomenu} className={`tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
-                          <td className="text-left align-middle"></td>
-                          <td className="text-left align-middle">{item.nomenu}</td>
-                          <td className="text-left align-middle">{item.namamenu}</td>
-                          <td className="text-left align-middle">{item.grupmenu}</td>
-                          <td className="text-center align-middle">
-                            <input type="checkbox" className="form-control m-auto" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} required />
-                          </td>
-                          <td className="text-left align-middle">
-                            <input type="checkbox" className="form-control m-auto" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} required />
-                          </td>
-                          <td className="text-left align-middle">
-                            <input type="checkbox" className="form-control m-auto" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} required />
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={7} className="text-center">
-                        data tidak ditemukan
-                      </td>
-                    </tr>
-
+                  {!isLoading ? (
+                    menu?.data?.length > 0 ? (
+                      menu?.data?.map((item) => {
+                        const is_checked = list_menu.some((menu) => menu.nomenu === item.nomenu);
+                        const checked_add = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).add : false;
+                        const checked_update = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).update : false;
+                        const checked_cancel = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu).cancel : false;
+                        return (
+                          <tr key={item.nomenu} className={`tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
+                            <td className="text-left align-middle"></td>
+                            <td className="text-left align-middle">{item.nomenu}</td>
+                            <td className="text-left align-middle">{item.namamenu}</td>
+                            <td className="text-left align-middle">{item.grupmenu}</td>
+                            <td className="text-center align-middle">
+                              <input type="checkbox" className="form-control m-auto" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} required />
+                            </td>
+                            <td className="text-left align-middle">
+                              <input type="checkbox" className="form-control m-auto" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} required />
+                            </td>
+                            <td className="text-left align-middle">
+                              <input type="checkbox" className="form-control m-auto" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} required />
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={7} className="text-center">
+                          data tidak ditemukan
+                        </td>
+                      </tr>
+                    )
                   ) : (
                     <tr>
                       <td colSpan={7} className="text-center">

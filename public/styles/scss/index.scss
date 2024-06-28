@@ -688,11 +688,14 @@ input[type="number"] {
 /* End of CSS Home */
 
 .logo-menu {
+  display: inline-flex;
   background: #402218;
-  width: 80px;
-  height: 80px;
+  width: 35px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
   border-radius: 8px;
-  padding: 5px 10px;
+  padding: 5px 5px;
   color: #fff;
   margin-right: 5px;
 }
@@ -767,7 +770,7 @@ select.form-control,
   &:not(textarea) {
     height: calc(1.5rem + 2px);
   }
-  padding: 0.375rem 0.75rem;
+  // padding: 0.375rem 0.75rem;
   font-size: 0.813rem;
   line-height: 1.5;
   color: #665c70;
@@ -1126,7 +1129,7 @@ p {
 }
 
 .clicked-event {
-  background: $clicked-table-color!important;
+  background: $clicked-table-color !important;
   color: #ffffff !important;
   /* Add more styles as desired */
   border-bottom: 1px solid #eaeaea !important;
@@ -1309,6 +1312,24 @@ p {
   }
 
   .sm\:col-thirdperfour {
+    @apply xl:w-3/4 w-3/4 relative min-h-[1px] px-[5px] flex-[0_0_75%];
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:col-half {
+    @apply xl:w-1/2 w-1/2 relative min-h-[1px] px-[5px] flex-[0_0_50%];
+  }
+
+  .md\:col-quarter {
+    @apply xl:w-1/4 w-1/4 relative min-h-[1px] px-[5px] flex-[0_0_25%];
+  }
+
+  .md\:col-sixth {
+    @apply xl:w-1/6 w-1/6 relative min-h-[1px] px-[5px] flex-[0_0_16.666667%];
+  }
+
+  .md\:col-thirdperfour {
     @apply xl:w-3/4 w-3/4 relative min-h-[1px] px-[5px] flex-[0_0_75%];
   }
 }

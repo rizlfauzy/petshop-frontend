@@ -69,6 +69,8 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
                       sidebar_overlay_ref.current.classList.remove("open");
                       btn_sidebar.current.classList.remove("bx-menu-alt-right");
                       btn_sidebar.current.classList.add("bx-menu");
+                      document.querySelectorAll(".nav-list-item").forEach((item) => item.classList.add("collapsed"));
+                      document.querySelectorAll(".dropdown_menu").forEach((item) => item.classList.add("hidden"));
                     }}>
                       <i className={`links_icon ${it.icondetail}`}></i>
                       <span className="links_name">{it.namamenu}</span>
@@ -90,6 +92,8 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
               sidebar_overlay_ref.current.classList.remove("open");
               btn_sidebar.current.classList.remove("bx-menu-alt-right");
               btn_sidebar.current.classList.add("bx-menu");
+              document.querySelectorAll(".nav-list-item").forEach((item) => item.classList.add("collapsed"));
+              document.querySelectorAll(".dropdown_menu").forEach((item) => item.classList.add("hidden"));
             }}
           >
             <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>

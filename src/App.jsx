@@ -86,7 +86,7 @@ function App() {
           path={`${VITE_PREFIX}order`}
           element={
             <Main title={"PEMBELIAN"}>
-              <Pembelian icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"PEMBELIAN"} />
+              <Pembelian icon={<i className="far fa-shopping-cart fa-lg !text-[19px]"></i>} title={"PEMBELIAN"} />
             </Main>
           }
         />

@@ -5,9 +5,12 @@ import useSession from "../../hooks/useSession";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { set_hide_all_modal } from "../../hooks/useStore";
+import { useNavigate } from "react-router-dom";
+const { VITE_PREFIX } = import.meta.env;
 
 export default function ModalMain({ set, is_selected, conf, children }) {
-  const { session } = useSession();
+  const { session, setSessionData } = useSession();
+  const navigate = useNavigate();
   const { run } = useAsync();
   const dispatch = useDispatch();
   const tr_head = useRef(null);
@@ -27,7 +30,8 @@ export default function ModalMain({ set, is_selected, conf, children }) {
 
   const on_find_data = useCallback(
     async (keyword = "", limit = 5, page = 1) => {
-      const { error, message, data } = await run(
+      try {
+        const { error, message, data } = await run(
         fetch_data({
           url: "/page",
           method: "POST",
@@ -48,8 +52,14 @@ export default function ModalMain({ set, is_selected, conf, children }) {
       );
       if (error) throw new Error(message);
       set_data(data);
+      } catch (e) {
+        if (e.message == "Token expired") {
+          setSessionData(null);
+          navigate(`${VITE_PREFIX}login`, { replace: true });
+        }
+      }
     },
-    [konf, run, session]
+    [konf, run, session, navigate, setSessionData]
   );
 
   const handle_keyword = useCallback(
@@ -140,7 +150,7 @@ export default function ModalMain({ set, is_selected, conf, children }) {
             ) : data?.list?.length > 0 ? (
               data?.list?.map((item) => (
                 <tr key={item[Object.keys(item)[0]]}>
-                  <td className="text-center">
+                  <td className="text-center" width={10}>
                     <button
                       type="button"
                       className="btn-sm !p-[.25rem_.9rem] bg-primary text-white"

@@ -30,18 +30,14 @@ export default function MasterKategori({ icon, title }) {
 
   useEffect(() => {
     async function get_kategori() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/kategori?kode=" + kode_kategori,
-            headers: { authorization: `Bearer ${session.token}` },
-          })
-        );
-        if (error) throw new Error(message);
-        set_kategori((state) => ({ ...state, ...data }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/kategori?kode=" + kode_kategori,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      set_kategori((state) => ({ ...state, ...data }));
     }
 
     if (is_selected) {
@@ -56,7 +52,7 @@ export default function MasterKategori({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-  }, [is_selected, kode_kategori]);
+  }, [is_selected, kode_kategori, run, session]);
 
   const handle_modal = useCallback(() => {
     dispatch(set_show_modal(true));
@@ -197,7 +193,7 @@ export default function MasterKategori({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_kategori && (
-        <Modal modal_title="Kategori" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Kategori" className={["modal-md"]} btn={<></>}>
           <ModalMain
             set={set_kode_kategori}
             is_selected={set_is_selected}

@@ -342,7 +342,7 @@ export default function MasterBarang({ icon, title }) {
                     </div>
                     <div className="relative col-half !px-0">
                       <input value={satuan.nama_satuan} type="text" className="form-control" name="nama_satuan" id="nama_satuan" placeholder="tekan tombol cari" onChange={handle_change_satuan} required readOnly />
-                      <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_find_satuan}>
+                      <button className="btn_absolute_right !right-1 hover:text-primary" type="button" onClick={handle_find_satuan}>
                         <FontAwesomeIcon icon={faSearch} />
                       </button>
                     </div>
@@ -355,7 +355,7 @@ export default function MasterBarang({ icon, title }) {
                     </div>
                     <div className="relative col-half !px-0">
                       <input value={kategori.nama_kategori} type="text" className="form-control" name="nama_kategori" id="nama_kategori" placeholder="tekan tombol cari" onChange={handle_change_kategori} required readOnly />
-                      <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_find_kategori}>
+                      <button className="btn_absolute_right !right-1 hover:text-primary" type="button" onClick={handle_find_kategori}>
                         <FontAwesomeIcon icon={faSearch} />
                       </button>
                     </div>
@@ -378,7 +378,7 @@ export default function MasterBarang({ icon, title }) {
                     </div>
                     <div className="relative col-half !px-0">
                       <input value={barang.disc} onChange={handle_change_barang} type="text" className="form-control" name="disc" id="disc" required placeholder="DISKON ITEM" />
-                      <button className="btn_absolute_right hover:text-primary !cursor-auto" type="button">
+                      <button className="btn_absolute_right !right-1 hover:text-primary !cursor-auto" type="button" disabled>
                         <FontAwesomeIcon icon={faPercent} />
                       </button>
                     </div>
@@ -414,7 +414,7 @@ export default function MasterBarang({ icon, title }) {
                       id="keterangan"
                       className="form-control col-thirdperfour"
                       rows={5}
-                      placeholder="Informasi ..."
+                      placeholder="Keterangan ..."
                       value={barang.keterangan}
                       onInput={handle_change_barang}
                       onKeyDown={handle_keterangan}
@@ -450,7 +450,7 @@ export default function MasterBarang({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_satuan && (
-        <Modal modal_title="Satuan" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Satuan" className={["modal-md"]} btn={<></>}>
           <ModalMain
             set={set_kode_satuan}
             is_selected={set_is_selected_satuan}
@@ -478,7 +478,7 @@ export default function MasterBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal && show_modal_kategori && (
-        <Modal modal_title="Kategori" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Kategori" className={["modal-md"]} btn={<></>}>
           <ModalMain
             set={set_kode_kategori}
             is_selected={set_is_selected_kategori}
@@ -506,7 +506,7 @@ export default function MasterBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal && show_modal_barang && (
-        <Modal modal_title="Barang" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Barang" className={["modal-md"]} btn={<></>}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang}
@@ -543,9 +543,7 @@ export default function MasterBarang({ icon, title }) {
           </ModalMain>
         </Modal>
       )}
-      {show_modal && show_modal_import && (
-        <ModalImport />
-      )}
+      {show_modal && show_modal_import && <ModalImport />}
     </>
   );
 }

@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 export default function ListMenu({ list_menu, set_list_menu, keyword, set_keyword, menu, setMenu, check_all, set_check_all}) {
   const { run, isLoading, data } = useAsync();
   const { session } = useSession();
-  // const [check_all, set_check_all] = useState(false);
   const delay = useRef(null);
 
   useLayoutEffect(() => {

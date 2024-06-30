@@ -148,7 +148,7 @@ export default function ModalImport() {
   return (
     <Modal
       modal_title={"Import"}
-      className={["modal-md"]}
+      className={["modal-sm"]}
       btn={
         <button id="import_file" className="p-2 text-white rounded-md btn-modal" disabled ref={btn_import_ref}>
           <FontAwesomeIcon icon={faFileImport} className="mr-[10px]" /> Import

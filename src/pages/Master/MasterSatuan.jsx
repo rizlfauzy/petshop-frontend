@@ -30,18 +30,14 @@ export default function MasterSatuan({ icon, title }) {
 
   useEffect(() => {
     async function get_satuan() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/satuan?kode=" + kode_satuan,
-            headers: { authorization: `Bearer ${session.token}` },
-          })
-        );
-        if (error) throw new Error(message);
-        set_satuan((state) => ({ ...state, ...data }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/satuan?kode=" + kode_satuan,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      set_satuan((state) => ({ ...state, ...data }));
     }
 
     if (is_selected) {
@@ -56,7 +52,7 @@ export default function MasterSatuan({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-  }, [is_selected, kode_satuan]);
+  }, [is_selected, kode_satuan, run , session]);
 
   const handle_modal = useCallback(() => {
     dispatch(set_show_modal(true));
@@ -198,7 +194,7 @@ export default function MasterSatuan({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_satuan && (
-        <Modal modal_title="Grup" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Grup" className={["modal-md"]} btn={<></>}>
           <ModalMain
             set={set_kode_satuan}
             is_selected={set_is_selected}

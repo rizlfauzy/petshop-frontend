@@ -14,6 +14,9 @@ import { get_data, fetch_data } from "../../hooks/useFetch";
 import ModalBarangQty from "../../components/main/Pembelian/ModalBarangQty";
 import ListBarang from "../../components/main/Pembelian/ListBarang";
 import useAlert from "../../hooks/useAlert";
+import { useDispatch, useSelector } from "react-redux";
+import { set_show_pembelian } from "../../hooks/useStore";
+import Modal from "../../components/Modal";
 
 export default function Pembelian({ icon, title }) {
   const btn_save = useRef(null);
@@ -21,7 +24,7 @@ export default function Pembelian({ icon, title }) {
   const btn_cancel = useRef(null);
   const btn_tanggal_ref = useRef(null);
   const [show_modal_barang, set_show_modal_barang] = useState(false);
-  const [show_modal_pembelian, set_show_modal_pembelian] = useState(false);
+  // const [show_modal_pembelian, set_show_modal_pembelian] = useState(false);
   const [barcode, set_barcode] = useState("");
   const [nomor, set_nomor] = useState("");
   const [is_selected_barang, set_is_selected_barang] = useState(false);
@@ -48,6 +51,8 @@ export default function Pembelian({ icon, title }) {
   const { run } = useAsync();
   const { session } = useSession();
   const { swalAlert, swalAlertConfirm, swalAlertInput } = useAlert();
+  const dispatch = useDispatch();
+  const {show_modal_pembelian} = useSelector(state => state.conf);
 
   useLayoutEffect(() => {
     const date = date_picker("tanggal");
@@ -99,7 +104,6 @@ export default function Pembelian({ icon, title }) {
 
     if (is_selected_pembelian) {
       get_pembelian();
-      set_show_modal_pembelian(false);
       btn_save.current.disabled = true;
       btn_update.current.disabled = false;
       btn_cancel.current.disabled = false;
@@ -202,10 +206,11 @@ export default function Pembelian({ icon, title }) {
     set_is_selected_barang(false);
     set_is_selected_pembelian(false);
     set_is_edit(false);
+    dispatch(set_show_pembelian(false));
     btn_save.current.disabled = false;
     btn_update.current.disabled = true;
     btn_cancel.current.disabled = true;
-  }, []);
+  }, [dispatch]);
 
   const handle_save = useCallback(async () => {
     try {
@@ -274,9 +279,8 @@ export default function Pembelian({ icon, title }) {
   }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput])
 
   const handle_find_pembelian = useCallback(() => {
-    set_show_modal_pembelian(true);
-
-  }, []);
+    dispatch(set_show_pembelian(true));
+  }, [dispatch]);
 
   const handle_keterangan = useCallback((e) => {
     const textarea = e.target;
@@ -431,7 +435,7 @@ export default function Pembelian({ icon, title }) {
         </ModalSec>
       )}
       {show_modal_pembelian && (
-        <ModalSec modal_title="Pembelian" className={["modal-md"]} btn={<></>} set_modal={set_show_modal_pembelian}>
+        <Modal modal_title="Pembelian" className={["modal-md"]} btn={<></>}>
           <ModalMain
             set={set_nomor}
             is_selected={set_is_selected_pembelian}
@@ -454,7 +458,7 @@ export default function Pembelian({ icon, title }) {
             <th className="text-left align-middle">Tanggal</th>
             <th className="text-left align-middle">Keterangan</th>
           </ModalMain>
-        </ModalSec>
+        </Modal>
       )}
       {show_modal_qty && (
         <ModalSec modal_title="Input Qty" className={["modal-sm"]} btn={<></>} set_modal={set_show_modal_qty}>

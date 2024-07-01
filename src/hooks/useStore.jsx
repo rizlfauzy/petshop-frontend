@@ -13,6 +13,7 @@ const conf = createSlice({
     show_modal_barang: false,
     show_modal_import: false,
     show_modal_pembelian: false,
+    show_modal_penjualan: false,
     show_loading: false,
     graph: null,
   },
@@ -51,6 +52,9 @@ const conf = createSlice({
     set_show_pembelian: (state, action) => {
       state.show_modal_pembelian = action.payload;
     },
+    set_show_penjualan: (state, action) => {
+      state.show_modal_penjualan = action.payload;
+    },
     set_hide_all_modal: (state) => {
       state.show_modal = false;
       state.show_modal_logout = false;
@@ -61,6 +65,7 @@ const conf = createSlice({
       state.show_modal_barang = false;
       state.show_modal_import = false;
       state.show_modal_pembelian = false;
+      state.show_modal_penjualan = false;
     },
     set_show_loading: (state, action) => {
       state.show_loading = action.payload;
@@ -77,5 +82,5 @@ const store = configureStore({
   },
 });
 
-export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang, set_show_import, set_show_pembelian } = conf.actions;
+export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang, set_show_import, set_show_pembelian, set_show_penjualan } = conf.actions;
 export default store;

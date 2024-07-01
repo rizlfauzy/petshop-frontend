@@ -47,7 +47,7 @@ export default function Pembelian({ icon, title }) {
   const { format_rupiah } = useFormating();
   const { run } = useAsync();
   const { session } = useSession();
-  const { swalAlert } = useAlert();
+  const { swalAlert, swalAlertConfirm, swalAlertInput } = useAlert();
 
   useLayoutEffect(() => {
     const date = date_picker("tanggal");
@@ -148,6 +148,7 @@ export default function Pembelian({ icon, title }) {
       ...prev,
       [name]: value,
     }));
+    set_is_selected_pembelian(false);
   }, []);
 
   const handle_scan_barcode = useCallback(
@@ -186,6 +187,14 @@ export default function Pembelian({ icon, title }) {
       tanggal: moment().format("YYYY-MM-DD"),
       keterangan: "",
     });
+    set_barang_qty({
+      nama_barang: "",
+      barcode: "",
+      stock: 0,
+      harga_modal: 0,
+      qty: 0,
+      total_harga: 0
+    })
     set_list_barang([]);
     set_barcode("");
     set_nomor("");
@@ -219,12 +228,54 @@ export default function Pembelian({ icon, title }) {
     }
   }, [swalAlert, list_barang, pembelian, run, session, handle_clear]);
 
-  const handle_update = useCallback(() => {
-    console.log("Update");
-  }, []);
+  const handle_update = useCallback(async () => {
+    try {
+      const confirm = await swalAlertConfirm("Data akan segera diupdate !!!", "warning");
+      if (!confirm.isConfirmed) return;
+
+      const { error, message } = await run(
+        fetch_data({
+          url: "/order",
+          method: "PUT",
+          headers: { authorization: `Bearer ${session.token}` },
+          data: {
+            ...pembelian,
+            list_barang: JSON.stringify(list_barang),
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [swalAlert, swalAlertConfirm, handle_clear, list_barang, run, session, pembelian]);
+
+  const handle_cancel = useCallback(async () => {
+    try {
+      const confirm = await swalAlertInput("Data yang dicancel tidak bisa dihapus !!!", "warning");
+      if (!confirm.isConfirmed) return;
+
+      const { error, message } = await run(
+        fetch_data({
+          url: "/order",
+          method: "DELETE",
+          headers: { authorization: `Bearer ${session.token}` },
+          data: {nomor: pembelian.nomor, alasan: confirm.value},
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput])
 
   const handle_find_pembelian = useCallback(() => {
     set_show_modal_pembelian(true);
+
   }, []);
 
   const handle_keterangan = useCallback((e) => {
@@ -245,7 +296,7 @@ export default function Pembelian({ icon, title }) {
         <button id="find" className="btn-sm bg-primary text-white" onClick={handle_find_pembelian}>
           <i className="far fa-file-search mr-[10px]"></i>Find
         </button>
-        <button id="cancel" className="btn-sm bg-red-600 hover:bg-red-800 active:bg-red-950 text-white" ref={btn_cancel}>
+        <button id="cancel" className="btn-sm bg-red-600 hover:bg-red-800 active:bg-red-950 text-white" ref={btn_cancel} onClick={handle_cancel}>
           <FontAwesomeIcon icon={faCancel} className="mr-[10px]" />
           Cancel
         </button>
@@ -390,7 +441,7 @@ export default function Pembelian({ icon, title }) {
               page: 1,
               select: ["nomor", "tanggal", "keterangan"],
               order: [["nomor", "ASC"]],
-              where: {},
+              where: {batal: false},
               likes: ["nomor"],
               keyword: "",
               func_item: {

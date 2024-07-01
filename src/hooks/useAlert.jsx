@@ -20,5 +20,39 @@ export default function useAlert() {
     });
   }
 
-  return { swalAlert };
+  async function swalAlertConfirm(msg, type) {
+    return await MySwal.fire({
+      title: "Apakah anda yakin?",
+      text: msg,
+      icon: type,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya !!!",
+      cancelButtonText: "Tidak !!!",
+    });
+  }
+
+  async function swalAlertInput(msg, type) {
+    return await MySwal.fire({
+      title: "Apakah anda yakin?",
+      text: msg,
+      icon: type,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya !!!",
+      cancelButtonText: "Tidak !!!",
+      input: "textarea",
+      inputLabel: "Alasan",
+      inputPlaceholder: "Ketikan Alasan di sini...",
+      inputAttributes: {
+        required: true,
+        "aria-label": "Ketikan Alasan di sini...",
+      },
+      inputValidator: (result) => !result && "Alasan tidak boleh kosong!!!",
+    });
+  }
+
+  return { swalAlert, swalAlertConfirm, swalAlertInput };
 }

@@ -1,21 +1,21 @@
-import PropTypes from 'prop-types';
-import HeaderPage from '../../components/HeaderPage';
-import { useRef, useCallback, useState, useLayoutEffect, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCancel, faCalendarDays, faSearch } from '@fortawesome/free-solid-svg-icons';
-import moment from 'moment';
-import useDatePicker from '../../hooks/useDatePicker';
-import { useDispatch, useSelector } from 'react-redux';
-import { set_show_penjualan, set_show_barang, set_show_qty,set_hide_all_modal } from '../../hooks/useStore';
-import Modal from '../../components/Modal';
-import ModalMain from '../../components/main/ModalMain';
-import useAsync from '../../hooks/useAsync';
-import { fetch_data, get_data } from '../../hooks/useFetch';
-import useSession from '../../hooks/useSession';
-import useFormating from '../../hooks/useFormating';
-import ModalBarangQty from '../../components/main/Penjualan/ModalBarangQty';
-import ListBarang from '../../components/main/Penjualan/ListBarang';
-import useAlert from '../../hooks/useAlert';
+import PropTypes from "prop-types";
+import HeaderPage from "../../components/HeaderPage";
+import { useRef, useCallback, useState, useLayoutEffect, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCancel, faCalendarDays, faSearch } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import useDatePicker from "../../hooks/useDatePicker";
+import { useDispatch, useSelector } from "react-redux";
+import { set_show_penjualan, set_show_barang, set_show_qty, set_hide_all_modal } from "../../hooks/useStore";
+import Modal from "../../components/Modal";
+import ModalMain from "../../components/main/ModalMain";
+import useAsync from "../../hooks/useAsync";
+import { fetch_data, get_data } from "../../hooks/useFetch";
+import useSession from "../../hooks/useSession";
+import useFormating from "../../hooks/useFormating";
+import ModalBarangQty from "../../components/main/Penjualan/ModalBarangQty";
+import ListBarang from "../../components/main/Penjualan/ListBarang";
+import useAlert from "../../hooks/useAlert";
 
 export default function Penjualan({ icon, title }) {
   moment.locale("id");
@@ -24,8 +24,8 @@ export default function Penjualan({ icon, title }) {
   const btn_cancel = useRef(null);
   const btn_tanggal_ref = useRef(null);
   const [nomor, set_nomor] = useState("");
-  const [barcode, set_barcode] = useState('');
-  const [keyword, set_keyword] = useState('');
+  const [barcode, set_barcode] = useState("");
+  const [keyword, set_keyword] = useState("");
   const [is_edit, set_is_edit] = useState(false);
   const [is_selected_penjualan, set_is_selected_penjualan] = useState(false);
   const [is_selected_barang, set_is_selected_barang] = useState(false);
@@ -51,10 +51,10 @@ export default function Penjualan({ icon, title }) {
   const { run } = useAsync();
   const { session } = useSession();
   const { format_rupiah } = useFormating();
-  const { swalAlert } = useAlert();
+  const { swalAlert, swalAlertInput, swalAlertConfirm } = useAlert();
 
   useLayoutEffect(() => {
-    const date = date_picker('tanggal');
+    const date = date_picker("tanggal");
     date.onSelect((date) => {
       const tanggal = moment(date).format("YYYY-MM-DD");
       set_penjualan((prev) => ({
@@ -70,27 +70,29 @@ export default function Penjualan({ icon, title }) {
       btn_tanggal.removeEventListener("click", open_date);
       date.destroy();
     };
-  }, [date_picker, btn_tanggal_ref])
+  }, [date_picker, btn_tanggal_ref]);
 
   useEffect(() => {
     async function get_penjualan() {
-      const { error, message, data } = await run(get_data({
-        url: "/sales?nomor=" + nomor,
-        headers: { authorization: `Bearer ${session.token}` },
-      }))
+      const { error, message, data } = await run(
+        get_data({
+          url: "/sales?nomor=" + nomor,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
       if (error) throw new Error(message);
       if (data) {
-        set_penjualan(prev => ({ ...prev, ...data }))
-        const goods = data.list_barang.map(item => ({
+        set_penjualan((prev) => ({ ...prev, ...data }));
+        const goods = data.list_barang.map((item) => ({
           barcode: item.barcode,
           nama_barang: item.nama_barang,
-          stock: item.stock,
+          stock: Number(item.stock) + Number(item.qty),
           qty: item.qty,
           disc: item.disc,
           nilai_disc: item.nilai_disc,
           harga_jual: item.harga,
-          total_harga: item.total
-        }))
+          total_harga: item.total,
+        }));
         set_list_barang(goods);
       }
     }
@@ -105,7 +107,7 @@ export default function Penjualan({ icon, title }) {
       btn_update.current.disabled = true;
       btn_cancel.current.disabled = true;
     }
-  }, [run, nomor, is_selected_penjualan, session])
+  }, [run, nomor, is_selected_penjualan, session]);
 
   useEffect(() => {
     async function get_barang() {
@@ -124,12 +126,12 @@ export default function Penjualan({ icon, title }) {
           total_harga: 0,
           qty: 0,
           nilai_disc: 0,
-          stock
+          stock,
         }));
       }
     }
 
-    if (is_selected_barang && keyword != '') {
+    if (is_selected_barang && keyword != "") {
       dispatch(set_show_qty(true));
       set_is_selected_barang(false);
       set_is_edit(false);
@@ -139,7 +141,7 @@ export default function Penjualan({ icon, title }) {
       set_is_selected_barang(false);
       set_is_edit(false);
     }
-  }, [run, barcode, session, dispatch, keyword, is_selected_barang, list_barang])
+  }, [run, barcode, session, dispatch, keyword, is_selected_barang, list_barang]);
 
   const handle_scan_barcode = useCallback(
     async (e) => {
@@ -162,7 +164,7 @@ export default function Penjualan({ icon, title }) {
             ...data,
             total_harga: 0,
             qty: 0,
-            nilai_disc: 0
+            nilai_disc: 0,
           }));
         }
       } catch (e) {
@@ -221,17 +223,58 @@ export default function Penjualan({ icon, title }) {
     }
   }, [swalAlert, list_barang, penjualan, run, session, handle_clear]);
 
-  const handle_update = useCallback(() => {
-    console.log("Update");
-  }, []);
+  const handle_update = useCallback(async () => {
+    try {
+      const confirm = await swalAlertConfirm("Data akan segera diupdate !!!", "warning");
+      if (!confirm.isConfirmed) return;
+
+      const { error, message } = await run(
+        fetch_data({
+          url: "/sales",
+          method: "PUT",
+          headers: { authorization: `Bearer ${session.token}` },
+          data: {
+            ...penjualan,
+            list_barang: JSON.stringify(list_barang),
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [handle_clear, list_barang, penjualan, run, session, swalAlert, swalAlertConfirm]);
 
   const handle_find_penjualan = useCallback(() => {
     dispatch(set_show_penjualan(true));
   }, [dispatch]);
 
-  const handle_cancel = useCallback(() => {
-    console.log("Cancel");
-  }, []);
+  const handle_cancel = useCallback(async () => {
+    try {
+      const confirm = await swalAlertInput("Data yang dicancel tidak bisa dihapus !!!", "warning");
+      if (!confirm.isConfirmed) return;
+
+      const { error, message } = await run(
+        fetch_data({
+          url: "/sales",
+          method: "DELETE",
+          headers: { authorization: `Bearer ${session.token}` },
+          data: {
+            nomor: penjualan.nomor,
+            alasan: confirm.value,
+            tanggal: penjualan.tanggal,
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [handle_clear, penjualan, run, session, swalAlertInput, swalAlert]);
 
   const handle_change_penjualan = useCallback((e) => {
     const { name, value } = e.target;
@@ -363,6 +406,63 @@ export default function Penjualan({ icon, title }) {
           </div>
         </div>
         <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
+        <div className="row">
+          <div className="md:col-quarter col-full">
+            <div className="modal-content-main mb-2">
+              <div className="modal-header-main !p-2">
+                <h5 className="mb-0 text-md">Detail Penjualan</h5>
+              </div>
+              <div className="modal-body-main">
+                <div className="row my-2">
+                  <div className="col-full input-group md:mb-0 mb-2">
+                    <div className="col-half p-0 input-group-prepend">
+                      <label htmlFor="total_qty" className="input-group-text">
+                        Jumlah Barang
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      className="form-control col-half"
+                      name="total_qty"
+                      id="total_qty"
+                      required
+                      placeholder="Total Qty Barang"
+                      value={format_rupiah(
+                        list_barang.reduce((acc, curr) => {
+                          return acc + Number(curr.qty);
+                        }, 0)
+                      , {})}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="row my-2">
+                  <div className="col-full input-group md:mb-0 mb-2">
+                    <div className="col-half p-0 input-group-prepend">
+                      <label htmlFor="total_harga" className="input-group-text">
+                        Total Harga Barang
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      className="form-control col-half"
+                      name="total_harga"
+                      id="total_harga"
+                      required
+                      placeholder="Total Harga Barang"
+                      value={format_rupiah(
+                        list_barang.reduce((acc, curr) => {
+                          return acc + Number(curr.harga_jual) * Number(curr.qty) - Number(curr.nilai_disc);
+                        }, 0)
+                      )}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       {show_modal_penjualan && (
         <Modal modal_title="Penjualan" className={["md:modal-md", "modal-xl"]} btn={<></>}>
@@ -432,5 +532,5 @@ export default function Penjualan({ icon, title }) {
 
 Penjualan.propTypes = {
   icon: PropTypes.element,
-  title: PropTypes.string
-}
+  title: PropTypes.string,
+};

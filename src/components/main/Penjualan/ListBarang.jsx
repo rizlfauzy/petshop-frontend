@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { set_show_qty } from "../../../hooks/useStore";
 
 export default function ListBarang({ set_list_barang, list_barang, set_barang_qty, set_is_edit }) {
-  const { format_rupiah } = useFormating();
+  const { format_rupiah, format_disc } = useFormating();
   const dispatch = useDispatch();
 
   const handle_edit_barang = useCallback(
@@ -68,7 +68,7 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
                               <td className="text-left align-middle">{item.nama_barang}</td>
                               <td className="text-left align-middle">{format_rupiah(item.qty, {})}</td>
                               <td className="text-left align-middle">{format_rupiah(item.harga_jual)}</td>
-                              <td className="text-left align-middle">{format_rupiah(item.disc,{})}</td>
+                              <td className="text-left align-middle">{format_disc(item.disc)}%</td>
                               <td className="text-left align-middle">{format_rupiah(item.nilai_disc)}</td>
                               <td className="text-left align-middle">{format_rupiah(item.total_harga)}</td>
                               <td className="text-left align-middle">

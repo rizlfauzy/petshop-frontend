@@ -86,9 +86,7 @@ export default function Pembelian({ icon, title }) {
       if (data) {
         set_pembelian((prev) => ({
           ...prev,
-          nomor: data.nomor,
-          tanggal: data.tanggal,
-          keterangan: data.keterangan,
+          ...data,
         }));
         const goods = data.list_barang.map((item) => ({
           barcode: item.barcode,
@@ -267,7 +265,7 @@ export default function Pembelian({ icon, title }) {
           url: "/order",
           method: "DELETE",
           headers: { authorization: `Bearer ${session.token}` },
-          data: {nomor: pembelian.nomor, alasan: confirm.value},
+          data: {nomor: pembelian.nomor, alasan: confirm.value, tanggal: pembelian.tanggal},
         })
       );
       if (error) throw new Error(message);
@@ -407,7 +405,7 @@ export default function Pembelian({ icon, title }) {
         <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_show_modal_qty={set_show_modal_qty} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
       </div>
       {show_modal_barang && (
-        <ModalSec modal_title={"Barang"} className={["modal-md"]} btn={<></>} set_modal={set_show_modal_barang}>
+        <ModalSec modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>} set_modal={set_show_modal_barang}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang}
@@ -435,7 +433,7 @@ export default function Pembelian({ icon, title }) {
         </ModalSec>
       )}
       {show_modal_pembelian && (
-        <Modal modal_title="Pembelian" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Pembelian" className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_nomor}
             is_selected={set_is_selected_pembelian}
@@ -461,7 +459,7 @@ export default function Pembelian({ icon, title }) {
         </Modal>
       )}
       {show_modal_qty && (
-        <ModalSec modal_title="Input Qty" className={["modal-sm"]} btn={<></>} set_modal={set_show_modal_qty}>
+        <ModalSec modal_title="Input Qty" className={["md:modal-sm", "modal-xl"]} btn={<></>} set_modal={set_show_modal_qty}>
           <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} set_show_modal_qty={set_show_modal_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} />
         </ModalSec>
       )}

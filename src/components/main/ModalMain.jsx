@@ -108,7 +108,7 @@ export default function ModalMain({ set, is_selected, conf, children }) {
   return (
     <div className="table-responsive">
       <div className="row mb-2 justify-between">
-        <div className="col-sixth">
+        <div className="md:col-sixth col-onethird">
           <label htmlFor="select_limit_list" className="flex">
             Pilih
             <select value={limit} onChange={handle_limit} id="select_limit_list" className="form-control form-control-sm">
@@ -117,9 +117,9 @@ export default function ModalMain({ set, is_selected, conf, children }) {
             Baris
           </label>
         </div>
-        <div className="col-half">
+        <div className="md:col-half col-twothird">
           <div className="input-group justify-end">
-            <div className="col-quarter p-0 input-group-prepend">
+            <div className="md:col-quarter col-half p-0 input-group-prepend justify-end">
               <label htmlFor="input_list" className="input-group-text">
                 Cari Data
               </label>

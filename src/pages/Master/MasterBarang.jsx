@@ -72,6 +72,10 @@ export default function MasterBarang({ icon, title }) {
       set_barang((prev) => ({ ...prev, kode_satuan: data.kode, nama_satuan: data.nama }));
     }
 
+    if (is_selected_satuan) get_satuan();
+  }, [is_selected_satuan, kode_satuan, run, session]);
+
+  useEffect(() => {
     async function get_kategori() {
       const { error, message, data } = await run(
         get_data({
@@ -86,6 +90,10 @@ export default function MasterBarang({ icon, title }) {
       set_barang((prev) => ({ ...prev, kode_kategori: data.kode, nama_kategori: data.nama }));
     }
 
+    if (is_selected_kategori) get_kategori();
+  }, [is_selected_kategori, kode_kategori, run, session]);
+
+  useEffect(() => {
     async function get_barang() {
       const { error, message, data } = await run(
         get_data({
@@ -101,8 +109,6 @@ export default function MasterBarang({ icon, title }) {
       set_kategori((prev) => ({ ...prev, kode_kategori: data.kode_kategori, nama_kategori: data.nama_kategori }));
     }
 
-    if (is_selected_satuan) get_satuan();
-    if (is_selected_kategori) get_kategori();
     if (is_selected_barang) {
       get_barang();
       btn_save.current.disabled = true;
@@ -113,7 +119,7 @@ export default function MasterBarang({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-  }, [is_selected_satuan, is_selected_kategori, is_selected_barang, kode_satuan, kode_kategori, barcode, format_disc, format_rupiah, run, session]);
+  }, [is_selected_barang, barcode, run, session])
 
   const handle_change_barang = useCallback(
     (e) => {

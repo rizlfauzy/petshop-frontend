@@ -2,16 +2,20 @@ import PropTypes from 'prop-types';
 import HeaderPage from '../../components/HeaderPage';
 import { useRef, useCallback, useState, useLayoutEffect, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCancel, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { faCancel, faCalendarDays, faSearch } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import useDatePicker from '../../hooks/useDatePicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { set_show_penjualan } from '../../hooks/useStore';
+import { set_show_penjualan, set_show_barang, set_show_qty,set_hide_all_modal } from '../../hooks/useStore';
 import Modal from '../../components/Modal';
 import ModalMain from '../../components/main/ModalMain';
 import useAsync from '../../hooks/useAsync';
-import { get_data } from '../../hooks/useFetch';
+import { fetch_data, get_data } from '../../hooks/useFetch';
 import useSession from '../../hooks/useSession';
+import useFormating from '../../hooks/useFormating';
+import ModalBarangQty from '../../components/main/Penjualan/ModalBarangQty';
+import ListBarang from '../../components/main/Penjualan/ListBarang';
+import useAlert from '../../hooks/useAlert';
 
 export default function Penjualan({ icon, title }) {
   moment.locale("id");
@@ -20,17 +24,34 @@ export default function Penjualan({ icon, title }) {
   const btn_cancel = useRef(null);
   const btn_tanggal_ref = useRef(null);
   const [nomor, set_nomor] = useState("");
+  const [barcode, set_barcode] = useState('');
+  const [keyword, set_keyword] = useState('');
+  const [is_edit, set_is_edit] = useState(false);
   const [is_selected_penjualan, set_is_selected_penjualan] = useState(false);
+  const [is_selected_barang, set_is_selected_barang] = useState(false);
+  const [list_barang, set_list_barang] = useState([]);
   const [penjualan, set_penjualan] = useState({
     nomor: "",
     tanggal: moment().format("YYYY-MM-DD"),
     keterangan: "",
   });
+  const [barang_qty, set_barang_qty] = useState({
+    barcode: "",
+    nama_barang: "",
+    stock: 0,
+    qty: 0,
+    disc: 0,
+    nilai_disc: 0,
+    harga_jual: 0,
+    total_harga: 0,
+  });
   const { date_picker } = useDatePicker();
   const dispatch = useDispatch();
-  const { show_modal_penjualan } = useSelector((state) => state.conf);
+  const { show_modal_penjualan, show_modal_barang, show_modal_qty } = useSelector((state) => state.conf);
   const { run } = useAsync();
   const { session } = useSession();
+  const { format_rupiah } = useFormating();
+  const { swalAlert } = useAlert();
 
   useLayoutEffect(() => {
     const date = date_picker('tanggal');
@@ -58,7 +79,20 @@ export default function Penjualan({ icon, title }) {
         headers: { authorization: `Bearer ${session.token}` },
       }))
       if (error) throw new Error(message);
-      if (data) set_penjualan(prev => ({ ...prev, ...data }));
+      if (data) {
+        set_penjualan(prev => ({ ...prev, ...data }))
+        const goods = data.list_barang.map(item => ({
+          barcode: item.barcode,
+          nama_barang: item.nama_barang,
+          stock: item.stock,
+          qty: item.qty,
+          disc: item.disc,
+          nilai_disc: item.nilai_disc,
+          harga_jual: item.harga,
+          total_harga: item.total
+        }))
+        set_list_barang(goods);
+      }
     }
 
     if (is_selected_penjualan) {
@@ -73,9 +107,119 @@ export default function Penjualan({ icon, title }) {
     }
   }, [run, nomor, is_selected_penjualan, session])
 
-  const handle_save = useCallback(() => {
-    console.log("Save");
-  }, []);
+  useEffect(() => {
+    async function get_barang() {
+      const { error, message, data } = await run(
+        get_data({
+          url: "/stock?barcode=" + barcode,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      if (data) {
+        const stock = list_barang.some((item) => item.barcode === data.barcode) ? data.stock - list_barang.find((item) => item.barcode === data.barcode).qty : data.stock;
+        set_barang_qty((prev) => ({
+          ...prev,
+          ...data,
+          total_harga: 0,
+          qty: 0,
+          nilai_disc: 0,
+          stock
+        }));
+      }
+    }
+
+    if (is_selected_barang && keyword != '') {
+      dispatch(set_show_qty(true));
+      set_is_selected_barang(false);
+      set_is_edit(false);
+    } else if (is_selected_barang) {
+      get_barang();
+      dispatch(set_show_qty(true));
+      set_is_selected_barang(false);
+      set_is_edit(false);
+    }
+  }, [run, barcode, session, dispatch, keyword, is_selected_barang, list_barang])
+
+  const handle_scan_barcode = useCallback(
+    async (e) => {
+      try {
+        set_keyword(e.target.value);
+        if (e.key === "Enter") {
+          set_barcode(e.target.value);
+          const { error, message, data } = await run(
+            get_data({
+              url: "/stock?barcode=" + e.target.value,
+              headers: { authorization: `Bearer ${session.token}` },
+            })
+          );
+          if (error) throw new Error(message);
+          if (!data) throw new Error("Barang tidak ditemukan !!!");
+          set_keyword("");
+          set_is_selected_barang(true);
+          set_barang_qty((prev) => ({
+            ...prev,
+            ...data,
+            total_harga: 0,
+            qty: 0,
+            nilai_disc: 0
+          }));
+        }
+      } catch (e) {
+        return swalAlert(e.message, "error");
+      }
+    },
+    [swalAlert, run, session]
+  );
+
+  const handle_clear = useCallback(() => {
+    set_penjualan({
+      nomor: "",
+      tanggal: moment().format("YYYY-MM-DD"),
+      keterangan: "",
+    });
+    set_barang_qty({
+      barcode: "",
+      nama_barang: "",
+      stock: 0,
+      qty: 0,
+      disc: 0,
+      nilai_disc: 0,
+      harga_jual: 0,
+      total_harga: 0,
+    });
+    set_list_barang([]);
+    set_is_selected_barang(false);
+    set_is_selected_penjualan(false);
+    set_barcode("");
+    set_is_edit(false);
+    set_keyword("");
+    dispatch(set_hide_all_modal());
+    btn_save.current.disabled = false;
+    btn_update.current.disabled = true;
+    btn_cancel.current.disabled = true;
+  }, [dispatch]);
+
+  const handle_save = useCallback(async () => {
+    try {
+      const { error, message } = await run(
+        fetch_data({
+          url: "/sales",
+          method: "POST",
+          headers: { authorization: `Bearer ${session.token}` },
+          data: {
+            ...penjualan,
+            list_barang: JSON.stringify(list_barang),
+          },
+        })
+      );
+      if (error) throw new Error(message);
+      swalAlert(message, "success");
+      handle_clear();
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [swalAlert, list_barang, penjualan, run, session, handle_clear]);
 
   const handle_update = useCallback(() => {
     console.log("Update");
@@ -87,10 +231,6 @@ export default function Penjualan({ icon, title }) {
 
   const handle_cancel = useCallback(() => {
     console.log("Cancel");
-  }, []);
-
-  const handle_clear = useCallback(() => {
-    console.log("Clear");
   }, []);
 
   const handle_change_penjualan = useCallback((e) => {
@@ -176,13 +316,56 @@ export default function Penjualan({ icon, title }) {
                     ></textarea>
                   </div>
                 </div>
+                <div className="row my-2">
+                  <div className="col-full input-group">
+                    <div className="md:col-quarter col-half p-0 input-group-prepend">
+                      <label htmlFor="nama_barang" className="input-group-text">
+                        NAMA BARANG
+                      </label>
+                    </div>
+                    <div className="relative md:col-thirdperfour col-half !px-0">
+                      <input type="text" className="form-control" name="nama_barang" id="nama_barang" required readOnly placeholder="NAMA BARANG" />
+                      <button
+                        className="btn_absolute_right !right-1 text-primary hover:text-primary"
+                        type="button"
+                        onClick={() => {
+                          dispatch(set_show_barang(true));
+                          set_is_selected_barang(false);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faSearch} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="row my-2">
+                  <div className="md:col-half coll-full input-group">
+                    <div className="col-half p-0 input-group-prepend">
+                      <label htmlFor="barcode" className="input-group-text">
+                        SCAN BARCODE
+                      </label>
+                    </div>
+                    <input
+                      value={keyword}
+                      type="text"
+                      className="form-control col-half"
+                      name="barcode"
+                      id="barcode"
+                      required
+                      placeholder="KETIK BARCODE DI SINI !!!"
+                      onChange={(e) => set_keyword(e.target.value)}
+                      onKeyDown={handle_scan_barcode}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
       </div>
       {show_modal_penjualan && (
-        <Modal modal_title="Penjualan" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Penjualan" className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_nomor}
             is_selected={set_is_selected_penjualan}
@@ -208,6 +391,39 @@ export default function Penjualan({ icon, title }) {
             <th className="text-left align-middle">Penginput</th>
             <th className="text-left align-middle">Tgl Simpan</th>
           </ModalMain>
+        </Modal>
+      )}
+      {show_modal_barang && (
+        <Modal modal_title="Barang" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+          <ModalMain
+            set={set_barcode}
+            is_selected={set_is_selected_barang}
+            conf={{
+              name: "stock_barang",
+              limit: 5,
+              page: 1,
+              select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
+              order: [["barcode", "ASC"]],
+              where: { periode: moment().format("YYYYMM") },
+              likes: ["barcode", "nama_barang"],
+              keyword: "",
+              func_item: {
+                stock: (item) => format_rupiah(item.stock, {}) + " " + item.nama_satuan,
+              },
+            }}
+          >
+            <th className="text-left align-middle">Action</th>
+            <th className="text-left align-middle">Barcode</th>
+            <th className="text-left align-middle">Nama Barang</th>
+            <th className="text-left align-middle">Satuan</th>
+            <th className="text-left align-middle">Kategori</th>
+            <th className="text-left align-middle">Stock</th>
+          </ModalMain>
+        </Modal>
+      )}
+      {show_modal_qty && (
+        <Modal modal_title="Input QTY" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
+          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit}></ModalBarangQty>
         </Modal>
       )}
     </>

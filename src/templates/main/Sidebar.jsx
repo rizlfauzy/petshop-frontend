@@ -1,7 +1,7 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
 import { useRef, useCallback, useLayoutEffect } from "react";
-import { set_show_modal, set_show_logout } from "../../hooks/useStore";
+import { set_show_modal, set_show_logout, set_hide_all_modal } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
 import { useNavigate } from "react-router-dom";
@@ -53,8 +53,7 @@ export default function Sidebar() {
   }, []);
 
   const on_click_logout = useCallback(async () => {
-    dispatch(set_show_modal(false));
-    dispatch(set_show_logout(false));
+    dispatch(set_hide_all_modal());
     try {
       const { error, message } = await run(
         fetch_data({

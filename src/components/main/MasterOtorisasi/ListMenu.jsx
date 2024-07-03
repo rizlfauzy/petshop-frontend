@@ -113,12 +113,12 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
             <div className="row mb-2 justify-between">
               <div className="col-half">
                 <div className="input-group justify-start">
-                  <div className="col-quarter p-0 input-group-prepend">
+                  <div className="md:col-quarter col-half p-0 input-group-prepend">
                     <label htmlFor="input_menu" className="input-group-text">
                       Cari Data
                     </label>
                   </div>
-                  <div className="relative col-thirdperfour !px-0">
+                  <div className="relative md:col-thirdperfour col-half !px-0">
                     <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} required />
                     <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_clear_keyword}>
                       <i className="far fa-times"></i>
@@ -128,10 +128,10 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
               </div>
               <div className="col-half">
                 <div className="input-group justify-end">
-                  <div className="col-quarter p-0 input-group-prepend">
+                  <div className="md:col-quarter col-sixth p-0 input-group-prepend">
                     <input type="checkbox" className="form-control ml-auto" name="check_all" id="check_all" checked={check_all} onChange={handle_check_all} required />
                   </div>
-                  <div className="relative col-quarter">
+                  <div className="relative md:col-quarter">
                     <label htmlFor="check_all" className="input-group-text justify-end cursor-pointer">
                       Select All
                     </label>

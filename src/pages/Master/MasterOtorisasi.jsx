@@ -10,6 +10,7 @@ import { fetch_data, get_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
 import useAlert from "../../hooks/useAlert";
 import ListMenu from "../../components/main/MasterOtorisasi/ListMenu";
+import { useSelector } from "react-redux";
 
 export default function MasterOtorisasi({ icon, title }) {
   const [show_modal_grup, set_show_modal_grup] = useState(false);
@@ -22,6 +23,7 @@ export default function MasterOtorisasi({ icon, title }) {
   const { run } = useAsync();
   const { session } = useSession();
   const { swalAlert } = useAlert();
+  const { item } = useSelector((state) => state.conf);
   const [grup, set_grup] = useState({
     kode_grup: "",
     nama_grup: "",
@@ -119,17 +121,21 @@ export default function MasterOtorisasi({ icon, title }) {
               <div className="modal-body-main">
                 <div className="row my-2">
                   <div className="col-full input-group">
-                    <div className="col-quarter p-0 input-group-prepend">
+                    <div className="md:col-quarter col-half p-0 input-group-prepend">
                       <label htmlFor="nama_grup" className="input-group-text">
                         NAMA GRUP
                       </label>
                     </div>
-                    <div className="relative col-thirdperfour !px-0">
+                    <div className="relative md:col-thirdperfour col-half !px-0">
                       <input type="text" value={grup.nama_grup} className="form-control" name="nama_grup" id="nama_grup" placeholder="tekan tombol cari" required readOnly onChange={handle_change_grup} />
-                      <button className="btn_absolute_right hover:text-primary" type="button" onClick={() => {
-                        set_show_modal_grup(true);
-                        set_is_selected_grup(false);
-                      }}>
+                      <button
+                        className="btn_absolute_right hover:text-primary"
+                        type="button"
+                        onClick={() => {
+                          set_show_modal_grup(true);
+                          set_is_selected_grup(false);
+                        }}
+                      >
                         <FontAwesomeIcon icon={faSearch} />
                       </button>
                     </div>
@@ -146,7 +152,7 @@ export default function MasterOtorisasi({ icon, title }) {
         </div>
       </div>
       {show_modal_grup && (
-        <ModalSec modal_title="Grup" className={["modal-md"]} btn={<></>} set_modal={set_show_modal_grup}>
+        <ModalSec modal_title="Grup" className={["md:modal-md", "modal-xl"]} btn={<></>} set_modal={set_show_modal_grup}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected_grup}
@@ -156,7 +162,7 @@ export default function MasterOtorisasi({ icon, title }) {
               page: 1,
               select: ["kode", "nama", "aktif"],
               order: [["kode", "ASC"]],
-              where: "kode <> 'ITS' and aktif = 't'",
+              where: item?.data?.mygrup == "ITS" ? { aktif: true } : "kode <> 'ITS' and aktif = 't'",
               likes: ["kode", "nama"],
               keyword: "",
               func_item: {

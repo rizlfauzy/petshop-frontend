@@ -774,6 +774,10 @@ video {
   width: 75%;
 }
 
+.w-5\/6 {
+  width: 83.333333%;
+}
+
 .w-\[40\%\] {
   width: 40%;
 }
@@ -816,6 +820,10 @@ video {
 
 .flex-\[0_0_75\%\] {
   flex: 0 0 75%;
+}
+
+.flex-\[0_0_83\.333333\%\] {
+  flex: 0 0 83.333333%;
 }
 
 .border-collapse {
@@ -2465,6 +2473,21 @@ p{
   }
 }
 
+.col-five-sixth {
+  position: relative;
+  min-height: 1px;
+  width: 83.333333%;
+  flex: 0 0 83.333333%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+@media (min-width: 1280px) {
+  .col-five-sixth {
+    width: 83.333333%;
+  }
+}
+
 @media(min-width: 640px){
   .sm\:col-half {
     position: relative;
@@ -2538,6 +2561,21 @@ p{
   @media (min-width: 1280px) {
     .sm\:col-sixth {
       width: 16.666667%;
+    }
+  }
+
+  .sm\:col-five-sixth {
+    position: relative;
+    min-height: 1px;
+    width: 83.333333%;
+    flex: 0 0 83.333333%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  @media (min-width: 1280px) {
+    .sm\:col-five-sixth {
+      width: 83.333333%;
     }
   }
 
@@ -2630,6 +2668,21 @@ p{
   @media (min-width: 1280px) {
     .md\:col-sixth {
       width: 16.666667%;
+    }
+  }
+
+  .md\:col-five-sixth {
+    position: relative;
+    min-height: 1px;
+    width: 83.333333%;
+    flex: 0 0 83.333333%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  @media (min-width: 1280px) {
+    .md\:col-five-sixth {
+      width: 83.333333%;
     }
   }
 
@@ -2995,6 +3048,10 @@ input.form-control:is([type=radio],[type=checkbox]){
 
   .xl\:w-3\/4 {
     width: 75%;
+  }
+
+  .xl\:w-5\/6 {
+    width: 83.333333%;
   }
 
   .xl\:max-w-full {

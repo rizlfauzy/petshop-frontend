@@ -30,11 +30,11 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
       const result_value = arr_value.map((e) => Number(e)).join("");
       e.target.value = result_value.replace(/NaN/gi, "");
       if (e.target.value.length < 1) e.target.value = 0;
-      const nilai_disc = Math.round((parseFloat(barang_qty.harga_jual) * parseFloat(e.target.value) * parseFloat(barang_qty.disc)) / 100 / 100) * 100;
+      const nilai_disc = Math.round((parseFloat(barang_qty.harga) * parseFloat(e.target.value) * parseFloat(barang_qty.disc)) / 100 / 100) * 100;
       set_barang_qty((prev) => ({
         ...prev,
         nilai_disc,
-        total_harga: barang_qty.harga_jual * e.target.value - nilai_disc,
+        total_harga: barang_qty.harga * e.target.value - nilai_disc,
         [name]: format_rupiah(e.target.value, {}),
       }));
     },
@@ -52,8 +52,8 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
           if (item.barcode === barang_qty.barcode) {
             if (is_edit ? barang_qty.qty > barang_qty.stock : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang");
             item.qty = is_edit ? barang_qty.qty : Number(item.qty) + Number(barang_qty.qty);
-            item.nilai_disc = Math.round((parseFloat(item.harga_jual) * parseFloat(item.qty) * parseFloat(item.disc)) / 100 / 100) * 100;
-            item.total_harga = item.harga_jual * item.qty - item.nilai_disc;
+            item.nilai_disc = Math.round((parseFloat(item.harga) * parseFloat(item.qty) * parseFloat(item.disc)) / 100 / 100) * 100;
+            item.total_harga = item.harga * item.qty - item.nilai_disc;
           }
           return item;
         });
@@ -65,7 +65,7 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
             barcode: barang_qty.barcode,
             nama_barang: barang_qty.nama_barang,
             qty: barang_qty.qty,
-            harga_jual: barang_qty.harga_jual,
+            harga: barang_qty.harga,
             total_harga: barang_qty.total_harga,
             stock: barang_qty.stock,
             disc: barang_qty.disc,
@@ -121,11 +121,11 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
       <div className="row my-2">
         <div className="col-full input-group">
           <div className="col-half p-0 input-group-prepend">
-            <label htmlFor="harga_jual_qty" className="input-group-text">
-              Harga Jual
+            <label htmlFor="harga_qty" className="input-group-text">
+              Harga
             </label>
           </div>
-          <input type="text" className="form-control col-half" name="harga_jual_qty" id="harga_jual_qty" value={format_rupiah(barang_qty.harga_jual)} readOnly />
+          <input type="text" className="form-control col-half" name="harga_qty" id="harga_qty" value={format_rupiah(barang_qty.harga)} readOnly />
         </div>
       </div>
       <div className="row my-2">

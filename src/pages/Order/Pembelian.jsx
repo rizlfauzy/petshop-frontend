@@ -11,11 +11,11 @@ import useFormating from "../../hooks/useFormating";
 import useAsync from "../../hooks/useAsync";
 import useSession from "../../hooks/useSession";
 import { get_data, fetch_data } from "../../hooks/useFetch";
-import ModalBarangQty from "../../components/main/Pembelian/ModalBarangQty";
-import ListBarang from "../../components/main/Pembelian/ListBarang";
+import ModalBarangQty from "../../components/main/ModalBarangQty";
+import ListBarang from "../../components/main/ListBarang";
 import useAlert from "../../hooks/useAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_pembelian } from "../../hooks/useStore";
+import { set_show_pembelian, set_show_qty } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
 
 export default function Pembelian({ icon, title }) {
@@ -24,12 +24,10 @@ export default function Pembelian({ icon, title }) {
   const btn_cancel = useRef(null);
   const btn_tanggal_ref = useRef(null);
   const [show_modal_barang, set_show_modal_barang] = useState(false);
-  // const [show_modal_pembelian, set_show_modal_pembelian] = useState(false);
   const [barcode, set_barcode] = useState("");
   const [nomor, set_nomor] = useState("");
   const [is_selected_barang, set_is_selected_barang] = useState(false);
   const [is_selected_pembelian, set_is_selected_pembelian] = useState(false);
-  const [show_modal_qty, set_show_modal_qty] = useState(false);
   const [list_barang, set_list_barang] = useState([]);
   const [is_edit, set_is_edit] = useState(false);
   const [keyword, set_keyword] = useState("");
@@ -38,7 +36,7 @@ export default function Pembelian({ icon, title }) {
     nama_barang: "",
     stock: 0,
     qty: 0,
-    harga_modal: 0,
+    harga: 0,
     total_harga: 0,
   });
   const [pembelian, set_pembelian] = useState({
@@ -52,7 +50,32 @@ export default function Pembelian({ icon, title }) {
   const { session } = useSession();
   const { swalAlert, swalAlertConfirm, swalAlertInput } = useAlert();
   const dispatch = useDispatch();
-  const {show_modal_pembelian} = useSelector(state => state.conf);
+  const { show_modal_pembelian, show_modal_qty } = useSelector((state) => state.conf);
+
+  const get_stock = useCallback(
+    async (barcode) => {
+      const { error, message, data } = await run(
+        get_data({
+          url: `/stock?barcode=${barcode}&periode=${moment(pembelian.tanggal).format("YYYYMM")}`,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (data) {
+        const stock = list_barang.some((item) => item.barcode === data.barcode) ? data.stock - list_barang.find((item) => item.barcode === data.barcode).qty : data.stock;
+        set_barang_qty((prev) => ({
+          ...prev,
+          ...data,
+          harga: data.harga_modal,
+          total_harga: 0,
+          qty: 0,
+          nilai_disc: 0,
+          stock,
+        }));
+      }
+      return { error, message, data };
+    },
+    [run, session, pembelian.tanggal, list_barang]
+  );
 
   useLayoutEffect(() => {
     const date = date_picker("tanggal");
@@ -64,7 +87,11 @@ export default function Pembelian({ icon, title }) {
       }));
     });
 
-    const open_date = () => date.open();
+    const open_date = () => {
+      if (list_barang.length < 1) date.open();
+    };
+
+    if (list_barang.length > 0) date.destroy();
 
     const btn_tanggal = btn_tanggal_ref.current;
     btn_tanggal.addEventListener("click", open_date);
@@ -72,7 +99,7 @@ export default function Pembelian({ icon, title }) {
       btn_tanggal.removeEventListener("click", open_date);
       date.destroy();
     };
-  }, [date_picker, btn_tanggal_ref]);
+  }, [date_picker, btn_tanggal_ref, list_barang]);
 
   useEffect(() => {
     async function get_pembelian() {
@@ -92,7 +119,7 @@ export default function Pembelian({ icon, title }) {
           barcode: item.barcode,
           nama_barang: item.nama_barang,
           qty: item.qty,
-          harga_modal: item.harga,
+          harga: item.harga,
           total_harga: item.total,
           stock: item.stock,
         }));
@@ -114,35 +141,23 @@ export default function Pembelian({ icon, title }) {
 
   useEffect(() => {
     async function get_barang() {
-      const { error, message, data } = await run(
-        get_data({
-          url: "/stock?barcode=" + barcode,
-          headers: { authorization: `Bearer ${session.token}` },
-        })
-      );
+      const { error, message } = await get_stock(barcode);
       if (error) throw new Error(message);
-      if (data)
-        set_barang_qty((prev) => ({
-          ...prev,
-          ...data,
-          total_harga: 0,
-          qty: 0,
-        }));
     }
 
     if (is_selected_barang && keyword !== "") {
       set_show_modal_barang(false);
-      set_show_modal_qty(true);
+      dispatch(set_show_qty(true));
       set_is_selected_barang(false);
       set_is_edit(false);
     } else if (is_selected_barang) {
       get_barang();
       set_show_modal_barang(false);
-      set_show_modal_qty(true);
+      dispatch(set_show_qty(true));
       set_is_selected_barang(false);
       set_is_edit(false);
     }
-  }, [barcode, run, session, is_selected_barang, keyword]);
+  }, [barcode, is_selected_barang, keyword, get_stock, dispatch]);
 
   const handle_change_pembelian = useCallback((e) => {
     const { name, value } = e.target;
@@ -159,28 +174,17 @@ export default function Pembelian({ icon, title }) {
         set_keyword(e.target.value);
         if (e.key === "Enter") {
           set_barcode(e.target.value);
-          const { error, message, data } = await run(
-            get_data({
-              url: "/stock?barcode=" + e.target.value,
-              headers: { authorization: `Bearer ${session.token}` },
-            })
-          );
+          const { error, message, data } = await get_stock(e.target.value);
           if (error) throw new Error(message);
           if (!data) throw new Error("Barang tidak ditemukan !!!");
           set_keyword("");
           set_is_selected_barang(true);
-          set_barang_qty((prev) => ({
-            ...prev,
-            ...data,
-            total_harga: 0,
-            qty: 0,
-          }));
         }
       } catch (e) {
         return swalAlert(e.message, "error");
       }
     },
-    [swalAlert, run, session]
+    [swalAlert, get_stock]
   );
 
   const handle_clear = useCallback(() => {
@@ -193,10 +197,10 @@ export default function Pembelian({ icon, title }) {
       nama_barang: "",
       barcode: "",
       stock: 0,
-      harga_modal: 0,
+      harga: 0,
       qty: 0,
-      total_harga: 0
-    })
+      total_harga: 0,
+    });
     set_list_barang([]);
     set_barcode("");
     set_nomor("");
@@ -265,7 +269,7 @@ export default function Pembelian({ icon, title }) {
           url: "/order",
           method: "DELETE",
           headers: { authorization: `Bearer ${session.token}` },
-          data: {nomor: pembelian.nomor, alasan: confirm.value, tanggal: pembelian.tanggal},
+          data: { nomor: pembelian.nomor, alasan: confirm.value, tanggal: pembelian.tanggal },
         })
       );
       if (error) throw new Error(message);
@@ -274,7 +278,7 @@ export default function Pembelian({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput])
+  }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput]);
 
   const handle_find_pembelian = useCallback(() => {
     dispatch(set_show_pembelian(true));
@@ -371,6 +375,7 @@ export default function Pembelian({ icon, title }) {
                         onClick={() => {
                           set_show_modal_barang(true);
                           set_is_selected_barang(false);
+                          set_keyword("");
                         }}
                       >
                         <FontAwesomeIcon icon={faSearch} />
@@ -402,7 +407,7 @@ export default function Pembelian({ icon, title }) {
             </div>
           </div>
         </div>
-        <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_show_modal_qty={set_show_modal_qty} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
+        <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
       </div>
       {show_modal_barang && (
         <ModalSec modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>} set_modal={set_show_modal_barang}>
@@ -415,7 +420,7 @@ export default function Pembelian({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: { periode: moment().format("YYYYMM") },
+              where: { periode: moment(pembelian.tanggal).format("YYYYMM") },
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {
@@ -443,7 +448,7 @@ export default function Pembelian({ icon, title }) {
               page: 1,
               select: ["nomor", "tanggal", "keterangan"],
               order: [["nomor", "ASC"]],
-              where: {batal: false},
+              where: { batal: false },
               likes: ["nomor"],
               keyword: "",
               func_item: {
@@ -459,9 +464,9 @@ export default function Pembelian({ icon, title }) {
         </Modal>
       )}
       {show_modal_qty && (
-        <ModalSec modal_title="Input Qty" className={["md:modal-sm", "modal-xl"]} btn={<></>} set_modal={set_show_modal_qty}>
-          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} set_show_modal_qty={set_show_modal_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} />
-        </ModalSec>
+        <Modal modal_title="Input Qty" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
+          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} />
+        </Modal>
       )}
     </>
   );

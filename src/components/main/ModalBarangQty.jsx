@@ -1,37 +1,43 @@
 import PropTypes from "prop-types";
-import useFormating from "../../../hooks/useFormating";
+import useFormating from "../../hooks/useFormating";
 import { useEffect, useRef, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import useAlert from "../../../hooks/useAlert";
+import useAlert from "../../hooks/useAlert";
+import { useDispatch } from "react-redux";
+import { set_show_qty } from "../../hooks/useStore";
 
-export default function ModalBarangQty({ barang_qty, set_barang_qty, set_show_modal_qty, list_barang, set_list_barang, is_edit }) {
+export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang, set_list_barang, is_edit }) {
   const { format_rupiah } = useFormating();
   const input_qty_ref = useRef(null);
   const { swalAlert } = useAlert();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     input_qty_ref.current.focus();
   }, []);
 
-  const handle_change_qty = useCallback((e) => {
-    const { name, value } = e.target;
-    if (isNaN(Number(value))) e.target.value = value.substr(0, value.length - 1);
-    const arr_value = value.split("");
-    const first_val = arr_value[0];
-    if (first_val == 0) {
-      arr_value.shift();
-      e.target.value = arr_value.join("");
-    }
-    const result_value = arr_value.map((e) => Number(e)).join("");
-    e.target.value = result_value.replace(/NaN/gi, "");
-    if (e.target.value.length < 1) e.target.value = 0;
-    set_barang_qty((prev) => ({
-      ...prev,
-      total_harga: barang_qty.harga_modal * e.target.value,
-      [name]: format_rupiah(e.target.value, {}),
-    }));
-  }, [format_rupiah, set_barang_qty, barang_qty.harga_modal]);
+  const handle_change_qty = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      if (isNaN(Number(value))) e.target.value = value.substr(0, value.length - 1);
+      const arr_value = value.split("");
+      const first_val = arr_value[0];
+      if (first_val == 0) {
+        arr_value.shift();
+        e.target.value = arr_value.join("");
+      }
+      const result_value = arr_value.map((e) => Number(e)).join("");
+      e.target.value = result_value.replace(/NaN/gi, "");
+      if (e.target.value.length < 1) e.target.value = 0;
+      set_barang_qty((prev) => ({
+        ...prev,
+        total_harga: barang_qty.harga * e.target.value,
+        [name]: format_rupiah(e.target.value, {}),
+      }));
+    },
+    [format_rupiah, set_barang_qty, barang_qty.harga]
+  );
 
   const handle_input_barang = useCallback(() => {
     try {
@@ -42,7 +48,7 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, set_show_mo
         const new_list_barang = list_barang.map((item) => {
           if (item.barcode === barang_qty.barcode) {
             item.qty = is_edit ? barang_qty.qty : Number(item.qty) + Number(barang_qty.qty);
-            item.total_harga = item.harga_modal * item.qty;
+            item.total_harga = item.harga * item.qty;
           }
           return item;
         });
@@ -54,21 +60,24 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, set_show_mo
             barcode: barang_qty.barcode,
             nama_barang: barang_qty.nama_barang,
             qty: barang_qty.qty,
-            harga_modal: barang_qty.harga_modal,
+            harga: barang_qty.harga,
             total_harga: barang_qty.total_harga,
             stock: barang_qty.stock,
           },
         ]);
       }
-      set_show_modal_qty(false);
+      dispatch(set_show_qty(false));
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [barang_qty, set_show_modal_qty, swalAlert, list_barang, set_list_barang, is_edit]);
+  }, [barang_qty, dispatch, swalAlert, list_barang, set_list_barang, is_edit]);
 
-  const handle_input_on_enter = useCallback((e) => {
-    if (e.key === "Enter") handle_input_barang();
-  }, [handle_input_barang]);
+  const handle_input_on_enter = useCallback(
+    (e) => {
+      if (e.key === "Enter") handle_input_barang();
+    },
+    [handle_input_barang]
+  );
 
   return (
     <>
@@ -105,11 +114,11 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, set_show_mo
       <div className="row my-2">
         <div className="col-full input-group">
           <div className="col-half p-0 input-group-prepend">
-            <label htmlFor="harga_modal_qty" className="input-group-text">
-              Harga Modal
+            <label htmlFor="harga_qty" className="input-group-text">
+              Harga
             </label>
           </div>
-          <input type="text" className="form-control col-half" name="harga_modal_qty" id="harga_modal_qty" value={format_rupiah(barang_qty.harga_modal)} readOnly />
+          <input type="text" className="form-control col-half" name="harga_qty" id="harga_qty" value={format_rupiah(barang_qty.harga)} readOnly />
         </div>
       </div>
       <div className="row my-2">
@@ -144,7 +153,6 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, set_show_mo
 ModalBarangQty.propTypes = {
   barang_qty: PropTypes.object,
   set_barang_qty: PropTypes.func,
-  set_show_modal_qty: PropTypes.func,
   list_barang: PropTypes.array,
   set_list_barang: PropTypes.func,
   is_edit: PropTypes.bool,

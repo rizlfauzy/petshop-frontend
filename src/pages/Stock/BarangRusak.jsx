@@ -2,35 +2,34 @@ import PropTypes from "prop-types";
 import HeaderPage from "../../components/HeaderPage";
 import { useRef, useCallback, useState, useLayoutEffect, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faCalendarDays, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays, faCancel, faSearch } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import useDatePicker from "../../hooks/useDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_penjualan, set_show_barang, set_show_qty, set_hide_all_modal } from "../../hooks/useStore";
+import { set_show_barang, set_show_barang_rusak, set_hide_all_modal, set_show_qty } from "../../hooks/useStore";
+import useSession from "../../hooks/useSession";
+import useAlert from "../../hooks/useAlert";
+import useAsync from "../../hooks/useAsync";
+import { get_data, fetch_data } from "../../hooks/useFetch";
+import ListBarang from "../../components/main/ListBarang";
 import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
-import useAsync from "../../hooks/useAsync";
-import { fetch_data, get_data } from "../../hooks/useFetch";
-import useSession from "../../hooks/useSession";
 import useFormating from "../../hooks/useFormating";
-import ModalBarangQty from "../../components/main/Penjualan/ModalBarangQty";
-import ListBarang from "../../components/main/Penjualan/ListBarang";
-import useAlert from "../../hooks/useAlert";
+import ModalBarangQty from "../../components/main/ModalBarangQty";
 
-export default function Penjualan({ icon, title }) {
-  moment.locale("id");
+export default function BarangRusak({ icon, title }) {
   const btn_save = useRef(null);
   const btn_update = useRef(null);
   const btn_cancel = useRef(null);
   const btn_tanggal_ref = useRef(null);
-  const [nomor, set_nomor] = useState("");
   const [barcode, set_barcode] = useState("");
+  const [nomor, set_nomor] = useState("");
   const [keyword, set_keyword] = useState("");
-  const [is_edit, set_is_edit] = useState(false);
-  const [is_selected_penjualan, set_is_selected_penjualan] = useState(false);
   const [is_selected_barang, set_is_selected_barang] = useState(false);
+  const [is_selected_barang_rusak, set_is_selected_barang_rusak] = useState(false);
   const [list_barang, set_list_barang] = useState([]);
-  const [penjualan, set_penjualan] = useState({
+  const [is_edit, set_is_edit] = useState(false);
+  const [barang_rusak, set_barang_rusak] = useState({
     nomor: "",
     tanggal: moment().format("YYYY-MM-DD"),
     keterangan: "",
@@ -38,26 +37,24 @@ export default function Penjualan({ icon, title }) {
   const [barang_qty, set_barang_qty] = useState({
     barcode: "",
     nama_barang: "",
-    stock: 0,
     qty: 0,
-    disc: 0,
-    nilai_disc: 0,
+    stock: 0,
     harga: 0,
     total_harga: 0,
   });
   const { date_picker } = useDatePicker();
   const dispatch = useDispatch();
-  const { show_modal_penjualan, show_modal_barang, show_modal_qty } = useSelector((state) => state.conf);
-  const { run } = useAsync();
+  const { show_modal_barang, show_modal_barang_rusak, show_modal_qty } = useSelector((state) => state.conf);
   const { session } = useSession();
+  const { swalAlert, swalAlertConfirm, swalAlertInput } = useAlert();
+  const { run } = useAsync();
   const { format_rupiah } = useFormating();
-  const { swalAlert, swalAlertInput, swalAlertConfirm } = useAlert();
 
   const get_stock = useCallback(
     async (barcode) => {
       const { error, message, data } = await run(
         get_data({
-          url: `/stock?barcode=${barcode}&periode=${moment(penjualan.tanggal).format("YYYYMM")}`,
+          url: `/stock?barcode=${barcode}&periode=${moment(barang_rusak.tanggal).format("YYYYMM")}`,
           headers: { authorization: `Bearer ${session.token}` },
         })
       );
@@ -66,27 +63,27 @@ export default function Penjualan({ icon, title }) {
         set_barang_qty((prev) => ({
           ...prev,
           ...data,
-          harga: data.harga_jual,
           total_harga: 0,
+          harga: data.harga_jual,
           qty: 0,
-          nilai_disc: 0,
           stock,
         }));
       }
       return { error, message, data };
     },
-    [run, session, penjualan.tanggal, list_barang]
+    [run, session, barang_rusak.tanggal, list_barang]
   );
 
   useLayoutEffect(() => {
     const date = date_picker("tanggal");
     date.onSelect((date) => {
       const tanggal = moment(date).format("YYYY-MM-DD");
-      set_penjualan((prev) => ({
+      set_barang_rusak((prev) => ({
         ...prev,
         tanggal,
       }));
     });
+
     const open_date = () => {
       if (list_barang.length < 1) date.open();
     };
@@ -102,23 +99,21 @@ export default function Penjualan({ icon, title }) {
   }, [date_picker, btn_tanggal_ref, list_barang]);
 
   useEffect(() => {
-    async function get_penjualan() {
+    async function get_barang_rusak() {
       const { error, message, data } = await run(
         get_data({
-          url: "/sales?nomor=" + nomor,
+          url: "/barang-rusak?nomor=" + nomor,
           headers: { authorization: `Bearer ${session.token}` },
         })
       );
       if (error) throw new Error(message);
       if (data) {
-        set_penjualan((prev) => ({ ...prev, ...data }));
+        set_barang_rusak((prev) => ({ ...prev, ...data }));
         const goods = data.list_barang.map((item) => ({
           barcode: item.barcode,
           nama_barang: item.nama_barang,
           stock: Number(item.stock) + Number(item.qty),
           qty: item.qty,
-          disc: item.disc,
-          nilai_disc: item.nilai_disc,
           harga: item.harga,
           total_harga: item.total,
         }));
@@ -126,17 +121,17 @@ export default function Penjualan({ icon, title }) {
       }
     }
 
-    if (is_selected_penjualan) {
-      get_penjualan();
+    if (is_selected_barang_rusak) {
+      get_barang_rusak();
       btn_save.current.disabled = true;
       btn_update.current.disabled = false;
       btn_cancel.current.disabled = false;
-    } else if (!is_selected_penjualan) {
+    } else if (!is_selected_barang_rusak) {
       btn_save.current.disabled = false;
       btn_update.current.disabled = true;
       btn_cancel.current.disabled = true;
     }
-  }, [run, nomor, is_selected_penjualan, session]);
+  }, [run, nomor, is_selected_barang_rusak, session]);
 
   useEffect(() => {
     async function get_barang() {
@@ -176,7 +171,7 @@ export default function Penjualan({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
-    set_penjualan({
+    set_barang_rusak({
       nomor: "",
       tanggal: moment().format("YYYY-MM-DD"),
       keterangan: "",
@@ -186,14 +181,12 @@ export default function Penjualan({ icon, title }) {
       nama_barang: "",
       stock: 0,
       qty: 0,
-      disc: 0,
-      nilai_disc: 0,
       harga: 0,
       total_harga: 0,
     });
     set_list_barang([]);
     set_is_selected_barang(false);
-    set_is_selected_penjualan(false);
+    set_is_selected_barang_rusak(false);
     set_barcode("");
     set_is_edit(false);
     set_keyword("");
@@ -207,11 +200,11 @@ export default function Penjualan({ icon, title }) {
     try {
       const { error, message } = await run(
         fetch_data({
-          url: "/sales",
+          url: "/barang-rusak",
           method: "POST",
           headers: { authorization: `Bearer ${session.token}` },
           data: {
-            ...penjualan,
+            ...barang_rusak,
             list_barang: JSON.stringify(list_barang),
           },
         })
@@ -222,7 +215,7 @@ export default function Penjualan({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, list_barang, penjualan, run, session, handle_clear]);
+  }, [swalAlert, list_barang, barang_rusak, run, session, handle_clear]);
 
   const handle_update = useCallback(async () => {
     try {
@@ -231,11 +224,11 @@ export default function Penjualan({ icon, title }) {
 
       const { error, message } = await run(
         fetch_data({
-          url: "/sales",
+          url: "/barang-rusak",
           method: "PUT",
           headers: { authorization: `Bearer ${session.token}` },
           data: {
-            ...penjualan,
+            ...barang_rusak,
             list_barang: JSON.stringify(list_barang),
           },
         })
@@ -246,11 +239,7 @@ export default function Penjualan({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [handle_clear, list_barang, penjualan, run, session, swalAlert, swalAlertConfirm]);
-
-  const handle_find_penjualan = useCallback(() => {
-    dispatch(set_show_penjualan(true));
-  }, [dispatch]);
+  }, [handle_clear, list_barang, barang_rusak, run, session, swalAlert, swalAlertConfirm]);
 
   const handle_cancel = useCallback(async () => {
     try {
@@ -259,13 +248,13 @@ export default function Penjualan({ icon, title }) {
 
       const { error, message } = await run(
         fetch_data({
-          url: "/sales",
+          url: "/barang-rusak",
           method: "DELETE",
           headers: { authorization: `Bearer ${session.token}` },
           data: {
-            nomor: penjualan.nomor,
+            nomor: barang_rusak.nomor,
             alasan: confirm.value,
-            tanggal: penjualan.tanggal,
+            tanggal: barang_rusak.tanggal,
           },
         })
       );
@@ -275,14 +264,14 @@ export default function Penjualan({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [handle_clear, penjualan, run, session, swalAlertInput, swalAlert]);
+  }, [handle_clear, barang_rusak, run, session, swalAlertInput, swalAlert]);
 
-  const handle_change_penjualan = useCallback((e) => {
-    const { name, value } = e.target;
-    set_penjualan((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handle_find_barang_rusak = useCallback(() => {
+    dispatch(set_show_barang_rusak(true));
+  }, [dispatch]);
+
+  const handle_change_barang_rusak = useCallback((e) => {
+    set_barang_rusak((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }, []);
 
   const handle_keterangan = useCallback((e) => {
@@ -290,6 +279,7 @@ export default function Penjualan({ icon, title }) {
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
   }, []);
+
   return (
     <>
       <HeaderPage icon={icon} title={title}>
@@ -299,7 +289,7 @@ export default function Penjualan({ icon, title }) {
         <button ref={btn_update} id="update" type="button" className="btn-sm bg-primary text-white" onClick={handle_update}>
           <i className="far fa-money-check-edit mr-[10px]"></i>Update
         </button>
-        <button id="find" className="btn-sm bg-primary text-white" onClick={handle_find_penjualan}>
+        <button id="find" className="btn-sm bg-primary text-white" onClick={handle_find_barang_rusak}>
           <i className="far fa-file-search mr-[10px]"></i>Find
         </button>
         <button id="cancel" className="btn-sm bg-red-600 hover:bg-red-800 active:bg-red-950 text-white" ref={btn_cancel} onClick={handle_cancel}>
@@ -322,10 +312,10 @@ export default function Penjualan({ icon, title }) {
                   <div className="md:col-half col-full input-group md:mb-0 mb-2">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="nomor" className="input-group-text">
-                        Nomor SO
+                        Nomor BR
                       </label>
                     </div>
-                    <input type="text" className="form-control col-half" name="nomor" id="nomor" required placeholder="No. Sales Order" value={penjualan.nomor} onChange={handle_change_penjualan} readOnly />
+                    <input type="text" className="form-control col-half" name="nomor" id="nomor" required placeholder="No. Barang Rusak" value={barang_rusak.nomor} onChange={handle_change_barang_rusak} readOnly />
                   </div>
                   <div className="md:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
@@ -334,7 +324,7 @@ export default function Penjualan({ icon, title }) {
                       </label>
                     </div>
                     <div className="relative col-half !px-0">
-                      <input type="text" className="form-control" name="tanggal" id="tanggal" value={penjualan.tanggal} required readOnly />
+                      <input type="text" className="form-control" name="tanggal" id="tanggal" value={barang_rusak.tanggal} required readOnly />
                       <button className="btn_absolute_right !right-1 text-primary hover:text-primary" type="button" ref={btn_tanggal_ref}>
                         <FontAwesomeIcon icon={faCalendarDays} />
                       </button>
@@ -354,8 +344,8 @@ export default function Penjualan({ icon, title }) {
                       className="form-control md:col-thirdperfour col-half"
                       rows={5}
                       placeholder="Keterangan ..."
-                      value={penjualan.keterangan}
-                      onInput={handle_change_penjualan}
+                      value={barang_rusak.keterangan}
+                      onInput={handle_change_barang_rusak}
                       onKeyDown={handle_keterangan}
                     ></textarea>
                   </div>
@@ -408,96 +398,9 @@ export default function Penjualan({ icon, title }) {
           </div>
         </div>
         <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
-        <div className="row">
-          <div className="md:col-quarter col-full">
-            <div className="modal-content-main mb-2">
-              <div className="modal-header-main !p-2">
-                <h5 className="mb-0 text-md">Detail Penjualan</h5>
-              </div>
-              <div className="modal-body-main">
-                <div className="row my-2">
-                  <div className="col-full input-group md:mb-0 mb-2">
-                    <div className="col-half p-0 input-group-prepend">
-                      <label htmlFor="total_qty" className="input-group-text">
-                        Jumlah Barang
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      className="form-control col-half"
-                      name="total_qty"
-                      id="total_qty"
-                      required
-                      placeholder="Total Qty Barang"
-                      value={format_rupiah(
-                        list_barang.reduce((acc, curr) => {
-                          return acc + Number(curr.qty);
-                        }, 0),
-                        {}
-                      )}
-                      readOnly
-                    />
-                  </div>
-                </div>
-                <div className="row my-2">
-                  <div className="col-full input-group md:mb-0 mb-2">
-                    <div className="col-half p-0 input-group-prepend">
-                      <label htmlFor="total_harga" className="input-group-text">
-                        Total Harga Barang
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      className="form-control col-half"
-                      name="total_harga"
-                      id="total_harga"
-                      required
-                      placeholder="Total Harga Barang"
-                      value={format_rupiah(
-                        list_barang.reduce((acc, curr) => {
-                          return acc + Number(curr.harga) * Number(curr.qty) - Number(curr.nilai_disc);
-                        }, 0)
-                      )}
-                      readOnly
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-      {show_modal_penjualan && (
-        <Modal modal_title="Penjualan" className={["md:modal-md", "modal-xl"]} btn={<></>}>
-          <ModalMain
-            set={set_nomor}
-            is_selected={set_is_selected_penjualan}
-            conf={{
-              name: "penjualan",
-              limit: 5,
-              page: 1,
-              select: ["nomor", "tanggal", "keterangan", "pemakai", "tglsimpan"],
-              order: [["nomor", "ASC"]],
-              where: { batal: false },
-              likes: ["nomor"],
-              keyword: "",
-              func_item: {
-                tanggal: (item) => moment(item.tanggal).format("DD MMMM YYYY"),
-                tglsimpan: (item) => moment(item.tglsimpan).format("DD MMMM YYYY HH:mm:ss"),
-              },
-            }}
-          >
-            <th className="text-left align-middle">Action</th>
-            <th className="text-left align-middle">Nomor</th>
-            <th className="text-left align-middle">Tanggal</th>
-            <th className="text-left align-middle">Keterangan</th>
-            <th className="text-left align-middle">Penginput</th>
-            <th className="text-left align-middle">Tgl Simpan</th>
-          </ModalMain>
-        </Modal>
-      )}
       {show_modal_barang && (
-        <Modal modal_title="Barang" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang}
@@ -507,7 +410,7 @@ export default function Penjualan({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: { periode: moment(penjualan.tanggal).format("YYYYMM") },
+              where: { periode: moment(barang_rusak.tanggal).format("YYYYMM") },
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {
@@ -524,16 +427,42 @@ export default function Penjualan({ icon, title }) {
           </ModalMain>
         </Modal>
       )}
+      {show_modal_barang_rusak && (
+        <Modal modal_title="Barang Rusak" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+          <ModalMain
+            set={set_nomor}
+            is_selected={set_is_selected_barang_rusak}
+            conf={{
+              name: "barang_rusak",
+              limit: 5,
+              page: 1,
+              select: ["nomor", "tanggal", "keterangan"],
+              order: [["nomor", "ASC"]],
+              where: { batal: false },
+              likes: ["nomor"],
+              keyword: "",
+              func_item: {
+                tanggal: (item) => moment(item.tanggal).format("DD MMMM YYYY"),
+              },
+            }}
+          >
+            <th className="text-left align-middle">Action</th>
+            <th className="text-left align-middle">Nomor</th>
+            <th className="text-left align-middle">Tanggal</th>
+            <th className="text-left align-middle">Keterangan</th>
+          </ModalMain>
+        </Modal>
+      )}
       {show_modal_qty && (
         <Modal modal_title="Input QTY" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
-          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit}></ModalBarangQty>
+          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} />
         </Modal>
       )}
     </>
   );
 }
 
-Penjualan.propTypes = {
-  icon: PropTypes.element,
+BarangRusak.propTypes = {
+  icon: PropTypes.node,
   title: PropTypes.string,
 };

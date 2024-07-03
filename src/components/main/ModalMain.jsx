@@ -55,11 +55,12 @@ export default function ModalMain({ set, is_selected, conf, children }) {
       } catch (e) {
         if (e.message == "Token expired") {
           setSessionData(null);
+          dispatch(set_hide_all_modal());
           navigate(`${VITE_PREFIX}login`, { replace: true });
         }
       }
     },
-    [konf, run, session, navigate, setSessionData]
+    [konf, run, session, navigate, setSessionData, dispatch]
   );
 
   const handle_keyword = useCallback(

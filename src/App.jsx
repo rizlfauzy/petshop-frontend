@@ -11,6 +11,7 @@ import MasterBarang from "./pages/Master/MasterBarang";
 import MasterOtorisasi from "./pages/Master/MasterOtorisasi";
 import Pembelian from "./pages/Order/Pembelian";
 import Penjualan from "./pages/Sales/Penjualan";
+import BarangRusak from "./pages/Stock/BarangRusak";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -99,6 +100,16 @@ function App() {
             </Main>
           }
         />
+        <Route path={`${VITE_PREFIX}stok`}>
+          <Route
+            path="barang-rusak"
+            element={
+              <Main title={"BARANG RUSAK"}>
+                <BarangRusak icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"BARANG RUSAK"} />
+              </Main>
+            }
+          />
+        </Route>
       </Routes>
     </Router>
   );

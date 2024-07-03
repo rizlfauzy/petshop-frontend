@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types"
+import { set_hide_all_modal } from "../../hooks/useStore";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -34,6 +35,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
     dispatch(create_item(obj));
     if (!isLoading && data?.message == "Token expired") {
       setSessionData(null);
+      dispatch(set_hide_all_modal());
       navigate(`${VITE_PREFIX}login`, { replace: true });
     }
   }, [data, isLoading, dispatch, navigate, setSessionData]);

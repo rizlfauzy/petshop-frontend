@@ -67,7 +67,7 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
                               <td className="text-left align-middle">{item.barcode}</td>
                               <td className="text-left align-middle">{item.nama_barang}</td>
                               <td className="text-left align-middle">{format_rupiah(item.qty, {})}</td>
-                              <td className="text-left align-middle">{format_rupiah(item.harga_jual)}</td>
+                              <td className="text-left align-middle">{format_rupiah(item.harga)}</td>
                               <td className="text-left align-middle">{format_disc(item.disc)}%</td>
                               <td className="text-left align-middle">{format_rupiah(item.nilai_disc)}</td>
                               <td className="text-left align-middle">{format_rupiah(item.total_harga)}</td>

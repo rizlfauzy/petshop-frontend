@@ -1,11 +1,14 @@
 import PropTypes from "prop-types";
-import useFormating from "../../../hooks/useFormating";
+import useFormating from "../../hooks/useFormating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { set_show_qty } from "../../hooks/useStore";
 
-export default function ListBarang({ set_list_barang, list_barang, set_show_modal_qty, set_barang_qty, set_is_edit }) {
+export default function ListBarang({ set_list_barang, list_barang, set_barang_qty, set_is_edit }) {
   const { format_rupiah } = useFormating();
+  const dispatch = useDispatch();
 
   const handle_edit_barang = useCallback(
     (e) => {
@@ -15,17 +18,20 @@ export default function ListBarang({ set_list_barang, list_barang, set_show_moda
         ...prev,
         ...barang,
       }));
-      set_show_modal_qty(true);
+      dispatch(set_show_qty(true));
       set_is_edit(true);
     },
-    [set_show_modal_qty, list_barang, set_barang_qty, set_is_edit]
+    [dispatch, list_barang, set_barang_qty, set_is_edit]
   );
 
-  const handle_delete_barang = useCallback((e) => {
-    const barcode = e.target.dataset.barcode || e.target.parentElement.dataset.barcode || e.target.parentElement.parentElement.dataset.barcode;
-    const new_list_barang = list_barang.filter((item) => item.barcode !== barcode);
-    set_list_barang(new_list_barang);
-  }, [set_list_barang, list_barang]);
+  const handle_delete_barang = useCallback(
+    (e) => {
+      const barcode = e.target.dataset.barcode || e.target.parentElement.dataset.barcode || e.target.parentElement.parentElement.dataset.barcode;
+      const new_list_barang = list_barang.filter((item) => item.barcode !== barcode);
+      set_list_barang(new_list_barang);
+    },
+    [set_list_barang, list_barang]
+  );
 
   return (
     <div className="row">
@@ -59,7 +65,7 @@ export default function ListBarang({ set_list_barang, list_barang, set_show_moda
                               <td className="text-left align-middle">{item.barcode}</td>
                               <td className="text-left align-middle">{item.nama_barang}</td>
                               <td className="text-left align-middle">{format_rupiah(item.qty, {})}</td>
-                              <td className="text-left align-middle">{format_rupiah(item.harga_modal)}</td>
+                              <td className="text-left align-middle">{format_rupiah(item.harga)}</td>
                               <td className="text-left align-middle">{format_rupiah(item.total_harga)}</td>
                               <td className="text-left align-middle">
                                 <div className="flex justify-center items-center gap-2">
@@ -96,7 +102,6 @@ export default function ListBarang({ set_list_barang, list_barang, set_show_moda
 ListBarang.propTypes = {
   set_list_barang: PropTypes.func,
   list_barang: PropTypes.array,
-  set_show_modal_qty: PropTypes.func,
   set_barang_qty: PropTypes.func,
   set_is_edit: PropTypes.func,
 };

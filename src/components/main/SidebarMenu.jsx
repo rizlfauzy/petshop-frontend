@@ -16,7 +16,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
   const item = useSelector((state) => state.conf.item);
   const location = useLocation();
   const navigate = useNavigate();
-  const path = location.pathname.split("/").pop();
+  const path = location.pathname.split("/").length > 2 ? location.pathname.split("/").slice(1).join("/") : location.pathname.split("/").pop();
   const { session, setSessionData } = useSession();
 
   useLayoutEffect(() => {

@@ -12,6 +12,7 @@ import MasterOtorisasi from "./pages/Master/MasterOtorisasi";
 import Pembelian from "./pages/Order/Pembelian";
 import Penjualan from "./pages/Sales/Penjualan";
 import BarangRusak from "./pages/Stock/BarangRusak";
+import RepackBarang from "./pages/Stock/RepackBarang";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -106,6 +107,14 @@ function App() {
             element={
               <Main title={"BARANG RUSAK"}>
                 <BarangRusak icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"BARANG RUSAK"} />
+              </Main>
+            }
+          />
+          <Route
+            path="repack-barang"
+            element={
+              <Main title={"REPACK BARANG"}>
+                <RepackBarang icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"REPACK BARANG"} />
               </Main>
             }
           />

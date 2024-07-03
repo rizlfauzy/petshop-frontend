@@ -21,6 +21,7 @@ export default function MasterBarang({ icon, title }) {
   const aktif_row = useRef(null);
   const btn_save = useRef(null);
   const btn_update = useRef(null);
+  const input_barcode = useRef(null);
   const [kode_satuan, set_kode_satuan] = useState("");
   const [kode_kategori, set_kode_kategori] = useState("");
   const [barcode, set_barcode] = useState("");
@@ -111,10 +112,12 @@ export default function MasterBarang({ icon, title }) {
 
     if (is_selected_barang) {
       get_barang();
+      input_barcode.current.disabled = true;
       btn_save.current.disabled = true;
       btn_update.current.disabled = false;
       aktif_row.current.classList.remove("!hidden");
     } else if (!is_selected_barang) {
+      input_barcode.current.disabled = false;
       btn_save.current.disabled = false;
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
@@ -326,7 +329,7 @@ export default function MasterBarang({ icon, title }) {
                         Barcode
                       </label>
                     </div>
-                    <input value={barang.barcode} onChange={handle_change_barang} type="text" className="form-control col-thirdperfour" name="barcode" id="barcode" required placeholder="BARCODE BARANG" />
+                    <input value={barang.barcode} ref={input_barcode} onChange={handle_change_barang} type="text" className="form-control col-thirdperfour" name="barcode" id="barcode" required placeholder="BARCODE BARANG" />
                   </div>
                 </div>
                 <div className="row my-2">

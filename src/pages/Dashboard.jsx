@@ -1,8 +1,8 @@
 import HeaderPage from "../components/HeaderPage";
 import PropTypes from "prop-types";
-import DataOmset from "../components/main/Dashboard/DataOmset";
-import OmsetBulanan from "../components/main/Dashboard/OmsetBulanan";
-import NotifikasiStok from "../components/main/Dashboard/NotifikasiStok";
+import DataOmset from "../components/main/dashboard/DataOmset";
+import OmsetBulanan from "../components/main/dashboard/OmsetBulanan";
+import NotifikasiStok from "../components/main/dashboard/NotifikasiStok";
 import Informasi from "../components/main/Informasi";
 
 export default function Dashboard({ icon, title }) {

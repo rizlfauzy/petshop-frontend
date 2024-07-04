@@ -1579,6 +1579,10 @@ input.form-control:is([type="radio"], [type="checkbox"]) {
   cursor: pointer;
 }
 
+.swal2-container {
+  z-index: 99999 !important;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
   0% {

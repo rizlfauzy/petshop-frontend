@@ -6,7 +6,7 @@ import { faCalendarDays, faCancel, faSearch } from "@fortawesome/free-solid-svg-
 import moment from "moment";
 import useDatePicker from "../../hooks/useDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_barang, set_show_barang_rusak, set_hide_all_modal, set_show_qty } from "../../hooks/useStore";
+import { set_show_barang, set_show_barang_rusak, set_hide_all_modal, set_show_qty, set_show_loading } from "../../hooks/useStore";
 import useSession from "../../hooks/useSession";
 import useAlert from "../../hooks/useAlert";
 import useAsync from "../../hooks/useAsync";
@@ -171,33 +171,37 @@ export default function BarangRusak({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
-    set_barang_rusak({
-      nomor: "",
-      tanggal: moment().format("YYYY-MM-DD"),
-      keterangan: "",
-    });
-    set_barang_qty({
-      barcode: "",
-      nama_barang: "",
-      stock: 0,
-      qty: 0,
-      harga: 0,
-      total_harga: 0,
-    });
-    set_list_barang([]);
-    set_is_selected_barang(false);
-    set_is_selected_barang_rusak(false);
-    set_barcode("");
-    set_is_edit(false);
-    set_keyword("");
-    dispatch(set_hide_all_modal());
-    btn_save.current.disabled = false;
-    btn_update.current.disabled = true;
-    btn_cancel.current.disabled = true;
+    setTimeout(() => {
+      set_barang_rusak({
+        nomor: "",
+        tanggal: moment().format("YYYY-MM-DD"),
+        keterangan: "",
+      });
+      set_barang_qty({
+        barcode: "",
+        nama_barang: "",
+        stock: 0,
+        qty: 0,
+        harga: 0,
+        total_harga: 0,
+      });
+      set_list_barang([]);
+      set_is_selected_barang(false);
+      set_is_selected_barang_rusak(false);
+      set_barcode("");
+      set_is_edit(false);
+      set_keyword("");
+      dispatch(set_hide_all_modal());
+      btn_save.current.disabled = false;
+      btn_update.current.disabled = true;
+      btn_cancel.current.disabled = true;
+      dispatch(set_show_loading(false));
+    }, 1000);
   }, [dispatch]);
 
   const handle_save = useCallback(async () => {
     try {
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/barang-rusak",
@@ -215,13 +219,14 @@ export default function BarangRusak({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, list_barang, barang_rusak, run, session, handle_clear]);
+  }, [swalAlert, list_barang, barang_rusak, run, session, handle_clear, dispatch]);
 
   const handle_update = useCallback(async () => {
     try {
       const confirm = await swalAlertConfirm("Data akan segera diupdate !!!", "warning");
       if (!confirm.isConfirmed) return;
 
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/barang-rusak",
@@ -239,13 +244,14 @@ export default function BarangRusak({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [handle_clear, list_barang, barang_rusak, run, session, swalAlert, swalAlertConfirm]);
+  }, [handle_clear, list_barang, barang_rusak, run, session, swalAlert, swalAlertConfirm, dispatch]);
 
   const handle_cancel = useCallback(async () => {
     try {
       const confirm = await swalAlertInput("Data yang dicancel tidak bisa dihapus !!!", "warning");
       if (!confirm.isConfirmed) return;
 
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/barang-rusak",
@@ -264,7 +270,7 @@ export default function BarangRusak({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [handle_clear, barang_rusak, run, session, swalAlertInput, swalAlert]);
+  }, [handle_clear, barang_rusak, run, session, swalAlertInput, swalAlert, dispatch]);
 
   const handle_find_barang_rusak = useCallback(() => {
     dispatch(set_show_barang_rusak(true));

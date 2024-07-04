@@ -1,6 +1,5 @@
 import HeaderPage from "../components/HeaderPage";
 import PropTypes from "prop-types";
-import Loading from "../components/Loading";
 import DataOmset from "../components/main/Dashboard/DataOmset";
 import OmsetBulanan from "../components/main/Dashboard/OmsetBulanan";
 import NotifikasiStok from "../components/main/Dashboard/NotifikasiStok";
@@ -10,7 +9,6 @@ export default function Dashboard({ icon, title }) {
   return (
     <>
       <HeaderPage icon={icon} title={title} />
-      <Loading />
       <div className="col-full table-responsive">
         <div className="row">
           <div className="md:col-half col-full">

@@ -15,7 +15,7 @@ import ModalBarangQty from "../../components/main/ModalBarangQty";
 import ListBarang from "../../components/main/ListBarang";
 import useAlert from "../../hooks/useAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_pembelian, set_show_qty } from "../../hooks/useStore";
+import { set_show_pembelian, set_show_qty, set_show_loading } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
 
 export default function Pembelian({ icon, title }) {
@@ -165,7 +165,6 @@ export default function Pembelian({ icon, title }) {
       ...prev,
       [name]: value,
     }));
-    set_is_selected_pembelian(false);
   }, []);
 
   const handle_scan_barcode = useCallback(
@@ -188,34 +187,38 @@ export default function Pembelian({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
-    set_pembelian({
-      nomor: "",
-      tanggal: moment().format("YYYY-MM-DD"),
-      keterangan: "",
-    });
-    set_barang_qty({
-      nama_barang: "",
-      barcode: "",
-      stock: 0,
-      harga: 0,
-      qty: 0,
-      total_harga: 0,
-    });
-    set_list_barang([]);
-    set_barcode("");
-    set_nomor("");
-    set_keyword("");
-    set_is_selected_barang(false);
-    set_is_selected_pembelian(false);
-    set_is_edit(false);
-    dispatch(set_show_pembelian(false));
-    btn_save.current.disabled = false;
-    btn_update.current.disabled = true;
-    btn_cancel.current.disabled = true;
+    setTimeout(() => {
+      set_pembelian({
+        nomor: "",
+        tanggal: moment().format("YYYY-MM-DD"),
+        keterangan: "",
+      });
+      set_barang_qty({
+        nama_barang: "",
+        barcode: "",
+        stock: 0,
+        harga: 0,
+        qty: 0,
+        total_harga: 0,
+      });
+      set_list_barang([]);
+      set_barcode("");
+      set_nomor("");
+      set_keyword("");
+      set_is_selected_barang(false);
+      set_is_selected_pembelian(false);
+      set_is_edit(false);
+      dispatch(set_show_pembelian(false));
+      btn_save.current.disabled = false;
+      btn_update.current.disabled = true;
+      btn_cancel.current.disabled = true;
+      dispatch(set_show_loading(false));
+    }, 1000);
   }, [dispatch]);
 
   const handle_save = useCallback(async () => {
     try {
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/order",
@@ -233,13 +236,14 @@ export default function Pembelian({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, list_barang, pembelian, run, session, handle_clear]);
+  }, [swalAlert, list_barang, pembelian, run, session, handle_clear, dispatch]);
 
   const handle_update = useCallback(async () => {
     try {
       const confirm = await swalAlertConfirm("Data akan segera diupdate !!!", "warning");
       if (!confirm.isConfirmed) return;
 
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/order",
@@ -257,13 +261,14 @@ export default function Pembelian({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, swalAlertConfirm, handle_clear, list_barang, run, session, pembelian]);
+  }, [swalAlert, swalAlertConfirm, handle_clear, list_barang, run, session, pembelian, dispatch]);
 
   const handle_cancel = useCallback(async () => {
     try {
       const confirm = await swalAlertInput("Data yang dicancel tidak bisa dihapus !!!", "warning");
       if (!confirm.isConfirmed) return;
 
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/order",
@@ -278,7 +283,7 @@ export default function Pembelian({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput]);
+  }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput, dispatch]);
 
   const handle_find_pembelian = useCallback(() => {
     dispatch(set_show_pembelian(true));

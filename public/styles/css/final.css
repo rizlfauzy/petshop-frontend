@@ -774,6 +774,10 @@ video {
   width: 75%;
 }
 
+.w-5 {
+  width: 1.25rem;
+}
+
 .w-5\/6 {
   width: 83.333333%;
 }
@@ -2880,6 +2884,10 @@ input.form-control:is([type=radio],[type=checkbox]){
   height:20px;
   accent-color:#402218;
   cursor:pointer
+}
+
+.swal2-container{
+  z-index:99999 !important
 }
 
 @keyframes spin{

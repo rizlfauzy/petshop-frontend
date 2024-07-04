@@ -6,7 +6,7 @@ import { faCancel, faCalendarDays, faSearch } from "@fortawesome/free-solid-svg-
 import moment from "moment";
 import useDatePicker from "../../hooks/useDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_penjualan, set_show_barang, set_show_qty, set_hide_all_modal } from "../../hooks/useStore";
+import { set_show_penjualan, set_show_barang, set_show_qty, set_hide_all_modal, set_show_loading } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
 import useAsync from "../../hooks/useAsync";
@@ -176,35 +176,39 @@ export default function Penjualan({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
-    set_penjualan({
-      nomor: "",
-      tanggal: moment().format("YYYY-MM-DD"),
-      keterangan: "",
-    });
-    set_barang_qty({
-      barcode: "",
-      nama_barang: "",
-      stock: 0,
-      qty: 0,
-      disc: 0,
-      nilai_disc: 0,
-      harga: 0,
-      total_harga: 0,
-    });
-    set_list_barang([]);
-    set_is_selected_barang(false);
-    set_is_selected_penjualan(false);
-    set_barcode("");
-    set_is_edit(false);
-    set_keyword("");
-    dispatch(set_hide_all_modal());
-    btn_save.current.disabled = false;
-    btn_update.current.disabled = true;
-    btn_cancel.current.disabled = true;
+    setTimeout(() => {
+      set_penjualan({
+        nomor: "",
+        tanggal: moment().format("YYYY-MM-DD"),
+        keterangan: "",
+      });
+      set_barang_qty({
+        barcode: "",
+        nama_barang: "",
+        stock: 0,
+        qty: 0,
+        disc: 0,
+        nilai_disc: 0,
+        harga: 0,
+        total_harga: 0,
+      });
+      set_list_barang([]);
+      set_is_selected_barang(false);
+      set_is_selected_penjualan(false);
+      set_barcode("");
+      set_is_edit(false);
+      set_keyword("");
+      dispatch(set_hide_all_modal());
+      btn_save.current.disabled = false;
+      btn_update.current.disabled = true;
+      btn_cancel.current.disabled = true;
+      dispatch(set_show_loading(false));
+    }, 1000);
   }, [dispatch]);
 
   const handle_save = useCallback(async () => {
     try {
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/sales",
@@ -222,13 +226,14 @@ export default function Penjualan({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [swalAlert, list_barang, penjualan, run, session, handle_clear]);
+  }, [swalAlert, list_barang, penjualan, run, session, handle_clear, dispatch]);
 
   const handle_update = useCallback(async () => {
     try {
       const confirm = await swalAlertConfirm("Data akan segera diupdate !!!", "warning");
       if (!confirm.isConfirmed) return;
 
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/sales",
@@ -246,7 +251,7 @@ export default function Penjualan({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [handle_clear, list_barang, penjualan, run, session, swalAlert, swalAlertConfirm]);
+  }, [handle_clear, list_barang, penjualan, run, session, swalAlert, swalAlertConfirm, dispatch]);
 
   const handle_find_penjualan = useCallback(() => {
     dispatch(set_show_penjualan(true));
@@ -257,6 +262,7 @@ export default function Penjualan({ icon, title }) {
       const confirm = await swalAlertInput("Data yang dicancel tidak bisa dihapus !!!", "warning");
       if (!confirm.isConfirmed) return;
 
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/sales",
@@ -275,7 +281,7 @@ export default function Penjualan({ icon, title }) {
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [handle_clear, penjualan, run, session, swalAlertInput, swalAlert]);
+  }, [handle_clear, penjualan, run, session, swalAlertInput, swalAlert, dispatch]);
 
   const handle_change_penjualan = useCallback((e) => {
     const { name, value } = e.target;

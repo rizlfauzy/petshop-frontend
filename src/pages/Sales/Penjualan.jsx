@@ -16,6 +16,7 @@ import useFormating from "../../hooks/useFormating";
 import ModalBarangQty from "../../components/main/Penjualan/ModalBarangQty";
 import ListBarang from "../../components/main/Penjualan/ListBarang";
 import useAlert from "../../hooks/useAlert";
+import useSocket from "../../hooks/useSocket";
 
 export default function Penjualan({ icon, title }) {
   moment.locale("id");
@@ -52,6 +53,7 @@ export default function Penjualan({ icon, title }) {
   const { session } = useSession();
   const { format_rupiah } = useFormating();
   const { swalAlert, swalAlertInput, swalAlertConfirm } = useAlert();
+  const socket = useSocket();
 
   const get_stock = useCallback(
     async (barcode) => {
@@ -203,8 +205,10 @@ export default function Penjualan({ icon, title }) {
       btn_update.current.disabled = true;
       btn_cancel.current.disabled = true;
       dispatch(set_show_loading(false));
+      socket.emit("graph", { year: moment().format("YYYY") });
+      socket.emit("omset", { start: moment().startOf("month").format("YYYY-MM-DD"), end: moment().format("YYYY-MM-DD") });
     }, 1000);
-  }, [dispatch]);
+  }, [dispatch, socket]);
 
   const handle_save = useCallback(async () => {
     try {

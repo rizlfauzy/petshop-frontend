@@ -416,10 +416,7 @@ export default function Penjualan({ icon, title }) {
               </div>
             </div>
           </div>
-        </div>
-        <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
-        <div className="row">
-          <div className="md:col-quarter col-full">
+          <div className="md:col-half col-full">
             <div className="modal-content-main mb-2">
               <div className="modal-header-main !p-2">
                 <h5 className="mb-0 text-md">Detail Penjualan</h5>
@@ -476,6 +473,7 @@ export default function Penjualan({ icon, title }) {
             </div>
           </div>
         </div>
+        <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
       </div>
       {show_modal_penjualan && (
         <Modal modal_title="Penjualan" className={["md:modal-md", "modal-xl"]} btn={<></>}>

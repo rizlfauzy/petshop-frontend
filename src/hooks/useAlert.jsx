@@ -46,11 +46,26 @@ export default function useAlert() {
       input: "textarea",
       inputLabel: "Alasan",
       inputPlaceholder: "Ketikan Alasan di sini...",
+      inputAutoTrim: true,
       inputAttributes: {
         required: true,
         "aria-label": "Ketikan Alasan di sini...",
       },
       inputValidator: (result) => !result && "Alasan tidak boleh kosong!!!",
+      didOpen: (toast) => {
+        [...toast.children].forEach(ele => {
+          if (ele.nodeName == 'TEXTAREA') {
+            ele.addEventListener("keydown", function (e) {
+              if (e.key === 'Enter') {
+                // jika textarea tidak kosong maka
+                if (e.target.value.trim() !== '') {
+                  MySwal.clickConfirm();
+                }
+              }
+            })
+          }
+        })
+      }
     });
   }
 

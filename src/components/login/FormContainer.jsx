@@ -47,17 +47,6 @@ export default function FormContainer() {
           </button>
         </form>
         <p className="social-text"></p>
-        <div className="social-media">
-          <a href="http://fourbest.co.id/" target="_blank" className="social-icon">
-            <i className="fbs fbs-icon-fbs !font-normal"></i>
-          </a>
-          <div className="row">
-            <span className="social-title !font-normal" style={{ fontSize: "1.05rem" }}>
-              Copyright© FBS TEAM
-            </span>
-            <span className="social-title !font-normal">PT. FOUBERST SYNERGY</span>
-          </div>
-        </div>
       </div>
     </div>
   );

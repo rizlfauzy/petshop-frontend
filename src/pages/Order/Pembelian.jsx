@@ -187,6 +187,7 @@ export default function Pembelian({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
+    dispatch(set_show_loading(true));
     setTimeout(() => {
       set_pembelian({
         nomor: "",
@@ -234,6 +235,7 @@ export default function Pembelian({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [swalAlert, list_barang, pembelian, run, session, handle_clear, dispatch]);
@@ -259,6 +261,7 @@ export default function Pembelian({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [swalAlert, swalAlertConfirm, handle_clear, list_barang, run, session, pembelian, dispatch]);
@@ -281,6 +284,7 @@ export default function Pembelian({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [swalAlert, run, session, pembelian, handle_clear, swalAlertInput, dispatch]);

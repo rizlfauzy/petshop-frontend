@@ -178,6 +178,7 @@ export default function Penjualan({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
+    dispatch(set_show_loading(true))
     setTimeout(() => {
       set_penjualan({
         nomor: "",
@@ -228,6 +229,7 @@ export default function Penjualan({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [swalAlert, list_barang, penjualan, run, session, handle_clear, dispatch]);
@@ -253,6 +255,7 @@ export default function Penjualan({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [handle_clear, list_barang, penjualan, run, session, swalAlert, swalAlertConfirm, dispatch]);
@@ -283,6 +286,7 @@ export default function Penjualan({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [handle_clear, penjualan, run, session, swalAlertInput, swalAlert, dispatch]);

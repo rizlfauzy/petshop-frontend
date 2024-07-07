@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { set_show_qty } from "../../hooks/useStore";
 
-export default function ListBarang({ set_list_barang, list_barang, set_barang_qty, set_is_edit }) {
+export default function ListBarang({ set_list_barang, list_barang, set_barang_qty, set_is_edit, is_req_harga = true, is_pro_hasil = null, set_is_pro_hasil = null}) {
   const { format_rupiah } = useFormating();
   const dispatch = useDispatch();
 
@@ -19,9 +19,11 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
         ...barang,
       }));
       dispatch(set_show_qty(true));
+      is_pro_hasil != null && set_is_pro_hasil(true);
+      console.log(is_pro_hasil);
       set_is_edit(true);
     },
-    [dispatch, list_barang, set_barang_qty, set_is_edit]
+    [dispatch, list_barang, set_barang_qty, set_is_edit, is_pro_hasil, set_is_pro_hasil]
   );
 
   const handle_delete_barang = useCallback(
@@ -29,8 +31,9 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
       const barcode = e.target.dataset.barcode || e.target.parentElement.dataset.barcode || e.target.parentElement.parentElement.dataset.barcode;
       const new_list_barang = list_barang.filter((item) => item.barcode !== barcode);
       set_list_barang(new_list_barang);
+      is_pro_hasil != null && set_is_pro_hasil(false);
     },
-    [set_list_barang, list_barang]
+    [set_list_barang, list_barang, is_pro_hasil, set_is_pro_hasil]
   );
 
   return (
@@ -51,8 +54,12 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
                         <th className="text-left align-middle">Barcode</th>
                         <th className="text-left align-middle">Nama Barang</th>
                         <th className="text-left align-middle">Qty</th>
-                        <th className="text-left align-middle">Harga</th>
-                        <th className="text-left align-middle">Total</th>
+                        {is_req_harga && (
+                          <>
+                            <th className="text-left align-middle">Harga</th>
+                            <th className="text-left align-middle">Total</th>
+                          </>
+                        )}
                         <th className="text-left align-middle">Action</th>
                       </tr>
                     </thead>
@@ -60,19 +67,23 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
                       {list_barang.length > 0 ? (
                         list_barang.map((item) => {
                           return (
-                            <tr key={item.barcode}>
+                            <tr key={item?.barcode}>
                               <td className="text-left align-middle" width="5"></td>
-                              <td className="text-left align-middle">{item.barcode}</td>
-                              <td className="text-left align-middle">{item.nama_barang}</td>
-                              <td className="text-left align-middle">{format_rupiah(item.qty, {})}</td>
-                              <td className="text-left align-middle">{format_rupiah(item.harga)}</td>
-                              <td className="text-left align-middle">{format_rupiah(item.total_harga)}</td>
+                              <td className="text-left align-middle">{item?.barcode}</td>
+                              <td className="text-left align-middle">{item?.nama_barang}</td>
+                              <td className="text-left align-middle">{format_rupiah(item?.qty, {})}</td>
+                              {is_req_harga && (
+                                <>
+                                  <td className="text-left align-middle">{format_rupiah(item?.harga)}</td>
+                                  <td className="text-left align-middle">{format_rupiah(item?.total_harga)}</td>
+                                </>
+                              )}
                               <td className="text-left align-middle">
                                 <div className="flex justify-center items-center gap-2">
-                                  <button className="btn-sm !bg-yellow-500 hover:!bg-yellow-700 active:!bg-yellow-900 w-12" data-barcode={item.barcode} onClick={handle_edit_barang}>
+                                  <button className="btn-sm !bg-yellow-500 hover:!bg-yellow-700 active:!bg-yellow-900 w-12" data-barcode={item?.barcode} onClick={handle_edit_barang}>
                                     <FontAwesomeIcon icon={faEdit} className="text-white" />
                                   </button>
-                                  <button className="btn-sm !bg-red-500 hover:!bg-red-700 active:!bg-red-900 w-12" data-barcode={item.barcode} onClick={handle_delete_barang}>
+                                  <button className="btn-sm !bg-red-500 hover:!bg-red-700 active:!bg-red-900 w-12" data-barcode={item?.barcode} onClick={handle_delete_barang}>
                                     <FontAwesomeIcon icon={faTrash} className="text-white" />
                                   </button>
                                 </div>
@@ -104,4 +115,7 @@ ListBarang.propTypes = {
   list_barang: PropTypes.array,
   set_barang_qty: PropTypes.func,
   set_is_edit: PropTypes.func,
+  is_req_harga: PropTypes.bool,
+  is_pro_hasil: PropTypes.bool,
+  set_is_pro_hasil: PropTypes.func,
 };

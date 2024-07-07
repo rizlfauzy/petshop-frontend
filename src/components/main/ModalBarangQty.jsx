@@ -7,7 +7,7 @@ import useAlert from "../../hooks/useAlert";
 import { useDispatch } from "react-redux";
 import { set_show_qty } from "../../hooks/useStore";
 
-export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang, set_list_barang, is_edit }) {
+export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang, set_list_barang, is_edit, is_req_edit = true, is_pro_hasil = null, set_is_pro_hasil = null, is_reduction = false, list_barang_dua = null }) {
   const { format_rupiah } = useFormating();
   const input_qty_ref = useRef(null);
   const { swalAlert } = useAlert();
@@ -42,11 +42,16 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
   const handle_input_barang = useCallback(() => {
     try {
       if (barang_qty.qty < 1) throw new Error("Qty barang tidak boleh kurang dari 1");
+      if (is_reduction && barang_qty.qty > barang_qty.stock) throw new Error("Qty barang tidak boleh melebihi stock");
+      if (list_barang_dua != null && list_barang_dua.length > 0 && list_barang_dua.find((item) => item.barcode === barang_qty.barcode)) throw new Error("Barang sudah ada di list barang !!!");
       // cek barang sudah ada di list barang atau belum
       const is_exist = list_barang?.find((item) => item.barcode === barang_qty.barcode);
       if (is_exist) {
         const new_list_barang = list_barang.map((item) => {
           if (item.barcode === barang_qty.barcode) {
+            if (is_reduction) {
+              if (is_edit ? barang_qty.qty > barang_qty.stock : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
+            }
             item.qty = is_edit ? barang_qty.qty : Number(item.qty) + Number(barang_qty.qty);
             item.total_harga = item.harga * item.qty;
           }
@@ -67,10 +72,11 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
         ]);
       }
       dispatch(set_show_qty(false));
+      is_pro_hasil != null && set_is_pro_hasil(false);
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [barang_qty, dispatch, swalAlert, list_barang, set_list_barang, is_edit]);
+  }, [barang_qty, dispatch, swalAlert, list_barang, set_list_barang, is_edit, is_pro_hasil, set_is_pro_hasil, is_reduction, list_barang_dua]);
 
   const handle_input_on_enter = useCallback(
     (e) => {
@@ -111,26 +117,30 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
           <input type="text" className="form-control col-half" name="stock_barang_qty" id="stock_barang_qty" value={format_rupiah(barang_qty.stock, {})} readOnly />
         </div>
       </div>
-      <div className="row my-2">
-        <div className="col-full input-group">
-          <div className="col-half p-0 input-group-prepend">
-            <label htmlFor="harga_qty" className="input-group-text">
-              Harga
-            </label>
+      {is_req_edit && (
+        <>
+          <div className="row my-2">
+            <div className="col-full input-group">
+              <div className="col-half p-0 input-group-prepend">
+                <label htmlFor="harga_qty" className="input-group-text">
+                  Harga
+                </label>
+              </div>
+              <input type="text" className="form-control col-half" name="harga_qty" id="harga_qty" value={format_rupiah(barang_qty.harga)} readOnly />
+            </div>
           </div>
-          <input type="text" className="form-control col-half" name="harga_qty" id="harga_qty" value={format_rupiah(barang_qty.harga)} readOnly />
-        </div>
-      </div>
-      <div className="row my-2">
-        <div className="col-full input-group">
-          <div className="col-half p-0 input-group-prepend">
-            <label htmlFor="total_harga_qty" className="input-group-text">
-              Total Harga
-            </label>
+          <div className="row my-2">
+            <div className="col-full input-group">
+              <div className="col-half p-0 input-group-prepend">
+                <label htmlFor="total_harga_qty" className="input-group-text">
+                  Total Harga
+                </label>
+              </div>
+              <input type="text" className="form-control col-half" name="total_harga_qty" id="total_harga_qty" value={format_rupiah(barang_qty.total_harga)} readOnly />
+            </div>
           </div>
-          <input type="text" className="form-control col-half" name="total_harga_qty" id="total_harga_qty" value={format_rupiah(barang_qty.total_harga)} readOnly />
-        </div>
-      </div>
+        </>
+      )}
       <div className="row my-2">
         <div className="col-full input-group">
           <div className="col-half p-0 input-group-prepend">
@@ -156,4 +166,9 @@ ModalBarangQty.propTypes = {
   list_barang: PropTypes.array,
   set_list_barang: PropTypes.func,
   is_edit: PropTypes.bool,
+  is_req_edit: PropTypes.bool,
+  is_pro_hasil: PropTypes.bool,
+  set_is_pro_hasil: PropTypes.func,
+  is_reduction: PropTypes.bool,
+  list_barang_dua: PropTypes.array,
 };

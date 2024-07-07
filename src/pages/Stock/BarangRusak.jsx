@@ -171,6 +171,7 @@ export default function BarangRusak({ icon, title }) {
   );
 
   const handle_clear = useCallback(() => {
+    dispatch(set_show_loading(true))
     setTimeout(() => {
       set_barang_rusak({
         nomor: "",
@@ -217,6 +218,7 @@ export default function BarangRusak({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false))
       return swalAlert(e.message, "error");
     }
   }, [swalAlert, list_barang, barang_rusak, run, session, handle_clear, dispatch]);
@@ -242,6 +244,7 @@ export default function BarangRusak({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [handle_clear, list_barang, barang_rusak, run, session, swalAlert, swalAlertConfirm, dispatch]);
@@ -268,6 +271,7 @@ export default function BarangRusak({ icon, title }) {
       swalAlert(message, "success");
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       return swalAlert(e.message, "error");
     }
   }, [handle_clear, barang_rusak, run, session, swalAlertInput, swalAlert, dispatch]);
@@ -284,6 +288,16 @@ export default function BarangRusak({ icon, title }) {
     const textarea = e.target;
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
+    if ((e.ctrlKey && e.key === "1") && btn_save.current.disabled === false) {
+      e.preventDefault();
+      btn_save.current.click();
+    } else if ((e.ctrlKey && e.key === "2") && btn_update.current.disabled === false) {
+      e.preventDefault();
+      btn_update.current.click();
+    } else if ((e.ctrlKey && e.key === "3") && btn_cancel.current.disabled === false) {
+      e.preventDefault();
+      btn_cancel.current.click();
+    }
   }, []);
 
   return (
@@ -461,7 +475,7 @@ export default function BarangRusak({ icon, title }) {
       )}
       {show_modal_qty && (
         <Modal modal_title="Input QTY" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
-          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} />
+          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} is_reduction={true} />
         </Modal>
       )}
     </>

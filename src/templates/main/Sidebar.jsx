@@ -30,12 +30,16 @@ export default function Sidebar() {
     const save_btn = document.querySelector("#save");
     const update_btn = document.querySelector("#update");
     const cancel_btn = document.querySelector("#cancel");
+    const date_btn = document.querySelector("#tanggal");
+    const date_chooser_btn = document.querySelector("#btn_tanggal");
     if (save_btn && item?.data?.cek_menu?.add) save_btn.classList.remove("hidden");
     else if (save_btn) save_btn.classList.add("hidden");
     if (update_btn && item?.data?.cek_menu?.update) update_btn.classList.remove("hidden");
     else if (update_btn) update_btn.classList.add("hidden");
     if (cancel_btn && item?.data?.cek_menu?.cancel) cancel_btn.classList.remove("hidden");
     else if (cancel_btn) cancel_btn.classList.add("hidden");
+    if (date_btn && item?.data?.cek_menu?.backdate) {date_btn.disabled = false;date_chooser_btn.disabled = false;}
+    else if (date_btn) {date_btn.disabled = true;date_chooser_btn.disabled = true;}
   }, [item]);
 
   const on_click_menu = useCallback(() => {

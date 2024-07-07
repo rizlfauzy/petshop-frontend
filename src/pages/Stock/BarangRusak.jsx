@@ -345,7 +345,7 @@ export default function BarangRusak({ icon, title }) {
                     </div>
                     <div className="relative col-half !px-0">
                       <input type="text" className="form-control" name="tanggal" id="tanggal" value={barang_rusak.tanggal} required readOnly />
-                      <button className="btn_absolute_right !right-1 text-primary hover:text-primary" type="button" ref={btn_tanggal_ref}>
+                      <button className="btn_absolute_right !right-1 text-primary hover:text-primary" type="button" id="btn_tanggal" ref={btn_tanggal_ref}>
                         <FontAwesomeIcon icon={faCalendarDays} />
                       </button>
                     </div>

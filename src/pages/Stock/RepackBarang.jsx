@@ -365,7 +365,7 @@ export default function RepackBarang({ icon, title }) {
                     </div>
                     <div className="relative col-half !px-0">
                       <input type="text" className="form-control" name="tanggal" id="tanggal" value={repack_barang.tanggal} required readOnly />
-                      <button className="btn_absolute_right !right-1 text-primary hover:text-primary" type="button" ref={btn_tanggal_ref}>
+                      <button className="btn_absolute_right !right-1 text-primary hover:text-primary" type="button" id="btn_tanggal" ref={btn_tanggal_ref}>
                         <FontAwesomeIcon icon={faCalendarDays} />
                       </button>
                     </div>
@@ -556,7 +556,10 @@ export default function RepackBarang({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: list_barang_hasil.length > 0 ? `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and barcode not in (${list_barang_hasil.map((item) => `'${item.barcode}'`).join(",")})` : `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}'`,
+              where:
+                list_barang_hasil.length > 0
+                  ? `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and barcode not in (${list_barang_hasil.map((item) => `'${item.barcode}'`).join(",")})`
+                  : `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}'`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {
@@ -584,7 +587,10 @@ export default function RepackBarang({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: list_barang_proses.length > 0 ? `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and barcode not in (${list_barang_proses.map((item) => `'${item.barcode}'`).join(",")})` : `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}'`,
+              where:
+                list_barang_proses.length > 0
+                  ? `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and barcode not in (${list_barang_proses.map((item) => `'${item.barcode}'`).join(",")})`
+                  : `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}'`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {

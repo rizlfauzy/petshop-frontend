@@ -10,6 +10,7 @@ export default function ListStok({ date }) {
   const { session } = useSession();
   const [keyword, set_keyword] = useState("");
   const delay = useRef(null);
+  const input_keyword_ref = useRef(null);
 
   const get_stocks = useCallback(() => {
     clearTimeout(delay.current);
@@ -24,6 +25,7 @@ export default function ListStok({ date }) {
   }, [run, session, date, keyword])
 
   useLayoutEffect(() => {
+    input_keyword_ref.current.focus();
     get_stocks();
   }, [get_stocks]);
 
@@ -63,7 +65,7 @@ export default function ListStok({ date }) {
                     </label>
                   </div>
                   <div className="relative col-half !px-0">
-                    <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} required />
+                    <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} ref={input_keyword_ref} required />
                     <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_clear_keyword}>
                       <i className="far fa-times"></i>
                     </button>

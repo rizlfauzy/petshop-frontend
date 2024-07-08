@@ -1,15 +1,20 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 export default function PrivateRoute({ children }) {
   const { item } = useSelector((state) => state.conf);
-  const [isAuth] = useState(item?.data?.cek_menu?.open);
   const location = useLocation();
-  return isAuth ? children : <Navigate to="/" replace state={{ from: location }} />;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (item?.data?.cek_menu?.open == false) navigate("/", { replace: true, state: { from: location } });
+  }, [item?.data?.cek_menu?.open, location, navigate]);
+
+  return children;
 }
 
 PrivateRoute.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };

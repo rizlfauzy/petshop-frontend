@@ -484,6 +484,8 @@ export default function Penjualan({ icon, title }) {
           <ModalMain
             set={set_nomor}
             is_selected={set_is_selected_penjualan}
+            is_action_select={true}
+            is_print={true}
             conf={{
               name: "penjualan",
               limit: 5,
@@ -499,7 +501,7 @@ export default function Penjualan({ icon, title }) {
               },
             }}
           >
-            <th className="text-left align-middle">Action</th>
+            <th className="text-left align-middle action_select">Action</th>
             <th className="text-left align-middle">Nomor</th>
             <th className="text-left align-middle">Tanggal</th>
             <th className="text-left align-middle">Keterangan</th>

@@ -1583,6 +1583,19 @@ input.form-control:is([type="radio"], [type="checkbox"]) {
   z-index: 99999 !important;
 }
 
+th.action_select {
+  position: sticky;
+  left: 0;
+  z-index: 99991;
+}
+
+td.action_select {
+  position: sticky;
+  left: 0;
+  z-index: 99990;
+  background-color: rgba(233, 233, 233);
+}
+
 /* Safari */
 @-webkit-keyframes spin {
   0% {

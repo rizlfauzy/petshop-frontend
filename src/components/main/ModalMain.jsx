@@ -1,18 +1,22 @@
 import { useState, useRef, useCallback, useLayoutEffect } from "react";
 import useAsync from "../../hooks/useAsync";
-import { fetch_data } from "../../hooks/useFetch";
+import { fetch_data, get_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { set_hide_all_modal } from "../../hooks/useStore";
+import { set_hide_all_modal, set_show_loading } from "../../hooks/useStore";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import useAlert from "../../hooks/useAlert";
 const { VITE_PREFIX } = import.meta.env;
 
-export default function ModalMain({ set, is_selected, conf, children }) {
+export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false }) {
   const { session, setSessionData } = useSession();
   const navigate = useNavigate();
   const { run } = useAsync();
   const dispatch = useDispatch();
+  const { swalAlert } = useAlert();
   const tr_head = useRef(null);
   const input_list = useRef(null);
   const delay = useRef(null);
@@ -32,26 +36,26 @@ export default function ModalMain({ set, is_selected, conf, children }) {
     async (keyword = "", limit = 5, page = 1) => {
       try {
         const { error, message, data } = await run(
-        fetch_data({
-          url: "/page",
-          method: "POST",
-          headers: {
-            authorization: `Bearer ${session.token}`,
-          },
-          data: {
-            name: konf.name,
-            limit,
-            page,
-            select: JSON.stringify(konf.select),
-            order: JSON.stringify(konf.order),
-            where: JSON.stringify(konf.where),
-            likes: JSON.stringify(konf.likes),
-            keyword,
-          },
-        })
-      );
-      if (error) throw new Error(message);
-      set_data(data);
+          fetch_data({
+            url: "/page",
+            method: "POST",
+            headers: {
+              authorization: `Bearer ${session.token}`,
+            },
+            data: {
+              name: konf.name,
+              limit,
+              page,
+              select: JSON.stringify(konf.select),
+              order: JSON.stringify(konf.order),
+              where: JSON.stringify(konf.where),
+              likes: JSON.stringify(konf.likes),
+              keyword,
+            },
+          })
+        );
+        if (error) throw new Error(message);
+        set_data(data);
       } catch (e) {
         if (e.message == "Token expired" || e.message == "Token not found") {
           setSessionData(null);
@@ -151,7 +155,7 @@ export default function ModalMain({ set, is_selected, conf, children }) {
             ) : data?.list?.length > 0 ? (
               data?.list?.map((item) => (
                 <tr key={item[Object.keys(item)[0]]}>
-                  <td className="text-center" width={10}>
+                  <td className={`text-center ${is_action_select && "action_select"}`} width={10}>
                     <button
                       type="button"
                       className="btn-sm !p-[.25rem_.9rem] bg-primary text-white"
@@ -164,6 +168,36 @@ export default function ModalMain({ set, is_selected, conf, children }) {
                     >
                       <i className="far fa-check"></i>
                     </button>
+                    {is_print && (
+                      <button
+                        type="button"
+                        className="btn-sm !p-[.25rem_.9rem] bg-red-600 text-white !ml-1"
+                        data-id={item[Object.keys(item)[0]]}
+                        onClick={async () => {
+                          try {
+                            dispatch(set_show_loading(true));
+                            const { error, message, url } = await run(
+                              get_data({
+                                url: `/sales/print-so?nomor=${item[Object.keys(item)[0]]}`,
+                                headers: { authorization: `Bearer ${session.token}` },
+                              })
+                            );
+                            if (error) throw new Error(message);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.target = "_blank";
+                            a.click();
+                            swalAlert(message, "success");
+                            dispatch(set_show_loading(false));
+                          } catch (e) {
+                            dispatch(set_show_loading(false));
+                            return swalAlert(e.message, "error");
+                          }
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faPrint} />
+                      </button>
+                    )}
                   </td>
                   {konf.select.map((field) => (
                     <td key={field} className="text-left">
@@ -212,4 +246,6 @@ ModalMain.propTypes = {
   is_selected: PropTypes.func,
   conf: PropTypes.object,
   children: PropTypes.node,
+  is_action_select: PropTypes.bool,
+  is_print: PropTypes.bool,
 };

@@ -111,7 +111,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
         <div className="row my-2">
           <div className="table-responsive">
             <div className="row mb-2 justify-between">
-              <div className="col-half">
+              <div className="md:col-half col-full md:mb-0 mb-3">
                 <div className="input-group justify-start">
                   <div className="md:col-quarter col-half p-0 input-group-prepend">
                     <label htmlFor="input_menu" className="input-group-text">
@@ -126,12 +126,12 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                   </div>
                 </div>
               </div>
-              <div className="col-half">
-                <div className="input-group justify-end">
-                  <div className="md:col-quarter col-sixth p-0 input-group-prepend">
+              <div className="md:col-half col-full">
+                <div className="input-group md:justify-end justify-start md:gap-2 gap-1">
+                  <div className="md:p-0 px-[15px] input-group-prepend">
                     <input type="checkbox" className="form-control ml-auto" name="check_all" id="check_all" checked={check_all} onChange={handle_check_all} required />
                   </div>
-                  <div className="relative md:col-quarter">
+                  <div className="relative">
                     <label htmlFor="check_all" className="input-group-text justify-end cursor-pointer">
                       Select All
                     </label>

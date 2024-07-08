@@ -33,7 +33,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
   useEffect(() => {
     const obj = !isLoading ? data : null;
     dispatch(create_item(obj));
-    if (!isLoading && data?.message == "Token expired") {
+    if (!isLoading && (data?.message == "Token expired" || data?.message == "Token not found")) {
       setSessionData(null);
       dispatch(set_hide_all_modal());
       navigate(`${VITE_PREFIX}login`, { replace: true });

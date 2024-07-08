@@ -53,7 +53,7 @@ export default function ModalMain({ set, is_selected, conf, children }) {
       if (error) throw new Error(message);
       set_data(data);
       } catch (e) {
-        if (e.message == "Token expired") {
+        if (e.message == "Token expired" || e.message == "Token not found") {
           setSessionData(null);
           dispatch(set_hide_all_modal());
           navigate(`${VITE_PREFIX}login`, { replace: true });

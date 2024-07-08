@@ -8,6 +8,8 @@ import useAsync from "../hooks/useAsync";
 import useAlert from "../hooks/useAlert";
 import useSession from "../hooks/useSession";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { set_hide_all_modal } from "../hooks/useStore";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -22,6 +24,7 @@ export default function ChangePassword({ icon, title }) {
   const { swalAlert } = useAlert();
   const { session, setSessionData } = useSession();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     run(
@@ -38,11 +41,12 @@ export default function ChangePassword({ icon, title }) {
     const obj = !isLoading ? data : {};
     setUsername(obj?.data?.username);
     setPassword(obj?.data?.password);
-    if (!isLoading && data?.message == "Token expired") {
+    if (!isLoading && (data?.message == "Token expired" || data?.message == "Token not found")) {
       setSessionData(null);
+      dispatch(set_hide_all_modal());
       navigate(`${VITE_PREFIX}login`, { replace: true });
     }
-  }, [data, isLoading, navigate, setSessionData]);
+  }, [data, isLoading, navigate, setSessionData, dispatch]);
 
   const on_update = useCallback(async () => {
     try {

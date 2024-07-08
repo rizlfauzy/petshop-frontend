@@ -143,7 +143,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
               <table className={`table-modal table-bordered table-striped ${!isLoading ? (menu?.data?.length > 0 ? "penomoran" : "") : ""}`}>
                 <thead className="thead-dark">
                   <tr className="tr_head">
-                    <th className="text-left align-middle">Nomor</th>
+                    <th className="text-left align-middle">No</th>
                     <th className="text-left align-middle">Kode Menu</th>
                     <th className="text-left align-middle">Nama Menu</th>
                     <th className="text-left align-middle">Grup Menu</th>

@@ -14,6 +14,7 @@ import Pembelian from "./pages/Order/Pembelian";
 import Penjualan from "./pages/Sales/Penjualan";
 import BarangRusak from "./pages/Stock/BarangRusak";
 import RepackBarang from "./pages/Stock/RepackBarang";
+import CekStok from "./pages/Stock/CekStok";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -21,13 +22,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path={`${VITE_PREFIX}login`} element={<Login />} />
+        <Route path={`${VITE_PREFIX}LOGIN`} element={<Login />} />
         <Route
           path={VITE_PREFIX}
           element={
-              <Main title={"DASHBOARD"}>
-                <Dashboard icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"DASHBOARD"} />
-              </Main>
+            <Main title={"DASHBOARD"}>
+              <Dashboard icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"DASHBOARD"} />
+            </Main>
           }
         />
         <Route
@@ -137,6 +138,16 @@ function App() {
               <PrivateRoute>
                 <Main title={"REPACK BARANG"}>
                   <RepackBarang icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"REPACK BARANG"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="cek-stok"
+            element={
+              <PrivateRoute>
+                <Main title={"CEK STOK"}>
+                  <CekStok icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"CEK STOK"} />
                 </Main>
               </PrivateRoute>
             }

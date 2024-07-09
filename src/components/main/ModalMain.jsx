@@ -11,7 +11,7 @@ import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import useAlert from "../../hooks/useAlert";
 const { VITE_PREFIX } = import.meta.env;
 
-export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false }) {
+export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false, url_print= '' }) {
   const { session, setSessionData } = useSession();
   const navigate = useNavigate();
   const { run } = useAsync();
@@ -178,7 +178,7 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
                             dispatch(set_show_loading(true));
                             const { error, message, url } = await run(
                               get_data({
-                                url: `/sales/print-so?nomor=${item[Object.keys(item)[0]]}`,
+                                url: `${url_print}${item[Object.keys(item)[0]]}`,
                                 headers: { authorization: `Bearer ${session.token}` },
                               })
                             );
@@ -248,4 +248,5 @@ ModalMain.propTypes = {
   children: PropTypes.node,
   is_action_select: PropTypes.bool,
   is_print: PropTypes.bool,
+  url_print: PropTypes.string,
 };

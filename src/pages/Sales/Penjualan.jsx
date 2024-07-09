@@ -486,6 +486,7 @@ export default function Penjualan({ icon, title }) {
             is_selected={set_is_selected_penjualan}
             is_action_select={true}
             is_print={true}
+            url_print="/sales/print?nomor="
             conf={{
               name: "penjualan",
               limit: 5,

@@ -116,7 +116,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"PENJUALAN"}>
-                <Penjualan icon={<i className="far fa-file-invoice fa-lg !text-[19px]"></i>} title={"PENJUALAN"} />
+                <Penjualan icon={<i className="far fa-cart-arrow-down fa-lg !text-[19px]"></i>} title={"PENJUALAN"} />
               </Main>
             </PrivateRoute>
           }

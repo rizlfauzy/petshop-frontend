@@ -147,6 +147,9 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
   .wrap-nav-list {
     position: relative;
     max-height: 80vh;
+    overflow: auto;
+    // hilangkan scrollbar
+    scrollbar-width: none;
     .nav-list-item .list-item-menu:hover .tooltip {
       display: block;
       opacity: 1;

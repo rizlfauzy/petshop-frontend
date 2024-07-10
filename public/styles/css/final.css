@@ -654,6 +654,10 @@ video {
   margin-bottom: 0.5rem;
 }
 
+.\!ml-1 {
+  margin-left: 0.25rem !important;
+}
+
 .mb-0 {
   margin-bottom: 0px;
 }
@@ -670,6 +674,10 @@ video {
   margin-bottom: 0.75rem;
 }
 
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -684,14 +692,6 @@ video {
 
 .mt-2 {
   margin-top: 0.5rem;
-}
-
-.ml-1 {
-  margin-left: 0.25rem;
-}
-
-.\!ml-1 {
-  margin-left: 0.25rem !important;
 }
 
 .block {
@@ -886,16 +886,16 @@ video {
   justify-content: space-between;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
 
 .gap-3 {
   gap: 0.75rem;
-}
-
-.gap-1 {
-  gap: 0.25rem;
 }
 
 .overflow-auto {
@@ -996,22 +996,6 @@ video {
   padding: 0.75rem;
 }
 
-.p-\[\] {
-  padding: ;
-}
-
-.p-\[\.18rem\] {
-  padding: .18rem;
-}
-
-.p-\[\.18rem_\] {
-  padding: .18rem;
-}
-
-.p-\[\.18rem_\.55rem\] {
-  padding: .18rem .55rem;
-}
-
 .\!px-0 {
   padding-left: 0px !important;
   padding-right: 0px !important;
@@ -1027,6 +1011,11 @@ video {
   padding-right: 1rem;
 }
 
+.px-\[15px\] {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .px-\[5px\] {
   padding-left: 5px;
   padding-right: 5px;
@@ -1040,16 +1029,6 @@ video {
 .py-\[0\.15rem\] {
   padding-top: 0.15rem;
   padding-bottom: 0.15rem;
-}
-
-.px-\[\] {
-  padding-left: ;
-  padding-right: ;
-}
-
-.px-\[15px\] {
-  padding-left: 15px;
-  padding-right: 15px;
 }
 
 .text-left {
@@ -1310,7 +1289,9 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
 
 .sidebar .wrap-nav-list{
   position:relative;
-  max-height:80vh
+  max-height:80vh;
+  overflow:auto;
+  scrollbar-width:none
 }
 
 .sidebar .wrap-nav-list .nav-list-item .list-item-menu:hover .tooltip{

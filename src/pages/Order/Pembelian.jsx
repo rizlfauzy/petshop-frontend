@@ -451,6 +451,9 @@ export default function Pembelian({ icon, title }) {
           <ModalMain
             set={set_nomor}
             is_selected={set_is_selected_pembelian}
+            is_action_select={true}
+            is_print={true}
+            url_print="/order/print?nomor="
             conf={{
               name: "pembelian",
               limit: 5,

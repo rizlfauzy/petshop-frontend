@@ -89,7 +89,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
   }, [run, session, set_keyword, set_check_all]);
 
   const handle_check_all = useCallback((e) => {
-    const checkboxes = document.querySelectorAll(".tr_checkbox");
+    const checkboxes = document.querySelectorAll(".tr_menu.tr_checkbox");
     let list = [];
     checkboxes.forEach((checkbox) => {
       checkbox.classList.toggle("clicked-event", e.target.checked);
@@ -163,7 +163,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                         const checked_cancel = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.cancel : false;
                         const checked_backdate = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.backdate : false;
                         return (
-                          <tr key={item.nomenu} className={`tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
+                          <tr key={item.nomenu} className={`tr_menu tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
                             <td className="text-left align-middle"></td>
                             <td className="text-left align-middle">{item.nomenu}</td>
                             <td className="text-left align-middle">{item.namamenu}</td>

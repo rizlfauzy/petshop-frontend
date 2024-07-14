@@ -2,14 +2,15 @@ import MCDatepicker from "mc-datepicker";
 import moment from "moment";
 
 export default function useDatePicker() {
-  function date_picker(id) {
+  function date_picker(id, maxDate = false) {
+    const max = maxDate ? new Date(moment().endOf("month").format("YYYY-MM-DD")) : new Date(moment().format("YYYY-MM-DD"));
     return MCDatepicker.create({
       el: `#${id}`,
       bodyType: "inline",
       dateFormat: "yyyy-mm-dd",
       selectedDate: new Date(moment().format("YYYY-MM-DD")),
       minDate: new Date(moment(document.querySelector("#tglawal_periode").value).format("YYYY-MM-DD")),
-      maxDate: new Date(moment().format("YYYY-MM-DD")),
+      maxDate: max,
       autoClose: true,
       closeOnBlur: true,
       customWeekDays: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],

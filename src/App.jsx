@@ -15,6 +15,7 @@ import Penjualan from "./pages/Sales/Penjualan";
 import BarangRusak from "./pages/Stock/BarangRusak";
 import RepackBarang from "./pages/Stock/RepackBarang";
 import CekStok from "./pages/Stock/CekStok";
+import Laporan from "./pages/Report/Laporan";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -153,6 +154,16 @@ function App() {
             }
           />
         </Route>
+        <Route
+          path={`${VITE_PREFIX}report`}
+          element={
+            <PrivateRoute>
+              <Main title={"LAPORAN"}>
+                <Laporan icon={<i className="fas fa-file-invoice fa-lg !text-[19px]"></i>} title={"LAPORAN"} />
+              </Main>
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );

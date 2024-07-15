@@ -39,8 +39,6 @@ export default function Footer() {
       <script src={`${VITE_PREFIX}assets/datatables/dataTables.bootstrap4.min.js`}></script>
       <script src={`${VITE_PREFIX}assets/js/demo/datatables-demo.js`}></script>
 
-      <script src={`${VITE_PREFIX}assets/js/sweetalert2@11.js`}></script>
-
       <script src={`${VITE_PREFIX}assets/js/datetime.js`}></script>
       <script src={`${VITE_PREFIX}assets/js/moment-with-locales.min.js`}></script>
 

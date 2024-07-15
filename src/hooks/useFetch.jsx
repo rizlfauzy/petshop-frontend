@@ -1,7 +1,8 @@
-const { VITE_PREFIX_API} = import.meta.env;
+const { VITE_PREFIX_API, VITE_PREFIX_REPORTS } = import.meta.env;
 
 export function fetch_data({ url, method, data, headers = {}, host = VITE_PREFIX_API }) {
   if (host == '/') host = '';
+  if (host == '/reports') host = VITE_PREFIX_REPORTS;
   return fetch(`${host}${url}`, {
     method,
     headers: {
@@ -16,6 +17,7 @@ export function fetch_data({ url, method, data, headers = {}, host = VITE_PREFIX
 
 export function fetch_file({ url, method, data, headers= {}, host = VITE_PREFIX_API }) {
   if (host == "/") host = "";
+  if (host == "/reports") host = VITE_PREFIX_REPORTS;
   return fetch(`${host}${url}`, {
     method,
     headers,
@@ -26,6 +28,7 @@ export function fetch_file({ url, method, data, headers= {}, host = VITE_PREFIX_
 
 export function get_data({ url, headers = {}, host = VITE_PREFIX_API }) {
   if (host == "/") host = "";
+  if (host == "/reports") host = VITE_PREFIX_REPORTS;
   return fetch(`${host}${url}`, {
     headers: {
       "Content-Type": "application/json",

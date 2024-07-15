@@ -9,7 +9,7 @@ import { get_data } from "../../hooks/useFetch";
 import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_barang } from "../../hooks/useStore";
+import { set_show_barang, set_show_loading } from "../../hooks/useStore";
 import useDatePicker from "../../hooks/useDatePicker";
 import moment from "moment";
 import useAlert from "../../hooks/useAlert";
@@ -135,17 +135,38 @@ export default function Laporan({ icon, title }) {
     }
   }, [run, session, swalAlert]);
 
-  const handle_print = useCallback(() => {
+  const handle_print = useCallback(async () => {
     try {
+      dispatch(set_show_loading(true));
       if (report.barang && !barang.barcode) throw new Error("Nama Barang Harus Diisi");
       if (report.periode && (!tanggal_awal || !tanggal_akhir)) throw new Error("Tanggal Awal dan Tanggal Akhir Harus Diisi");
       if (report.barang && !barang.barcode) throw new Error("Nama Barang Harus Diisi");
 
-      
+      let report_url = '';
+      if (report.barang && report.periode) report_url = `/${report.report_url}?barcode=${barang.barcode}&tgl_awal=${moment(tanggal_awal).format("YYYYMMDD")}&tgl_akhir=${moment(tanggal_akhir).format("YYYYMMDD")}`;
+      else if (report.barang) report_url = `/${report.report_url}?barcode=${barang.barcode}`;
+      else if (report.periode) report_url = `/${report.report_url}?tgl_awal=${moment(tanggal_awal).format("YYYYMMDD")}&tgl_akhir=${moment(tanggal_akhir).format("YYYYMMDD")}`;
+      else report_url = `/${report.report_url}`;
+
+      const { error, message, url } = await run(
+        get_data({
+          url: report_url,
+          headers: { authorization: `Bearer ${session.token}` },
+          host: "/reports",
+        })
+      );
+      if (error) throw new Error(message);
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.click();
+      swalAlert(message, "success");
     } catch (e) {
       return swalAlert(e.message, "error");
+    } finally {
+      dispatch(set_show_loading(false));
     }
-  }, [report, barang, swalAlert, tanggal_akhir, tanggal_awal])
+  }, [report, barang, swalAlert, tanggal_akhir, tanggal_awal, run, session, dispatch])
 
   const handle_clear = useCallback(() => {
     row_barang_ref.current.style.display = "none";

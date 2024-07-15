@@ -8,7 +8,7 @@ export default function useDatePicker() {
       el: `#${id}`,
       bodyType: "inline",
       dateFormat: "yyyy-mm-dd",
-      selectedDate: new Date(moment().format("YYYY-MM-DD")),
+      // selectedDate: new Date(moment().format("YYYY-MM-DD")),
       minDate: new Date(moment(document.querySelector("#tglawal_periode").value).format("YYYY-MM-DD")),
       maxDate: max,
       autoClose: true,

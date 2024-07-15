@@ -515,7 +515,7 @@ export default function MasterBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal && show_modal_barang && (
-        <Modal modal_title="Barang" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Barang" className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang}

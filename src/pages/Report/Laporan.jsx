@@ -2,19 +2,60 @@ import PropTypes from "prop-types";
 import HeaderPage from "../../components/HeaderPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faCalendarDays, faPrint } from "@fortawesome/free-solid-svg-icons";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useAsync from "../../hooks/useAsync";
 import useSession from "../../hooks/useSession";
 import { get_data } from "../../hooks/useFetch";
+import Modal from "../../components/Modal";
+import ModalMain from "../../components/main/ModalMain";
+import { useDispatch, useSelector } from "react-redux";
+import { set_show_barang } from "../../hooks/useStore";
 import useDatePicker from "../../hooks/useDatePicker";
 import moment from "moment";
+import useAlert from "../../hooks/useAlert";
 
 export default function Laporan({ icon, title }) {
   const btn_tanggal_awal_ref = useRef(null);
   const btn_tanggal_akhir_ref = useRef(null);
-  const [tanggal_awal, set_tanggal_awal] = useState(moment().startOf('month').format("YYYY-MM-DD"));
+  const row_barang_ref = useRef(null);
+  const row_periode_ref = useRef(null);
+  const btn_print_pdf = useRef(null);
+  const [tanggal_awal, set_tanggal_awal] = useState(moment().startOf("month").format("YYYY-MM-DD"));
   const [tanggal_akhir, set_tanggal_akhir] = useState(moment().endOf("month").format("YYYY-MM-DD"));
+  const [barcode, set_barcode] = useState("");
+  const [is_selected_barang, set_is_selected_barang] = useState(false);
+  const [barang, set_barang] = useState({
+    barcode,
+    nama_barang: "",
+  });
+  const [report, set_report] = useState({
+    report: "",
+    nama: "",
+    report_url: "",
+    barang: false,
+    periode: false,
+    pdf: false
+  });
   const { date_picker } = useDatePicker();
+  const { session } = useSession();
+  const dispatch = useDispatch();
+  const { show_modal_barang } = useSelector((state) => state.conf);
+  const { run } = useAsync();
+  const { run: run_reports, data, isLoading } = useAsync();
+  const { swalAlert} = useAlert()
+
+  useLayoutEffect(() => {
+    btn_print_pdf.current.style.display = "none";
+    row_barang_ref.current.style.display = "none";
+    row_periode_ref.current.style.display = "none";
+
+    run_reports(
+      get_data({
+        url: "/reports",
+        headers: { authorization: `Bearer ${session.token}` },
+      })
+    );
+  }, [run_reports, session]);
 
   useLayoutEffect(() => {
     const date_awal = date_picker("tanggal_awal");
@@ -45,13 +86,81 @@ export default function Laporan({ icon, title }) {
     };
   }, [date_picker, btn_tanggal_awal_ref]);
 
+  useEffect(() => {
+    async function get_barang() {
+      const { error, message, data } = await run(
+        get_data({
+          url: `/barang?barcode=${barcode}`,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      if (data) set_barang((prev) => ({ ...prev, nama_barang: data.nama, barcode: data.barcode }));
+    }
+
+    if (is_selected_barang) {
+      get_barang();
+    }
+  }, [barcode, run, session, is_selected_barang]);
+
+  const handle_report = useCallback(async (e) => {
+    try {
+      const { error, message, data } = await run(
+        get_data({
+          url: `/report?report=${e.target.value}`,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      if (data) {
+        set_report((prev) => ({ ...prev, ...data }));
+        if (data.barang) row_barang_ref.current.style.display = 'block';
+        else row_barang_ref.current.style.display = 'none';
+        if (data.periode) row_periode_ref.current.style.display = 'flex';
+        else row_periode_ref.current.style.display = 'none';
+        if (data.pdf) btn_print_pdf.current.style.display = 'block';
+        else btn_print_pdf.current.style.display = 'none';
+      } else {
+        row_barang_ref.current.style.display = 'none';
+        row_periode_ref.current.style.display = 'none';
+        btn_print_pdf.current.style.display = 'none';
+        set_report((prev) => ({ ...prev, report: "", nama: "", report_url: "", barang: false, periode: false, pdf: false }));
+        set_barang({ barcode: "", nama_barang: "" });
+        set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
+        set_tanggal_akhir(moment().endOf("month").format("YYYY-MM-DD"));
+        set_barcode("");
+      }
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [run, session, swalAlert]);
+
+  const handle_print = useCallback(() => {
+    try {
+      if (report.barang && !barang.barcode) throw new Error("Nama Barang Harus Diisi");
+      if (report.periode && (!tanggal_awal || !tanggal_akhir)) throw new Error("Tanggal Awal dan Tanggal Akhir Harus Diisi");
+      if (report.barang && !barang.barcode) throw new Error("Nama Barang Harus Diisi");
+
+      
+    } catch (e) {
+      return swalAlert(e.message, "error");
+    }
+  }, [report, barang, swalAlert, tanggal_akhir, tanggal_awal])
+
   const handle_clear = useCallback(() => {
-    console.log("clear");
+    row_barang_ref.current.style.display = "none";
+    row_periode_ref.current.style.display = "none";
+    btn_print_pdf.current.style.display = "none";
+    set_report((prev) => ({ ...prev, report: "", nama: "", report_url: "", barang: false, periode: false, pdf: false }));
+    set_barang({ barcode: "", nama_barang: "" });
+    set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
+    set_tanggal_akhir(moment().endOf("month").format("YYYY-MM-DD"));
+    set_barcode("");
   }, []);
   return (
     <>
       <HeaderPage icon={icon} title={title}>
-        <button id="clear" className="btn-sm bg-red-600 text-white">
+        <button id="print" className="btn-sm bg-red-600 text-white" ref={btn_print_pdf} onClick={handle_print}>
           <FontAwesomeIcon icon={faPrint} className="mr-[10px]" />
           Print
         </button>
@@ -67,7 +176,7 @@ export default function Laporan({ icon, title }) {
                 <h5 className="mb-0 text-md">FILTER LAPORAN</h5>
               </div>
               <div className="modal-body-main">
-                <div className="row my-2" id="periode">
+                <div className="row my-2" id="periode" ref={row_periode_ref}>
                   <div className="col-half input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="tanggal_awal" className="input-group-text">
@@ -95,11 +204,78 @@ export default function Laporan({ icon, title }) {
                     </div>
                   </div>
                 </div>
+                <div className="row my-2" id="barang" ref={row_barang_ref}>
+                  <div className="col-full input-group">
+                    <div className="md:col-quarter col-half p-0 input-group-prepend">
+                      <label htmlFor="nama_barang" className="input-group-text">
+                        NAMA BARANG
+                      </label>
+                    </div>
+                    <div className="relative md:col-thirdperfour col-half !px-0">
+                      <input type="text" className="form-control" name="nama_barang" id="nama_barang" value={barang.nama_barang} required readOnly placeholder="NAMA BARANG" />
+                      <button
+                        className="btn_absolute_right !right-1 text-primary hover:text-primary"
+                        type="button"
+                        onClick={() => {
+                          dispatch(set_show_barang(true));
+                          set_is_selected_barang(false);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faSearch} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="row my-2">
+                  <div className="col-full input-group">
+                    <div className="md:col-quarter col-half p-0 input-group-prepend">
+                      <label htmlFor="report" className="input-group-text">
+                        Pilih Laporan
+                      </label>
+                    </div>
+                    <div className="relative md:col-thirdperfour col-half !px-0">
+                      <select name="report" id="report" className="form-control" value={report.report} onChange={handle_report} required>
+                        <option value="">Pilih Laporan</option>
+                        {!isLoading && data?.data?.map((item) => <option key={item.report} value={item.report}>{item.nama}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {show_modal_barang && (
+        <Modal modal_title="Barang" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+          <ModalMain
+            set={set_barcode}
+            is_selected={set_is_selected_barang}
+            conf={{
+              name: "barang",
+              limit: 5,
+              page: 1,
+              select: ["barcode", "nama", "nama_satuan", "nama_kategori", "aktif"],
+              order: [["barcode", "ASC"]],
+              where: {},
+              likes: ["barcode", "nama"],
+              keyword: "",
+              func_item: {
+                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
+              },
+            }}
+          >
+            <>
+              <th className="text-left align-middle">Action</th>
+              <th className="text-left align-middle">Barcode</th>
+              <th className="text-left align-middle">Nama</th>
+              <th className="text-left align-middle">Nama Satuan</th>
+              <th className="text-left align-middle">Nama Kategori</th>
+              <th className="text-left align-middle">Aktif</th>
+            </>
+          </ModalMain>
+        </Modal>
+      )}
     </>
   );
 }

@@ -9,10 +9,13 @@ import { get_data } from "../../hooks/useFetch";
 import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
 import { useDispatch, useSelector } from "react-redux";
-import { set_show_barang, set_show_loading } from "../../hooks/useStore";
+import { set_show_barang, set_show_loading, set_hide_all_modal } from "../../hooks/useStore";
 import useDatePicker from "../../hooks/useDatePicker";
 import moment from "moment";
 import useAlert from "../../hooks/useAlert";
+import { useNavigate } from "react-router-dom";
+
+const { VITE_PREFIX } = import.meta.env;
 
 export default function Laporan({ icon, title }) {
   const btn_tanggal_awal_ref = useRef(null);
@@ -37,12 +40,13 @@ export default function Laporan({ icon, title }) {
     pdf: false
   });
   const { date_picker } = useDatePicker();
-  const { session } = useSession();
+  const { session, setSessionData } = useSession();
   const dispatch = useDispatch();
   const { show_modal_barang } = useSelector((state) => state.conf);
   const { run } = useAsync();
   const { run: run_reports, data, isLoading } = useAsync();
-  const { swalAlert} = useAlert()
+  const { swalAlert } = useAlert()
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
     btn_print_pdf.current.style.display = "none";
@@ -162,11 +166,16 @@ export default function Laporan({ icon, title }) {
       a.click();
       swalAlert(message, "success");
     } catch (e) {
+      if (e.message == "Token expired" || e.message == "Token not found") {
+        setSessionData(null);
+        dispatch(set_hide_all_modal());
+        navigate(`${VITE_PREFIX}login`, { replace: true });
+      }
       return swalAlert(e.message, "error");
     } finally {
       dispatch(set_show_loading(false));
     }
-  }, [report, barang, swalAlert, tanggal_akhir, tanggal_awal, run, session, dispatch])
+  }, [report, barang, swalAlert, tanggal_akhir, tanggal_awal, run, session, dispatch, navigate, setSessionData]);
 
   const handle_clear = useCallback(() => {
     row_barang_ref.current.style.display = "none";

@@ -207,7 +207,7 @@ export default function Laporan({ icon, title }) {
               </div>
               <div className="modal-body-main">
                 <div className="row my-2" id="periode" ref={row_periode_ref}>
-                  <div className="col-half input-group">
+                  <div className="md:col-half col-full md:mb-0 mb-2 input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="tanggal_awal" className="input-group-text">
                         Tanggal Awal
@@ -220,7 +220,7 @@ export default function Laporan({ icon, title }) {
                       </button>
                     </div>
                   </div>
-                  <div className="col-half input-group">
+                  <div className="md:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="tanggal_akhir" className="input-group-text">
                         Tanggal Akhir
@@ -266,7 +266,12 @@ export default function Laporan({ icon, title }) {
                     <div className="relative md:col-thirdperfour col-half !px-0">
                       <select name="report" id="report" className="form-control" value={report.report} onChange={handle_report} required>
                         <option value="">Pilih Laporan</option>
-                        {!isLoading && data?.data?.map((item) => <option key={item.report} value={item.report}>{item.nama}</option>)}
+                        {!isLoading &&
+                          data?.data?.map((item) => (
+                            <option key={item.report} value={item.report}>
+                              {item.nama}
+                            </option>
+                          ))}
                       </select>
                     </div>
                   </div>

@@ -29,7 +29,7 @@ export default function PeriodeStok({ icon, title }) {
   const navigate = useNavigate();
 
   useLayoutEffect(() => {
-    const date_awal = date_picker("tanggal_awal");
+    const date_awal = date_picker("tanggal_awal", false, true);
     date_awal.onSelect((date) => {
       const tanggal_awal = moment(date).format("YYYY-MM-DD");
       set_tanggal_awal(tanggal_awal);
@@ -40,7 +40,7 @@ export default function PeriodeStok({ icon, title }) {
     const btn_tanggal_awal = btn_tanggal_awal_ref.current;
     btn_tanggal_awal.addEventListener("click", open_date_awal);
 
-    const date_akhir = date_picker("tanggal_akhir", true);
+    const date_akhir = date_picker("tanggal_akhir", true, true);
     date_akhir.onSelect((date) => {
       const tanggal_akhir = moment(date).format("YYYY-MM-DD");
       set_tanggal_akhir(tanggal_akhir);

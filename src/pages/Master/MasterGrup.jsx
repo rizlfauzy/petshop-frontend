@@ -31,18 +31,14 @@ export default function MasterGrup({ icon, title }) {
 
   useEffect(() => {
     async function get_grup() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/grup?kode=" + kode_grup,
-            headers: { authorization: `Bearer ${session.token}` },
-          })
-        );
-        if (error) throw new Error(message);
-        set_grup((state) => ({ ...state, ...data }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/grup?kode=" + kode_grup,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      set_grup((state) => ({ ...state, ...data }));
     }
 
     if (is_selected) {
@@ -57,7 +53,7 @@ export default function MasterGrup({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-  }, [is_selected, kode_grup]);
+  }, [is_selected, kode_grup, run, session]);
 
   const handle_modal = useCallback(async () => {
     dispatch(set_show_modal(true));
@@ -169,7 +165,18 @@ export default function MasterGrup({ icon, title }) {
                         NAMA GRUP
                       </label>
                     </div>
-                    <input type="text" value={grup.nama} className="form-control col-half" name="nama" id="nama" onChange={handle_change} required />
+                    <input
+                      type="text"
+                      value={grup.nama}
+                      className="form-control col-half"
+                      name="nama"
+                      id="nama"
+                      onChange={handle_change}
+                      onKeyDown={(e) => {
+                        if (e.keyCode == 13) handle_save();
+                      }}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="row my-2 !hidden" ref={aktif_row}>

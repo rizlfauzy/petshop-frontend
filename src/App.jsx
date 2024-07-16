@@ -16,6 +16,7 @@ import BarangRusak from "./pages/Stock/BarangRusak";
 import RepackBarang from "./pages/Stock/RepackBarang";
 import CekStok from "./pages/Stock/CekStok";
 import Laporan from "./pages/Report/Laporan";
+import PeriodeStok from "./pages/Stock/PeriodeStok";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -149,6 +150,16 @@ function App() {
               <PrivateRoute>
                 <Main title={"CEK STOK"}>
                   <CekStok icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"CEK STOK"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="periode-stok"
+            element={
+              <PrivateRoute>
+                <Main title={"PERIODE STOK"}>
+                  <PeriodeStok icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"PERIODE STOK"} />
                 </Main>
               </PrivateRoute>
             }

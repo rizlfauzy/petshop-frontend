@@ -101,10 +101,15 @@ export default function FormContainer() {
                 </label>
               </div>
             </div>
-            <div className="input-field">
+            <div
+              className="input-field !bg-[#2b2b2b] cursor-pointer "
+              onClick={() => {
+                dispatch(set_show_grup(true));
+              }}
+            >
               <i className="fas fa-chart-pie"></i>
               <div className="relative flex !px-0">
-                <input name="nama_grup" id="nama_grup" type="text" value={grup.nama_grup} onChange={handle_grup} readOnly placeholder="Grup" />
+                <input name="nama_grup" id="nama_grup" className="cursor-pointer  !text-white" type="text" value={grup.nama_grup} onChange={handle_grup} readOnly placeholder="Grup" />
                 <button
                   className="btn_absolute_right hover:text-primary"
                   type="button"

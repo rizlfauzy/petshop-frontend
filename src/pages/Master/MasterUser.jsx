@@ -41,35 +41,27 @@ export default function MasterUser({ icon, title }) {
 
   useEffect(() => {
     async function get_grup() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/grup?kode=" + kode_grup,
-            headers: { authorization: `Bearer ${session.token}` },
-          })
-        );
-        if (error) throw new Error(message);
-        set_grup((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
-        set_user((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/grup?kode=" + kode_grup,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      set_grup((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
+      set_user((state) => ({ ...state, kode_grup: data.kode, nama_grup: data.nama }));
     }
 
     async function get_user() {
-      try {
-        const { error, message, data } = await run(
-          get_data({
-            url: "/user?username=" + username,
-            headers: { authorization: `Bearer ${session.token}` },
-          })
-        );
-        if (error) throw new Error(message);
-        set_user((state) => ({ ...state, ...data }));
-        set_grup((state) => ({ ...state, ...data }));
-      } catch (e) {
-        swalAlert(e.message, "error");
-      }
+      const { error, message, data } = await run(
+        get_data({
+          url: "/user?username=" + username,
+          headers: { authorization: `Bearer ${session.token}` },
+        })
+      );
+      if (error) throw new Error(message);
+      set_user((state) => ({ ...state, ...data }));
+      set_grup((state) => ({ ...state, ...data }));
     }
 
     if (is_selected_grup) {
@@ -85,7 +77,7 @@ export default function MasterUser({ icon, title }) {
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
     }
-  }, [is_selected_grup, is_selected_user, kode_grup, username]);
+  }, [is_selected_grup, is_selected_user, kode_grup, username, run, session]);
 
   const handle_find_grup = useCallback(() => {
     dispatch(set_show_grup(true));

@@ -11,7 +11,7 @@ import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import useAlert from "../../hooks/useAlert";
 const { VITE_PREFIX } = import.meta.env;
 
-export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false, url_print= '' }) {
+export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false, url_print= '', is_login_modal = false }) {
   const { session, setSessionData } = useSession();
   const navigate = useNavigate();
   const { run } = useAsync();
@@ -37,11 +37,9 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
       try {
         const { error, message, data } = await run(
           fetch_data({
-            url: "/page",
+            url: is_login_modal ? "/page-login" : "/page",
             method: "POST",
-            headers: {
-              authorization: `Bearer ${session.token}`,
-            },
+            headers: is_login_modal ? {} : { authorization: `Bearer ${session.token}` },
             data: {
               name: konf.name,
               limit,
@@ -57,14 +55,14 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
         if (error) throw new Error(message);
         set_data(data);
       } catch (e) {
-        if (e.message == "Token expired" || e.message == "Token not found") {
+        if (!is_login_modal && (e.message == "Token expired" || e.message == "Token not found")) {
           setSessionData(null);
           dispatch(set_hide_all_modal());
           navigate(`${VITE_PREFIX}login`, { replace: true });
         }
       }
     },
-    [konf, run, session, navigate, setSessionData, dispatch]
+    [konf, run, session, navigate, setSessionData, dispatch, is_login_modal]
   );
 
   const handle_keyword = useCallback(
@@ -249,4 +247,5 @@ ModalMain.propTypes = {
   is_action_select: PropTypes.bool,
   is_print: PropTypes.bool,
   url_print: PropTypes.string,
+  is_login_modal: PropTypes.bool,
 };

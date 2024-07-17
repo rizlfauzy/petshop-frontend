@@ -17,6 +17,7 @@ import RepackBarang from "./pages/Stock/RepackBarang";
 import CekStok from "./pages/Stock/CekStok";
 import Laporan from "./pages/Report/Laporan";
 import PeriodeStok from "./pages/Stock/PeriodeStok";
+import Register from "./pages/Register";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -25,6 +26,7 @@ function App() {
     <Router>
       <Routes>
         <Route path={`${VITE_PREFIX}LOGIN`} element={<Login />} />
+        <Route path={`${VITE_PREFIX}REGISTER`} element={<Register />} />
         <Route
           path={VITE_PREFIX}
           element={

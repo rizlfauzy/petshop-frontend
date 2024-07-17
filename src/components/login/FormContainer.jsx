@@ -1,17 +1,20 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import useAlert from "../../hooks/useAlert";
 import useSession from "../../hooks/useSession";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const { VITE_PREFIX } = import.meta.env;
 
 export default function FormContainer() {
+  const input_password_reff = useRef(null);
+  const [showPassword, setShowPassword] = useState(false);
   const { run } = useAsync();
   const { swalAlert } = useAlert();
   const { setSessionData } = useSession();
-  const navigate = useNavigate();
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
@@ -23,11 +26,13 @@ export default function FormContainer() {
       setSessionData({ token });
       swalAlert(message, "success")
       form.reset();
-      navigate(VITE_PREFIX, { replace: true });
+      const a = document.createElement("a");
+      a.href = VITE_PREFIX;
+      a.click();
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [run, swalAlert, setSessionData, navigate]);
+  }, [run, swalAlert, setSessionData]);
 
   return (
     <div className="forms-container">
@@ -40,11 +45,33 @@ export default function FormContainer() {
           </div>
           <div className="input-field">
             <i className="fas fa-lock"></i>
-            <input name="password" id="password" type="password" placeholder="Password" autoComplete="new-password" />
+            <div className="relative flex !px-0">
+              <input name="password" id="password" type="password" placeholder="Password" autoComplete="new-password" ref={input_password_reff} />
+              <label htmlFor="show_password" className="btn_absolute_right">
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="inline-block w-10 text-slate-400" />
+                <input
+                  className="hidden"
+                  type="checkbox"
+                  name="show_password"
+                  id="show_password"
+                  placeholder="Password"
+                  onChange={(e) => {
+                    setShowPassword(e.target.checked);
+                    input_password_reff.current.type = e.target.checked ? "text" : "password";
+                  }}
+                />
+              </label>
+            </div>
           </div>
           <button className="btn transparent" id="oklogin" type="submit" name="btn" value="Login">
             Login
           </button>
+          {/* make register button */}
+          <Link to={`${VITE_PREFIX}register`} className="mt-3">
+            <button className="btn transparent !w-auto !border-none px-3 hover:!text-[#c3baa9] hover:!bg-transparent" id="regsiter_btn" type="button">
+              Belum punya akun? Daftar disini
+            </button>
+          </Link>
         </form>
         <p className="social-text"></p>
       </div>

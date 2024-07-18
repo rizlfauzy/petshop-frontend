@@ -11,6 +11,7 @@ export default function OmsetBulanan() {
   const { format_rupiah } = useFormating();
   const socket = useSocket("omset", (res) => {
     setDataOmset(res);
+    // console.log(res);
   });
 
   useLayoutEffect(() => {
@@ -31,7 +32,7 @@ export default function OmsetBulanan() {
               </span>
             </div>
             <div className="row">
-              <span className="text-[12px] font-semibold">Omset : {dataOmset && format_rupiah(dataOmset?.data?.penjualan)}</span>
+              <span className="text-[12px] font-semibold">Omset : {dataOmset && dataOmset?.data ? format_rupiah(dataOmset?.data?.penjualan) : "Rp. 0"}</span>
             </div>
           </div>
         </div>

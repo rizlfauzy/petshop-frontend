@@ -122,10 +122,14 @@ export default function FormContainer() {
                   </button>
                 </div>
               </div>
-              <button className="btn-sm text-white bg-red-600 !rounded-lg hover:bg-red-800" onClick={() => {
-                set_grup({ kode_grup: "", nama_grup: "" });
-                set_user((prev) => ({ ...prev, kode_grup: "", nama_grup: "" }));
-              }} type="button">
+              <button
+                className="btn-sm text-white bg-red-600 !rounded-lg hover:bg-red-800"
+                onClick={() => {
+                  set_grup({ kode_grup: "", nama_grup: "" });
+                  set_user((prev) => ({ ...prev, kode_grup: "", nama_grup: "" }));
+                }}
+                type="button"
+              >
                 <FontAwesomeIcon icon={faTimes} className="inline-block w-10 text-slate-400" />
               </button>
             </div>
@@ -142,7 +146,7 @@ export default function FormContainer() {
         </div>
       </div>
       {show_modal_grup && (
-        <Modal modal_title="Grup" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected_grup}

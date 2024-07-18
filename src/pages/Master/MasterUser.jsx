@@ -273,7 +273,7 @@ export default function MasterUser({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_grup && (
-        <Modal modal_title="Grup" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Grup" className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected_grup}
@@ -301,7 +301,7 @@ export default function MasterUser({ icon, title }) {
         </Modal>
       )}
       {show_modal && show_modal_user && (
-        <Modal modal_title="User" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="User" className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_username}
             is_selected={set_is_selected_user}

@@ -199,7 +199,7 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
                   </td>
                   {konf.select.map((field) => (
                     <td key={field} className="text-left">
-                      {konf.func_item[field] ? konf.func_item[field](item) : item[field]}
+                      {konf?.func_item && konf?.func_item[field] ? konf?.func_item[field](item) : item[field]}
                     </td>
                   ))}
                 </tr>

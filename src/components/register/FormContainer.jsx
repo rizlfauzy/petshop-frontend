@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEyeSlash, faEye, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faEyeSlash, faEye, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { set_show_grup } from "../../hooks/useStore";
@@ -101,25 +101,33 @@ export default function FormContainer() {
                 </label>
               </div>
             </div>
-            <div
-              className="input-field !bg-[#2b2b2b] cursor-pointer "
-              onClick={() => {
-                dispatch(set_show_grup(true));
-              }}
-            >
-              <i className="fas fa-chart-pie"></i>
-              <div className="relative flex !px-0">
-                <input name="nama_grup" id="nama_grup" className="cursor-pointer  !text-white" type="text" value={grup.nama_grup} onChange={handle_grup} readOnly placeholder="Grup" />
-                <button
-                  className="btn_absolute_right hover:text-primary"
-                  type="button"
-                  onClick={() => {
-                    dispatch(set_show_grup(true));
-                  }}
-                >
-                  <FontAwesomeIcon icon={faSearch} className="inline-block w-10 text-slate-400" />
-                </button>
+            <div className="flex items-center gap-3 w-full max-w-[380px]">
+              <div
+                className="input-field !bg-[#2b2b2b] cursor-pointer "
+                onClick={() => {
+                  dispatch(set_show_grup(true));
+                }}
+              >
+                <i className="fas fa-chart-pie"></i>
+                <div className="relative flex !px-0">
+                  <input name="nama_grup" id="nama_grup" className="cursor-pointer  !text-white" type="text" value={grup.nama_grup} onChange={handle_grup} readOnly placeholder="Grup" />
+                  <button
+                    className="btn_absolute_right hover:text-primary"
+                    type="button"
+                    onClick={() => {
+                      dispatch(set_show_grup(true));
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faSearch} className="inline-block w-10 text-slate-400" />
+                  </button>
+                </div>
               </div>
+              <button className="btn-sm text-white bg-red-600 !rounded-lg hover:bg-red-800" onClick={() => {
+                set_grup({ kode_grup: "", nama_grup: "" });
+                set_user((prev) => ({ ...prev, kode_grup: "", nama_grup: "" }));
+              }} type="button">
+                <FontAwesomeIcon icon={faTimes} className="inline-block w-10 text-slate-400" />
+              </button>
             </div>
             <button className="btn transparent" id="register" type="submit" name="register" value="Register">
               Register
@@ -143,20 +151,16 @@ export default function FormContainer() {
               name: "grup",
               limit: 5,
               page: 1,
-              select: ["kode", "nama", "aktif"],
+              select: ["kode", "nama"],
               order: [["kode", "ASC"]],
               where: "kode <> 'ITS' and aktif = true",
               likes: ["kode", "nama"],
               keyword: "",
-              func_item: {
-                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
-              },
             }}
           >
             <th className="text-left align-middle">Action</th>
             <th className="text-left align-middle">Kode</th>
             <th className="text-left align-middle">Nama</th>
-            <th className="text-left align-middle">Aktif</th>
           </ModalMain>
         </Modal>
       )}

@@ -11,7 +11,6 @@ export default function OmsetBulanan() {
   const { format_rupiah } = useFormating();
   const socket = useSocket("omset", (res) => {
     setDataOmset(res);
-    // console.log(res);
   });
 
   useLayoutEffect(() => {

@@ -111,16 +111,18 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
   return (
     <div className="table-responsive">
       <div className="row mb-2 justify-between">
-        <div className="md:col-sixth col-onethird">
-          <label htmlFor="select_limit_list" className="flex">
-            Pilih
-            <select value={limit} onChange={handle_limit} id="select_limit_list" className="form-control form-control-sm">
-              {option_content}
-            </select>
-            Baris
-          </label>
+        <div className="col-half">
+          <div className="input-group justify-start">
+            <label htmlFor="select_limit_list" className="flex items-center">
+              <div className="input-group-text">Pilih</div>
+              <select value={limit} onChange={handle_limit} id="select_limit_list" className="form-control form-control-sm cursor-pointer">
+                {option_content}
+              </select>
+              <div className="input-group-text">Baris</div>
+            </label>
+          </div>
         </div>
-        <div className="md:col-half col-twothird">
+        <div className="col-half">
           <div className="input-group justify-end">
             <div className="md:col-quarter col-half p-0 input-group-prepend justify-end">
               <label htmlFor="input_list" className="input-group-text">

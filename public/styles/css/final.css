@@ -734,10 +734,6 @@ video {
   height: 2px;
 }
 
-.h-\[55px\] {
-  height: 55px;
-}
-
 .max-h-\[100vh\] {
   max-height: 100vh;
 }
@@ -772,6 +768,10 @@ video {
 
 .w-1\/4 {
   width: 25%;
+}
+
+.w-1\/5 {
+  width: 20%;
 }
 
 .w-1\/6 {
@@ -826,12 +826,12 @@ video {
   width: 100%;
 }
 
-.max-w-full {
-  max-width: 100%;
-}
-
 .max-w-\[380px\] {
   max-width: 380px;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .flex-\[0_0_100\%\] {
@@ -840,6 +840,10 @@ video {
 
 .flex-\[0_0_16\.666667\%\] {
   flex: 0 0 16.666667%;
+}
+
+.flex-\[0_0_20\%\] {
+  flex: 0 0 20%;
 }
 
 .flex-\[0_0_25\%\] {
@@ -934,6 +938,10 @@ video {
   overflow: auto;
 }
 
+.\!rounded-lg {
+  border-radius: 0.5rem !important;
+}
+
 .rounded {
   border-radius: 0.25rem;
 }
@@ -944,18 +952,6 @@ video {
 
 .rounded-md {
   border-radius: 0.375rem;
-}
-
-.\!rounded-lg {
-  border-radius: 0.5rem !important;
-}
-
-.\!rounded-\[50\%\] {
-  border-radius: 50% !important;
-}
-
-.\!rounded-\[25\%\] {
-  border-radius: 25% !important;
 }
 
 .border {
@@ -2548,6 +2544,21 @@ p{
   }
 }
 
+.col-fifth {
+  position: relative;
+  min-height: 1px;
+  width: 20%;
+  flex: 0 0 20%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+@media (min-width: 1280px) {
+  .col-fifth {
+    width: 20%;
+  }
+}
+
 .col-sixth {
   position: relative;
   min-height: 1px;
@@ -2636,6 +2647,21 @@ p{
   @media (min-width: 1280px) {
     .sm\:col-quarter {
       width: 25%;
+    }
+  }
+
+  .sm\:col-fifth {
+    position: relative;
+    min-height: 1px;
+    width: 20%;
+    flex: 0 0 20%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  @media (min-width: 1280px) {
+    .sm\:col-fifth {
+      width: 20%;
     }
   }
 
@@ -2743,6 +2769,21 @@ p{
   @media (min-width: 1280px) {
     .md\:col-quarter {
       width: 25%;
+    }
+  }
+
+  .md\:col-fifth {
+    position: relative;
+    min-height: 1px;
+    width: 20%;
+    flex: 0 0 20%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  @media (min-width: 1280px) {
+    .md\:col-fifth {
+      width: 20%;
     }
   }
 
@@ -3164,6 +3205,10 @@ td.action_select{
 
   .xl\:w-1\/4 {
     width: 25%;
+  }
+
+  .xl\:w-1\/5 {
+    width: 20%;
   }
 
   .xl\:w-1\/6 {

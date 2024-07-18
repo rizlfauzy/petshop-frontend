@@ -107,6 +107,17 @@ export default function Laporan({ icon, title }) {
     }
   }, [barcode, run, session, is_selected_barang]);
 
+  const handle_clear = useCallback(() => {
+    row_barang_ref.current.style.display = "none";
+    row_periode_ref.current.style.display = "none";
+    btn_print_pdf.current.style.display = "none";
+    set_report((prev) => ({ ...prev, report: "", nama: "", report_url: "", barang: false, periode: false, pdf: false }));
+    set_barang({ barcode: "", nama_barang: "" });
+    set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
+    set_tanggal_akhir(moment().endOf("month").format("YYYY-MM-DD"));
+    set_barcode("");
+  }, []);
+
   const handle_report = useCallback(async (e) => {
     try {
       const { error, message, data } = await run(
@@ -124,20 +135,14 @@ export default function Laporan({ icon, title }) {
         else row_periode_ref.current.style.display = 'none';
         if (data.pdf) btn_print_pdf.current.style.display = 'block';
         else btn_print_pdf.current.style.display = 'none';
-      } else {
-        row_barang_ref.current.style.display = 'none';
-        row_periode_ref.current.style.display = 'none';
-        btn_print_pdf.current.style.display = 'none';
-        set_report((prev) => ({ ...prev, report: "", nama: "", report_url: "", barang: false, periode: false, pdf: false }));
-        set_barang({ barcode: "", nama_barang: "" });
-        set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
-        set_tanggal_akhir(moment().endOf("month").format("YYYY-MM-DD"));
-        set_barcode("");
-      }
+
+        if (data.report == "R001" || data.report == 'R002') set_tanggal_awal(moment(document.querySelector("#tglawal_periode").value).format("YYYY-MM-DD"));
+        else set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
+      } else handle_clear();
     } catch (e) {
       return swalAlert(e.message, "error");
     }
-  }, [run, session, swalAlert]);
+  }, [run, session, swalAlert, handle_clear]);
 
   const handle_print = useCallback(async () => {
     try {
@@ -177,16 +182,6 @@ export default function Laporan({ icon, title }) {
     }
   }, [report, barang, swalAlert, tanggal_akhir, tanggal_awal, run, session, dispatch, navigate, setSessionData]);
 
-  const handle_clear = useCallback(() => {
-    row_barang_ref.current.style.display = "none";
-    row_periode_ref.current.style.display = "none";
-    btn_print_pdf.current.style.display = "none";
-    set_report((prev) => ({ ...prev, report: "", nama: "", report_url: "", barang: false, periode: false, pdf: false }));
-    set_barang({ barcode: "", nama_barang: "" });
-    set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
-    set_tanggal_akhir(moment().endOf("month").format("YYYY-MM-DD"));
-    set_barcode("");
-  }, []);
   return (
     <>
       <HeaderPage icon={icon} title={title}>

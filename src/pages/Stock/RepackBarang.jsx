@@ -77,7 +77,7 @@ export default function RepackBarang({ icon, title }) {
   );
 
   useLayoutEffect(() => {
-    const date = date_picker("tanggal");
+    const date = date_picker({id: "tanggal", selected_date: repack_barang.tanggal});
     date.onSelect((date) => {
       const tanggal = moment(date).format("YYYY-MM-DD");
       set_repack_barang((prev) => ({
@@ -96,7 +96,7 @@ export default function RepackBarang({ icon, title }) {
       btn_tanggal.removeEventListener("click", open_date);
       date.destroy();
     };
-  }, [date_picker, btn_tanggal_ref, list_barang_proses]);
+  }, [date_picker, btn_tanggal_ref, list_barang_proses, repack_barang.tanggal]);
 
   useEffect(() => {
     async function get_repack_barang() {

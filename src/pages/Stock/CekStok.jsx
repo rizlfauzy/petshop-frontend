@@ -13,7 +13,7 @@ export default function CekStok({ icon, title }) {
   const { date_picker } = useDatePicker();
 
   useLayoutEffect(() => {
-    const date = date_picker("tanggal");
+    const date = date_picker({id:"tanggal", selected_date: tanggal});
     date.onSelect((date) => {
       const tanggal = moment(date).format("YYYY-MM-DD");
       set_tanggal(tanggal);
@@ -27,7 +27,7 @@ export default function CekStok({ icon, title }) {
       btn_tanggal.removeEventListener("click", open_date);
       date.destroy();
     };
-  }, [date_picker, btn_tanggal_ref]);
+  }, [date_picker, btn_tanggal_ref, tanggal]);
   return (
     <>
       <HeaderPage icon={icon} title={title} />

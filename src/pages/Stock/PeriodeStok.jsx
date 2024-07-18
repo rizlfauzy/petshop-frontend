@@ -29,7 +29,7 @@ export default function PeriodeStok({ icon, title }) {
   const navigate = useNavigate();
 
   useLayoutEffect(() => {
-    const date_awal = date_picker("tanggal_awal", false, true);
+    const date_awal = date_picker({id: "tanggal_awal", is_periode_page: true, selected_date: tanggal_awal});
     date_awal.onSelect((date) => {
       const tanggal_awal = moment(date).format("YYYY-MM-DD");
       set_tanggal_awal(tanggal_awal);
@@ -40,7 +40,7 @@ export default function PeriodeStok({ icon, title }) {
     const btn_tanggal_awal = btn_tanggal_awal_ref.current;
     btn_tanggal_awal.addEventListener("click", open_date_awal);
 
-    const date_akhir = date_picker("tanggal_akhir", true, true);
+    const date_akhir = date_picker({id: "tanggal_akhir", maxDate: true, is_periode_page: true, selected_date: tanggal_akhir});
     date_akhir.onSelect((date) => {
       const tanggal_akhir = moment(date).format("YYYY-MM-DD");
       set_tanggal_akhir(tanggal_akhir);
@@ -55,7 +55,7 @@ export default function PeriodeStok({ icon, title }) {
       btn_tanggal_akhir.removeEventListener("click", open_date_akhir);
       date_awal.destroy();
     };
-  }, [date_picker, btn_tanggal_awal_ref]);
+  }, [date_picker, btn_tanggal_awal_ref, tanggal_awal, tanggal_akhir]);
 
   useLayoutEffect(() => {
     run_get_tanggal(

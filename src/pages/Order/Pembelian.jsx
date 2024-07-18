@@ -78,7 +78,7 @@ export default function Pembelian({ icon, title }) {
   );
 
   useLayoutEffect(() => {
-    const date = date_picker("tanggal");
+    const date = date_picker({id:"tanggal", selected_date: pembelian.tanggal});
     date.onSelect((date) => {
       const tanggal = moment(date).format("YYYY-MM-DD");
       set_pembelian((prev) => ({
@@ -99,7 +99,7 @@ export default function Pembelian({ icon, title }) {
       btn_tanggal.removeEventListener("click", open_date);
       date.destroy();
     };
-  }, [date_picker, btn_tanggal_ref, list_barang]);
+  }, [date_picker, btn_tanggal_ref, list_barang, pembelian.tanggal]);
 
   useEffect(() => {
     async function get_pembelian() {

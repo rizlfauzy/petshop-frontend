@@ -1,8 +1,33 @@
-# React + Vite
+## Tutorial install apps
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+_ikuti langkah - langkah berikut_
 
-Currently, two official plugins are available:
+> 1. Git clone
+>
+> ```
+> - git clone https://github.com/rizlfauzy/petshop-frontend.git
+> ```
+>
+> ---
+>
+> 2. Install packages npm
+>
+> ```
+> - npm install
+> ```
+>
+> ---
+>
+> 3. Siapkan file .env sebagai environment program front-end dari developernya
+>
+> ---
+>
+> 4. Jalankan Program
+>
+> ```
+> - npm start
+> ```
+>
+> ---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Terima kasih**

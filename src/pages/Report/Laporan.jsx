@@ -136,7 +136,7 @@ export default function Laporan({ icon, title }) {
         if (data.pdf) btn_print_pdf.current.style.display = 'block';
         else btn_print_pdf.current.style.display = 'none';
 
-        if (data.report == "R001" || data.report == 'R002') set_tanggal_awal(moment(document.querySelector("#tglawal_periode").value).format("YYYY-MM-DD"));
+        if (data.report == "R003" || data.report == 'R004') set_tanggal_awal(moment(document.querySelector("#tglawal_periode").value).format("YYYY-MM-DD"));
         else set_tanggal_awal(moment().startOf("month").format("YYYY-MM-DD"));
       } else handle_clear();
     } catch (e) {

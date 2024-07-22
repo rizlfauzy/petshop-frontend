@@ -9,6 +9,8 @@ import Modal from "../../components/Modal";
 import ModalMain from "../../components/main/ModalMain";
 import useSession from "../../hooks/useSession";
 import useAlert from "../../hooks/useAlert";
+import { faMoneyCheck, faRefresh, faSave, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function MasterKategori({ icon, title }) {
   const dispatch = useDispatch();
@@ -126,16 +128,20 @@ export default function MasterKategori({ icon, title }) {
     <>
       <HeaderPage icon={icon} title={title}>
         <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
-          <i className="far fa-save mr-[10px]"></i>Save
+          <FontAwesomeIcon icon={faSave} className="mr-[10px]" />
+          Save
         </button>
         <button ref={btn_update} id="update" type="button" className="btn-sm bg-primary text-white" onClick={handle_update}>
-          <i className="far fa-money-check-edit mr-[10px]"></i>Update
+          <FontAwesomeIcon icon={faMoneyCheck} className="mr-[10px]" />
+          Update
         </button>
         <button id="find" className="btn-sm bg-primary text-white" onClick={handle_modal}>
-          <i className="far fa-file-search mr-[10px]"></i>Find
+          <FontAwesomeIcon icon={faSearch} className="mr-[10px]" />
+          Find
         </button>
         <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
-          <i className="far fa-refresh mr-[10px]"></i>Clear
+          <FontAwesomeIcon icon={faRefresh} className="mr-[10px]" />
+          Clear
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">

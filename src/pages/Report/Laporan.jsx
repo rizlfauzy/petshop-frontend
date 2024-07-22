@@ -190,7 +190,8 @@ export default function Laporan({ icon, title }) {
           Print
         </button>
         <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
-          <i className="far fa-refresh mr-[10px]"></i>Clear
+          <FontAwesomeIcon icon={"refresh"} className="mr-[10px]" />
+          Clear
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">

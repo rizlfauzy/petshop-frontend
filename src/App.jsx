@@ -19,6 +19,11 @@ import Laporan from "./pages/Report/Laporan";
 import PeriodeStok from "./pages/Stock/PeriodeStok";
 import Register from "./pages/Register";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBarChart, faBox, faBoxesStacked, faCartArrowDown, faClock, faCubesStacked, faExplosion, faFilePdf, faKey, faList, faS, faShieldHalved, faShoppingCart, faUser, faUsersLine } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+library.add(faBarChart, faBox, faBoxesStacked, faCartArrowDown, faClock, faCubesStacked, faExplosion, faFilePdf, faKey, faList, faS, faShieldHalved, faShoppingCart, faUser, faUsersLine);
+
 const { VITE_PREFIX } = import.meta.env;
 
 function App() {
@@ -31,7 +36,7 @@ function App() {
           path={VITE_PREFIX}
           element={
             <Main title={"DASHBOARD"}>
-              <Dashboard icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"DASHBOARD"} />
+              <Dashboard icon={<FontAwesomeIcon icon={"bar-chart"} className="!text-[19px]" />} title={"DASHBOARD"} />
             </Main>
           }
         />
@@ -40,7 +45,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"GANTI PASSWORD"}>
-                <ChangePassword icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"GANTI PASSWORD"} />
+                <ChangePassword icon={<FontAwesomeIcon icon={"key"} className="!text-[19px]" />} title={"GANTI PASSWORD"} />
               </Main>
             </PrivateRoute>
           }
@@ -50,7 +55,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"MASTER GRUP"}>
-                <MasterGrup icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER GRUP"} />
+                <MasterGrup icon={<FontAwesomeIcon icon={"users-line"} className="!text-[19px]" />} title={"MASTER GRUP"} />
               </Main>
             </PrivateRoute>
           }
@@ -60,7 +65,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"MASTER OTORISASI"}>
-                <MasterOtorisasi icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER OTORISASI"} />
+                <MasterOtorisasi icon={<FontAwesomeIcon icon={"shield-halved"} className="!text-[19px]" />} title={"MASTER OTORISASI"} />
               </Main>
             </PrivateRoute>
           }
@@ -70,7 +75,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"MASTER USER"}>
-                <MasterUser icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER USER"} />
+                <MasterUser icon={<FontAwesomeIcon icon={"user"} className="!text-[19px]" />} title={"MASTER USER"} />
               </Main>
             </PrivateRoute>
           }
@@ -80,7 +85,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"MASTER SATUAN"}>
-                <MasterSatuan icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER SATUAN"} />
+                <MasterSatuan icon={<FontAwesomeIcon icon={"s"} className="!text-[19px]" />} title={"MASTER SATUAN"} />
               </Main>
             </PrivateRoute>
           }
@@ -90,7 +95,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"MASTER KATEGORI"}>
-                <MasterKategori icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER KATEGORI"} />
+                <MasterKategori icon={<FontAwesomeIcon icon={"list"} className="!text-[19px]" />} title={"MASTER KATEGORI"} />
               </Main>
             </PrivateRoute>
           }
@@ -100,7 +105,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"MASTER BARANG"}>
-                <MasterBarang icon={<i className="fal fa-chart-pie fa-lg !text-[19px]"></i>} title={"MASTER BARANG"} />
+                <MasterBarang icon={<FontAwesomeIcon icon={"box"} className="!text-[19px]" />} title={"MASTER BARANG"} />
               </Main>
             </PrivateRoute>
           }
@@ -110,7 +115,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"PEMBELIAN"}>
-                <Pembelian icon={<i className="far fa-shopping-cart fa-lg !text-[19px]"></i>} title={"PEMBELIAN"} />
+                <Pembelian icon={<FontAwesomeIcon icon={"shopping-cart"} className="!text-[19px]" />} title={"PEMBELIAN"} />
               </Main>
             </PrivateRoute>
           }
@@ -120,7 +125,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"PENJUALAN"}>
-                <Penjualan icon={<i className="far fa-cart-arrow-down fa-lg !text-[19px]"></i>} title={"PENJUALAN"} />
+                <Penjualan icon={<FontAwesomeIcon icon={"cart-arrow-down"} className="!text-[19px]" />} title={"PENJUALAN"} />
               </Main>
             </PrivateRoute>
           }
@@ -131,7 +136,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Main title={"BARANG RUSAK"}>
-                  <BarangRusak icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"BARANG RUSAK"} />
+                  <BarangRusak icon={<FontAwesomeIcon icon={"explosion"} className="!text-[19px]" />} title={"BARANG RUSAK"} />
                 </Main>
               </PrivateRoute>
             }
@@ -141,7 +146,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Main title={"REPACK BARANG"}>
-                  <RepackBarang icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"REPACK BARANG"} />
+                  <RepackBarang icon={<FontAwesomeIcon icon={"cubes-stacked"} className="!text-[19px]" />} title={"REPACK BARANG"} />
                 </Main>
               </PrivateRoute>
             }
@@ -151,7 +156,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Main title={"CEK STOK"}>
-                  <CekStok icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"CEK STOK"} />
+                  <CekStok icon={<FontAwesomeIcon icon={"boxes-stacked"} className="!text-[19px]" />} title={"CEK STOK"} />
                 </Main>
               </PrivateRoute>
             }
@@ -161,7 +166,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Main title={"PERIODE STOK"}>
-                  <PeriodeStok icon={<i className="fas fa-inventory fa-lg !text-[19px]"></i>} title={"PERIODE STOK"} />
+                  <PeriodeStok icon={<FontAwesomeIcon icon={"clock"} className="!text-[19px]" />} title={"PERIODE STOK"} />
                 </Main>
               </PrivateRoute>
             }
@@ -172,7 +177,7 @@ function App() {
           element={
             <PrivateRoute>
               <Main title={"LAPORAN"}>
-                <Laporan icon={<i className="fas fa-file-invoice fa-lg !text-[19px]"></i>} title={"LAPORAN"} />
+                <Laporan icon={<FontAwesomeIcon icon="file-pdf" className="!text-[19px]" />} title={"LAPORAN"} />
               </Main>
             </PrivateRoute>
           }

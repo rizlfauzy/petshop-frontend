@@ -8,7 +8,7 @@ export default function HeaderPage({ icon, title, children }) {
           <div className="xl:max-w-full max-w-full flex-[0_0_100%]">
             <div className="row">
               <div className="col-full sm:flex-[0_0_40%] sm:mb-0 mb-3">
-                <h2>
+                <h2 className="flex items-center">
                   <span className="logo-menu">{icon}</span>
                   <span className="text-uppercase md:text-[1.7vw] !text-[1rem]">{title}</span>
                 </h2>

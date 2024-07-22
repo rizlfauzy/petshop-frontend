@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { set_hide_all_modal, set_show_loading } from "../../hooks/useStore";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPrint, faTimes } from "@fortawesome/free-solid-svg-icons";
 import useAlert from "../../hooks/useAlert";
 const { VITE_PREFIX } = import.meta.env;
 
@@ -132,7 +132,7 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
             <div className="relative col-half !px-0">
               <input type="text" className="form-control w-full" id="input_list" ref={input_list} value={keyword} onInput={handle_keyword} placeholder="Ketik Di sini ..." required />
               <button className="btn_absolute_right hover:text-primary" onClick={handle_clear} type="button">
-                <i className="far fa-times"></i>
+                <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
                         dispatch(set_hide_all_modal());
                       }}
                     >
-                      <i className="far fa-check"></i>
+                      <FontAwesomeIcon icon={faCheck} />
                     </button>
                     {is_print && (
                       <button

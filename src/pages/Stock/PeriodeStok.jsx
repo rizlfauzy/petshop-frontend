@@ -107,7 +107,8 @@ export default function PeriodeStok({ icon, title }) {
     <>
       <HeaderPage title={title} icon={icon}>
         <button id="update" type="button" className="btn-sm bg-primary text-white" onClick={handle_update}>
-          <i className="far fa-money-check-edit mr-[10px]"></i>Update
+          <FontAwesomeIcon icon={"money-check"} className="mr-[10px]" />
+          Update
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">

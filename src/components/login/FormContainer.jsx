@@ -5,7 +5,7 @@ import useAlert from "../../hooks/useAlert";
 import useSession from "../../hooks/useSession";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
 const { VITE_PREFIX } = import.meta.env;
 
@@ -40,11 +40,15 @@ export default function FormContainer() {
         <form id="form_login" className="sign-in-form" action="api/login" method="post" onSubmit={handleSubmit}>
           <h2 className="title">Sign in</h2>
           <div className="input-field">
-            <i className="fas fa-user"></i>
+            <div className="w-[55px] grid place-items-center">
+              <FontAwesomeIcon icon={faUser} className="text-slate-400" />
+            </div>
             <input name="username" id="username" type="username" placeholder="Username" />
           </div>
           <div className="input-field">
-            <i className="fas fa-lock"></i>
+            <div className="w-[55px] grid place-items-center">
+              <FontAwesomeIcon icon={faLock} className="text-slate-400" />
+            </div>
             <div className="relative flex !px-0">
               <input name="password" id="password" type="password" placeholder="Password" autoComplete="new-password" ref={input_password_reff} />
               <label htmlFor="show_password" className="btn_absolute_right">

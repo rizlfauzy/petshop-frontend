@@ -3,6 +3,8 @@ import { get_data } from "../../../hooks/useFetch";
 import useSession from "../../../hooks/useSession";
 import {  useLayoutEffect, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListMenu({ list_menu, set_list_menu, keyword, set_keyword, menu, setMenu, check_all, set_check_all}) {
   const { run, isLoading, data } = useAsync();
@@ -121,7 +123,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                   <div className="relative md:col-thirdperfour col-half !px-0">
                     <input type="text" className="form-control w-full" id="input_menu" placeholder="Ketik Di sini ..." value={keyword} onChange={handle_search} required />
                     <button className="btn_absolute_right hover:text-primary" type="button" onClick={handle_clear_keyword}>
-                      <i className="far fa-times"></i>
+                      <FontAwesomeIcon icon={faTimes} />
                     </button>
                   </div>
                 </div>

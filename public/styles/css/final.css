@@ -718,6 +718,10 @@ video {
   display: table;
 }
 
+.grid {
+  display: grid;
+}
+
 .contents {
   display: contents;
 }
@@ -732,6 +736,18 @@ video {
 
 .h-\[2px\] {
   height: 2px;
+}
+
+.h-\[40px\] {
+  height: 40px;
+}
+
+.h-\[55px\] {
+  height: 55px;
+}
+
+.h-\[50px\] {
+  height: 50px;
 }
 
 .max-h-\[100vh\] {
@@ -818,12 +834,28 @@ video {
   width: 40%;
 }
 
+.w-\[40px\] {
+  width: 40px;
+}
+
+.w-\[55px\] {
+  width: 55px;
+}
+
 .w-\[60\%\] {
   width: 60%;
 }
 
 .w-full {
   width: 100%;
+}
+
+.w-\[50px\] {
+  width: 50px;
+}
+
+.min-w-\[50px\] {
+  min-width: 50px;
 }
 
 .max-w-\[380px\] {
@@ -896,6 +928,10 @@ video {
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.place-items-center {
+  place-items: center;
 }
 
 .\!items-start {
@@ -1106,6 +1142,10 @@ video {
 
 .text-\[\.813rem\] {
   font-size: .813rem;
+}
+
+.text-\[1\.1rem\] {
+  font-size: 1.1rem;
 }
 
 .text-\[11px\] {
@@ -1344,8 +1384,6 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
 
 .sidebar .links_icon{
   color:#fff;
-  height:50px;
-  min-width:50px;
   text-align:center;
   line-height:50px
 }
@@ -1435,8 +1473,6 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
 }
 
 .sidebar .nav-list-item .links_icon{
-  height:40px;
-  line-height:40px;
   font-size:18px;
   border-radius:12px
 }
@@ -1459,8 +1495,6 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
 }
 
 .sidebar .nav-sublist-item .links_icon{
-  height:40px;
-  line-height:40px;
   font-size:14px;
   border-radius:12px
 }

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEyeSlash, faEye, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faEyeSlash, faEye, faSearch, faTimes, faUser, faLock, faChartPie } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { set_show_grup } from "../../hooks/useStore";
@@ -78,11 +78,15 @@ export default function FormContainer() {
           <form id="form_register" className="sign-in-form" onSubmit={handle_submit} method="post">
             <h2 className="title">Register</h2>
             <div className="input-field">
-              <i className="fas fa-user"></i>
+              <div className="w-[55px] grid place-items-center">
+                <FontAwesomeIcon icon={faUser} className="text-slate-400" />
+              </div>
               <input name="username" id="username" type="text" value={user.username} onChange={handle_user} placeholder="Username" />
             </div>
             <div className="input-field">
-              <i className="fas fa-lock"></i>
+              <div className="w-[55px] grid place-items-center">
+                <FontAwesomeIcon icon={faLock} className="text-slate-400" />
+              </div>
               <div className="relative flex !px-0">
                 <input name="password" id="password" type="password" placeholder="Password" autoComplete="new-password" value={user.password} onChange={handle_user} ref={input_password_reff} />
                 <label htmlFor="show_password" className="btn_absolute_right">
@@ -108,7 +112,9 @@ export default function FormContainer() {
                   dispatch(set_show_grup(true));
                 }}
               >
-                <i className="fas fa-chart-pie"></i>
+                <div className="w-[55px] grid place-items-center">
+                  <FontAwesomeIcon icon={faChartPie} className="text-slate-400" />
+                </div>
                 <div className="relative flex !px-0">
                   <input name="nama_grup" id="nama_grup" className="cursor-pointer  !text-white" type="text" value={grup.nama_grup} onChange={handle_grup} readOnly placeholder="Grup" />
                   <button
@@ -123,14 +129,14 @@ export default function FormContainer() {
                 </div>
               </div>
               <button
-                className="btn-sm text-white bg-red-600 !rounded-lg hover:bg-red-800"
+                className="btn-sm text-white bg-red-600 !rounded-lg hover:bg-red-800 w-[55px] h-[55px]"
                 onClick={() => {
                   set_grup({ kode_grup: "", nama_grup: "" });
                   set_user((prev) => ({ ...prev, kode_grup: "", nama_grup: "" }));
                 }}
                 type="button"
               >
-                <FontAwesomeIcon icon={faTimes} className="inline-block w-10 text-slate-400" />
+                <FontAwesomeIcon icon={faTimes} className="inline-block w-10 text-slate-400 text-[1.1rem]" />
               </button>
             </div>
             <button className="btn transparent" id="register" type="submit" name="register" value="Register">

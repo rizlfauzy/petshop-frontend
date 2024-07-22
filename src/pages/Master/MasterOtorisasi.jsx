@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import HeaderPage from "../../components/HeaderPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faRefresh, faSave, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useLayoutEffect, useCallback } from "react";
 import ModalSec from "../../components/ModalSec";
 import ModalMain from "../../components/main/ModalMain";
@@ -144,10 +144,12 @@ export default function MasterOtorisasi({ icon, title }) {
     <>
       <HeaderPage icon={icon} title={title}>
         <button id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
-          <i className="far fa-save mr-[10px]"></i>Save
+          <FontAwesomeIcon icon={faSave} className="mr-[10px]" />
+          Save
         </button>
         <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
-          <i className="far fa-refresh mr-[10px]"></i>Clear
+          <FontAwesomeIcon icon={faRefresh} className="mr-[10px]" />
+          Clear
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">
@@ -189,7 +191,16 @@ export default function MasterOtorisasi({ icon, title }) {
             <ListMenu list_menu={list_menu} set_list_menu={set_list_menu} keyword={keyword_menu} set_keyword={set_keyword_menu} menu={menu} setMenu={setMenu} check_all={check_all_menu} set_check_all={set_check_all_menu} />
           </div>
           <div className="md:col-half col-full">
-            <ListReport list_report={list_report} set_list_report={set_list_report} keyword={keyword_report} set_keyword={set_keyword_report} report={report} set_report={set_report} check_all={check_all_report} set_check_all={set_check_all_report} />
+            <ListReport
+              list_report={list_report}
+              set_list_report={set_list_report}
+              keyword={keyword_report}
+              set_keyword={set_keyword_report}
+              report={report}
+              set_report={set_report}
+              check_all={check_all_report}
+              set_check_all={set_check_all_report}
+            />
           </div>
         </div>
       </div>

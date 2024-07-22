@@ -1,7 +1,7 @@
 import HeaderPage from "../../components/HeaderPage";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faMoneyCheck, faSave, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { set_show_modal, set_show_grup, set_show_user } from "../../hooks/useStore";
@@ -167,16 +167,20 @@ export default function MasterUser({ icon, title }) {
     <>
       <HeaderPage icon={icon} title={title}>
         <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
-          <i className="far fa-save mr-[10px]"></i>Save
+          <FontAwesomeIcon icon={faSave} className="mr-[10px]" />
+          Save
         </button>
         <button ref={btn_update} id="update" type="button" className="btn-sm bg-primary text-white" onClick={handle_update}>
-          <i className="far fa-money-check-edit mr-[10px]"></i>Update
+          <FontAwesomeIcon icon={faMoneyCheck} className="mr-[10px]" />
+          Update
         </button>
         <button id="find" className="btn-sm bg-primary text-white" onClick={handle_find_user}>
-          <i className="far fa-file-search mr-[10px]"></i>Find
+          <FontAwesomeIcon icon={"search"} className="mr-[10px]" />
+          Find
         </button>
         <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
-          <i className="far fa-refresh mr-[10px]"></i>Clear
+          <FontAwesomeIcon icon={"refresh"} className="mr-[10px]" />
+          Clear
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">

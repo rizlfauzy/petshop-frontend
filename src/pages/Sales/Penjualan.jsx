@@ -308,20 +308,24 @@ export default function Penjualan({ icon, title }) {
     <>
       <HeaderPage icon={icon} title={title}>
         <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
-          <i className="far fa-save mr-[10px]"></i>Save
+          <FontAwesomeIcon icon={"save"} className="mr-[10px]" />
+          Save
         </button>
         <button ref={btn_update} id="update" type="button" className="btn-sm bg-primary text-white" onClick={handle_update}>
-          <i className="far fa-money-check-edit mr-[10px]"></i>Update
+          <FontAwesomeIcon icon={"money-check"} className="mr-[10px]" />
+          Update
         </button>
         <button id="find" className="btn-sm bg-primary text-white" onClick={handle_find_penjualan}>
-          <i className="far fa-file-search mr-[10px]"></i>Find
+          <FontAwesomeIcon icon={"search"} className="mr-[10px]" />
+          Find
         </button>
         <button id="cancel" className="btn-sm bg-red-600 hover:bg-red-800 active:bg-red-950 text-white" ref={btn_cancel} onClick={handle_cancel}>
           <FontAwesomeIcon icon={faCancel} className="mr-[10px]" />
           Cancel
         </button>
         <button id="clear" className="btn-sm bg-primary text-white" onClick={handle_clear}>
-          <i className="far fa-refresh mr-[10px]"></i>Clear
+          <FontAwesomeIcon icon={"refresh"} className="mr-[10px]" />
+          Clear
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">

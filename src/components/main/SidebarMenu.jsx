@@ -5,12 +5,16 @@ import { create_item } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import { set_hide_all_modal } from "../../hooks/useStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+library.add(fas);
 
 const { VITE_PREFIX } = import.meta.env;
 
-export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header}) {
+export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header }) {
   const { run, isLoading, data } = useAsync();
   const dispatch = useDispatch();
   const item = useSelector((state) => state.conf.item);
@@ -40,24 +44,29 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
     }
   }, [data, isLoading, dispatch, navigate, setSessionData]);
 
-  const on_click_dropdown = useCallback((e) => {
-    const sub_menu = document.querySelector(e.target.parentElement.dataset.target || e.target.parentElement.parentElement.dataset.target);
-    sub_menu.previousElementSibling.parentElement.classList.toggle("collapsed");
-    sub_menu.classList.toggle("hidden");
-    if (!sub_menu.classList.contains("hidden")) {
-      sidebar_ref.current.classList.add("open");
-      sidebar_overlay_ref.current.classList.add("open");
-      btn_sidebar.current.classList.remove("bx-menu");
-      btn_sidebar.current.classList.add("bx-menu-alt-right");
-    }
-  }, [ sidebar_ref, sidebar_overlay_ref, btn_sidebar]);
+  const on_click_dropdown = useCallback(
+    (e) => {
+      const sub_menu = document.querySelector(e.currentTarget.parentElement.dataset.target);
+      sub_menu.previousElementSibling.parentElement.classList.toggle("collapsed");
+      sub_menu.classList.toggle("hidden");
+      if (!sub_menu.classList.contains("hidden")) {
+        sidebar_ref.current.classList.add("open");
+        sidebar_overlay_ref.current.classList.add("open");
+        btn_sidebar.current.classList.remove("bx-menu");
+        btn_sidebar.current.classList.add("bx-menu-alt-right");
+      }
+    },
+    [sidebar_ref, sidebar_overlay_ref, btn_sidebar]
+  );
 
   return item?.data?.grup_menu?.map((gr) => {
-    if (gr.linkmenu == '#')
+    if (gr.linkmenu == "#")
       return (
         <li ref={li_header} className="nav-list-item collapsed" data-tooltip={`tooltip_${gr.headermenu}`} data-toggle="collapse" data-target={`#${gr.headermenu}_menu`} key={gr.urut_global}>
-          <a className="list-item-menu text-white " href="#" onClick={on_click_dropdown}>
-            <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>
+          <a className="list-item-menu text-white " href="#" onClick={on_click_dropdown} >
+            <div className="w-[50px] h-[40px] grid place-items-center">
+              <FontAwesomeIcon icon={gr.iconmenu} className="links_icon text-[18px] min-w-[50px]" />
+            </div>
             <span className="links_name">{gr.grupmenu}</span>
           </a>
           <div id={`${gr.headermenu}_menu`} className={`dropdown_menu hidden`}>
@@ -66,15 +75,21 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
                 ?.filter((it) => it.grupmenu == gr.grupmenu)
                 .map((it) => (
                   <li className={`nav-sublist-item nomenu_${gr.grupmenu}`} data-tooltip={`tooltip_${it.linkdetail}`} key={it.nomenu}>
-                    <Link to={`${VITE_PREFIX}${it.linkdetail}`} className="sublist-item-menu" onClick={() => {
-                      sidebar_ref.current.classList.remove("open");
-                      sidebar_overlay_ref.current.classList.remove("open");
-                      btn_sidebar.current.classList.remove("bx-menu-alt-right");
-                      btn_sidebar.current.classList.add("bx-menu");
-                      document.querySelectorAll(".nav-list-item").forEach((item) => item.classList.add("collapsed"));
-                      document.querySelectorAll(".dropdown_menu").forEach((item) => item.classList.add("hidden"));
-                    }}>
-                      <i className={`links_icon ${it.icondetail}`}></i>
+                    <Link
+                      to={`${VITE_PREFIX}${it.linkdetail}`}
+                      className="sublist-item-menu"
+                      onClick={() => {
+                        sidebar_ref.current.classList.remove("open");
+                        sidebar_overlay_ref.current.classList.remove("open");
+                        btn_sidebar.current.classList.remove("bx-menu-alt-right");
+                        btn_sidebar.current.classList.add("bx-menu");
+                        document.querySelectorAll(".nav-list-item").forEach((item) => item.classList.add("collapsed"));
+                        document.querySelectorAll(".dropdown_menu").forEach((item) => item.classList.add("hidden"));
+                      }}
+                    >
+                      <div className="w-[50px] h-[40px] grid place-items-center">
+                        <FontAwesomeIcon icon={it.icondetail} className="links_icon" size="xs" />
+                      </div>
                       <span className="links_name">{it.namamenu}</span>
                     </Link>
                   </li>
@@ -98,7 +113,9 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
               document.querySelectorAll(".dropdown_menu").forEach((item) => item.classList.add("hidden"));
             }}
           >
-            <i className={`links_icon ${gr.iconmenu} text-[18px]`}></i>
+            <div className="w-[50px] h-[40px] grid place-items-center">
+              <FontAwesomeIcon icon={gr.iconmenu} className="links_icon text-[18px] min-w-[50px]" />
+            </div>
             <span className="links_name">{gr.grupmenu}</span>
           </Link>
           <span className="tooltip">{gr.grupmenu}</span>
@@ -111,5 +128,5 @@ SidebarMenu.propTypes = {
   sidebar_ref: PropTypes.object,
   sidebar_overlay_ref: PropTypes.object,
   btn_sidebar: PropTypes.object,
-  li_header: PropTypes.object
-}
+  li_header: PropTypes.object,
+};

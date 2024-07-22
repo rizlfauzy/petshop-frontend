@@ -87,7 +87,7 @@ form.sign-in-form {
   grid-template-columns: none;
 }
 
-.input-field i {
+.input-field :is(i, svg) {
   text-align: center;
   line-height: 55px;
   color: #acacac;

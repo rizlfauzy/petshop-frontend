@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import HeaderPage from "../components/HeaderPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faMoneyCheck } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from "react";
 import { get_data, fetch_data } from "../hooks/useFetch";
 import useAsync from "../hooks/useAsync";
@@ -71,7 +71,8 @@ export default function ChangePassword({ icon, title }) {
     <>
       <HeaderPage icon={icon} title={title}>
         <button id="update" type="button" className="btn-sm bg-primary text-white" onClick={on_update}>
-          <i className="far fa-money-check-edit mr-[10px]"></i>Update
+          <FontAwesomeIcon icon={faMoneyCheck} className="mr-[10px]" />
+          Update
         </button>
       </HeaderPage>
       <div className="col-full table-responsive">

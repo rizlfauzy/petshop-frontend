@@ -20,9 +20,9 @@ import PeriodeStok from "./pages/Stock/PeriodeStok";
 import Register from "./pages/Register";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBarChart, faBox, faBoxesStacked, faCartArrowDown, faClock, faCubesStacked, faExplosion, faFilePdf, faKey, faList, faS, faShieldHalved, faShoppingCart, faUser, faUsersLine } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
-library.add(faBarChart, faBox, faBoxesStacked, faCartArrowDown, faClock, faCubesStacked, faExplosion, faFilePdf, faKey, faList, faS, faShieldHalved, faShoppingCart, faUser, faUsersLine);
+import { fas } from "@fortawesome/free-solid-svg-icons";
+library.add(fas);
 
 const { VITE_PREFIX } = import.meta.env;
 

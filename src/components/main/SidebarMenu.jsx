@@ -8,9 +8,6 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { set_hide_all_modal } from "../../hooks/useStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-library.add(fas);
 
 const { VITE_PREFIX } = import.meta.env;
 

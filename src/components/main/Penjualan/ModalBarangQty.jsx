@@ -44,14 +44,15 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
   const handle_input_barang = useCallback(() => {
     try {
       if (barang_qty.qty < 1) throw new Error("Qty barang tidak boleh kurang dari 1");
-      if (barang_qty.qty > barang_qty.stock) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
+      console.log(barang_qty);
+      if (Number(barang_qty.qty) > Number(barang_qty.stock)) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
       // cek barang sudah ada di list barang atau belum
       const is_exist = list_barang?.find((item) => item.barcode === barang_qty.barcode);
       if (is_exist) {
         const new_list_barang = list_barang.map((item) => {
           if (item.barcode === barang_qty.barcode) {
-            if (is_edit ? barang_qty.qty > barang_qty.stock : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang");
-            item.qty = is_edit ? barang_qty.qty : Number(item.qty) + Number(barang_qty.qty);
+            if (is_edit ? Number(barang_qty.qty) > Number(barang_qty.stock) : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang");
+            item.qty = is_edit ? Number(barang_qty.qty) : Number(item.qty) + Number(barang_qty.qty);
             item.nilai_disc = Math.round((parseFloat(item.harga) * parseFloat(item.qty) * parseFloat(item.disc)) / 100 / 100) * 100;
             item.total_harga = item.harga * item.qty - item.nilai_disc;
           }

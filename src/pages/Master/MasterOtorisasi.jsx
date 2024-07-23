@@ -205,7 +205,7 @@ export default function MasterOtorisasi({ icon, title }) {
         </div>
       </div>
       {show_modal_grup && (
-        <ModalSec modal_title="Grup" className={["md:modal-md", "modal-xl"]} btn={<></>} set_modal={set_show_modal_grup}>
+        <ModalSec modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>} set_modal={set_show_modal_grup}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected_grup}
@@ -213,20 +213,16 @@ export default function MasterOtorisasi({ icon, title }) {
               name: "grup",
               limit: 5,
               page: 1,
-              select: ["kode", "nama", "aktif"],
+              select: ["kode", "nama"],
               order: [["kode", "ASC"]],
               where: item?.data?.mygrup == "ITS" ? { aktif: true } : "kode <> 'ITS' and aktif = 't'",
               likes: ["kode", "nama"],
               keyword: "",
-              func_item: {
-                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
-              },
             }}
           >
             <th className="text-left align-middle">Action</th>
             <th className="text-left align-middle">Kode</th>
             <th className="text-left align-middle">Nama</th>
-            <th className="text-left align-middle">Aktif</th>
           </ModalMain>
         </ModalSec>
       )}

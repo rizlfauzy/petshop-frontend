@@ -200,7 +200,7 @@ export default function MasterSatuan({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_satuan && (
-        <Modal modal_title="Grup" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_satuan}
             is_selected={set_is_selected}

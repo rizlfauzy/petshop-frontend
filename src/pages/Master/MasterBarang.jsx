@@ -463,7 +463,7 @@ export default function MasterBarang({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_satuan && (
-        <Modal modal_title="Satuan" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Satuan" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_satuan}
             is_selected={set_is_selected_satuan}
@@ -471,27 +471,23 @@ export default function MasterBarang({ icon, title }) {
               name: "satuan",
               limit: 5,
               page: 1,
-              select: ["kode", "nama", "aktif"],
+              select: ["kode", "nama"],
               order: [["kode", "ASC"]],
               where: "kode <> 'ITS' and aktif = true",
               likes: ["kode", "nama"],
-              keyword: "",
-              func_item: {
-                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
-              },
+              keyword: ""
             }}
           >
             <>
               <th className="text-left align-middle">Action</th>
               <th className="text-left align-middle">Kode</th>
               <th className="text-left align-middle">Nama</th>
-              <th className="text-left align-middle">Aktif</th>
             </>
           </ModalMain>
         </Modal>
       )}
       {show_modal && show_modal_kategori && (
-        <Modal modal_title="Kategori" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Kategori" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_kategori}
             is_selected={set_is_selected_kategori}
@@ -499,21 +495,17 @@ export default function MasterBarang({ icon, title }) {
               name: "kategori",
               limit: 5,
               page: 1,
-              select: ["kode", "nama", "aktif"],
+              select: ["kode", "nama"],
               order: [["kode", "ASC"]],
-              where: {},
+              where: {aktif : true},
               likes: ["kode", "nama"],
               keyword: "",
-              func_item: {
-                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
-              },
             }}
           >
             <>
               <th className="text-left align-middle">Action</th>
               <th className="text-left align-middle">Kode</th>
               <th className="text-left align-middle">Nama</th>
-              <th className="text-left align-middle">Aktif</th>
             </>
           </ModalMain>
         </Modal>

@@ -199,7 +199,7 @@ export default function MasterKategori({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_kategori && (
-        <Modal modal_title="Kategori" className={["modal-md"]} btn={<></>}>
+        <Modal modal_title="Kategori" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_kategori}
             is_selected={set_is_selected}

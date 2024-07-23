@@ -214,7 +214,7 @@ export default function MasterGrup({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_grup && (
-        <Modal modal_title="Grup" className={["modal-lg"]} btn={<></>}>
+        <Modal modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected}

@@ -277,7 +277,7 @@ export default function MasterUser({ icon, title }) {
         </div>
       </div>
       {show_modal && show_modal_grup && (
-        <Modal modal_title="Grup" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected_grup}
@@ -285,27 +285,23 @@ export default function MasterUser({ icon, title }) {
               name: "grup",
               limit: 5,
               page: 1,
-              select: ["kode", "nama", "aktif"],
+              select: ["kode", "nama"],
               order: [["kode", "ASC"]],
               where: "kode <> 'ITS' and aktif = true",
               likes: ["kode", "nama"],
               keyword: "",
-              func_item: {
-                aktif: (item) => (item.aktif ? "Aktif" : "Non Aktif"),
-              },
             }}
           >
             <>
               <th className="text-left align-middle">Action</th>
               <th className="text-left align-middle">Kode</th>
               <th className="text-left align-middle">Nama</th>
-              <th className="text-left align-middle">Aktif</th>
             </>
           </ModalMain>
         </Modal>
       )}
       {show_modal && show_modal_user && (
-        <Modal modal_title="User" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="User" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_username}
             is_selected={set_is_selected_user}

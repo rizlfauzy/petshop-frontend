@@ -11,7 +11,7 @@ import { faCheck, faPrint, faTimes } from "@fortawesome/free-solid-svg-icons";
 import useAlert from "../../hooks/useAlert";
 const { VITE_PREFIX } = import.meta.env;
 
-export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false, url_print= '', is_login_modal = false }) {
+export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false, url_print = "", is_login_modal = false }) {
   const { session, setSessionData } = useSession();
   const navigate = useNavigate();
   const { run } = useAsync();
@@ -219,7 +219,7 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
       <div className="row items-center">
         <div className="col-half">
           {data && data?.list?.length > 0 && (
-            <p className="text-[.813rem]">
+            <p className="text-[.813rem] text-[#665c70]">
               Data yang tampil {data?.list?.length} dari total {data?.totalItem} baris
             </p>
           )}

@@ -3,18 +3,18 @@ import HeaderPage from "../../components/HeaderPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh, faSave, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useLayoutEffect, useCallback } from "react";
-import ModalSec from "../../components/ModalSec";
 import ModalMain from "../../components/main/ModalMain";
 import useAsync from "../../hooks/useAsync";
 import { fetch_data, get_data } from "../../hooks/useFetch";
 import useSession from "../../hooks/useSession";
 import useAlert from "../../hooks/useAlert";
 import ListMenu from "../../components/main/MasterOtorisasi/ListMenu";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ListReport from "../../components/main/MasterOtorisasi/ListReport";
+import Modal from "../../components/Modal";
+import { set_show_grup } from "../../hooks/useStore";
 
 export default function MasterOtorisasi({ icon, title }) {
-  const [show_modal_grup, set_show_modal_grup] = useState(false);
   const [kode_grup, set_kode_grup] = useState("");
   const [is_selected_grup, set_is_selected_grup] = useState(false);
   const [list_menu, set_list_menu] = useState([]);
@@ -28,7 +28,8 @@ export default function MasterOtorisasi({ icon, title }) {
   const { run } = useAsync();
   const { session } = useSession();
   const { swalAlert } = useAlert();
-  const { item } = useSelector((state) => state.conf);
+  const { item, show_modal_grup } = useSelector((state) => state.conf);
+  const dispatch = useDispatch();
   const [grup, set_grup] = useState({
     kode_grup: "",
     nama_grup: "",
@@ -80,7 +81,6 @@ export default function MasterOtorisasi({ icon, title }) {
       get_grup();
       get_menu();
       get_report();
-      set_show_modal_grup(false);
     }
   }, [is_selected_grup, kode_grup, run, session]);
 
@@ -173,7 +173,7 @@ export default function MasterOtorisasi({ icon, title }) {
                         className="btn_absolute_right hover:text-primary"
                         type="button"
                         onClick={() => {
-                          set_show_modal_grup(true);
+                          dispatch(set_show_grup(true));
                           set_is_selected_grup(false);
                         }}
                       >
@@ -205,7 +205,7 @@ export default function MasterOtorisasi({ icon, title }) {
         </div>
       </div>
       {show_modal_grup && (
-        <ModalSec modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>} set_modal={set_show_modal_grup}>
+        <Modal modal_title="Grup" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_kode_grup}
             is_selected={set_is_selected_grup}
@@ -224,7 +224,7 @@ export default function MasterOtorisasi({ icon, title }) {
             <th className="text-left align-middle">Kode</th>
             <th className="text-left align-middle">Nama</th>
           </ModalMain>
-        </ModalSec>
+        </Modal>
       )}
     </>
   );

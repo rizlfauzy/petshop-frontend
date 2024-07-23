@@ -5,7 +5,6 @@ import moment from "moment";
 import useDatePicker from "../../hooks/useDatePicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faCancel, faSearch } from "@fortawesome/free-solid-svg-icons";
-import ModalSec from "../../components/ModalSec";
 import ModalMain from "../../components/main/ModalMain";
 import useFormating from "../../hooks/useFormating";
 import useAsync from "../../hooks/useAsync";
@@ -17,13 +16,13 @@ import useAlert from "../../hooks/useAlert";
 import { useDispatch, useSelector } from "react-redux";
 import { set_show_pembelian, set_show_qty, set_show_loading } from "../../hooks/useStore";
 import Modal from "../../components/Modal";
+import { set_show_barang } from "../../hooks/useStore";
 
 export default function Pembelian({ icon, title }) {
   const btn_save = useRef(null);
   const btn_update = useRef(null);
   const btn_cancel = useRef(null);
   const btn_tanggal_ref = useRef(null);
-  const [show_modal_barang, set_show_modal_barang] = useState(false);
   const [barcode, set_barcode] = useState("");
   const [nomor, set_nomor] = useState("");
   const [is_selected_barang, set_is_selected_barang] = useState(false);
@@ -50,7 +49,7 @@ export default function Pembelian({ icon, title }) {
   const { session } = useSession();
   const { swalAlert, swalAlertConfirm, swalAlertInput } = useAlert();
   const dispatch = useDispatch();
-  const { show_modal_pembelian, show_modal_qty } = useSelector((state) => state.conf);
+  const { show_modal_pembelian, show_modal_qty, show_modal_barang } = useSelector((state) => state.conf);
 
   const get_stock = useCallback(
     async (barcode) => {
@@ -61,7 +60,7 @@ export default function Pembelian({ icon, title }) {
         })
       );
       if (data) {
-        const stock = list_barang.some((item) => item.barcode === data.barcode) ? data.stock - list_barang.find((item) => item.barcode === data.barcode).qty : data.stock;
+        const stock = list_barang.some((item) => item.barcode === data.barcode) ? data.stock + list_barang.find((item) => item.barcode === data.barcode).qty : data.stock;
         set_barang_qty((prev) => ({
           ...prev,
           ...data,
@@ -146,13 +145,11 @@ export default function Pembelian({ icon, title }) {
     }
 
     if (is_selected_barang && keyword !== "") {
-      set_show_modal_barang(false);
       dispatch(set_show_qty(true));
       set_is_selected_barang(false);
       set_is_edit(false);
     } else if (is_selected_barang) {
       get_barang();
-      set_show_modal_barang(false);
       dispatch(set_show_qty(true));
       set_is_selected_barang(false);
       set_is_edit(false);
@@ -386,7 +383,7 @@ export default function Pembelian({ icon, title }) {
                         className="btn_absolute_right !right-1 text-primary hover:text-primary"
                         type="button"
                         onClick={() => {
-                          set_show_modal_barang(true);
+                          dispatch(set_show_barang(true));
                           set_is_selected_barang(false);
                           set_keyword("");
                         }}
@@ -423,7 +420,7 @@ export default function Pembelian({ icon, title }) {
         <ListBarang set_list_barang={set_list_barang} list_barang={list_barang} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} />
       </div>
       {show_modal_barang && (
-        <ModalSec modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>} set_modal={set_show_modal_barang}>
+        <Modal modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang}
@@ -448,7 +445,7 @@ export default function Pembelian({ icon, title }) {
             <th className="text-left align-middle">Kategori</th>
             <th className="text-left align-middle">Stock</th>
           </ModalMain>
-        </ModalSec>
+        </Modal>
       )}
       {show_modal_pembelian && (
         <Modal modal_title="Pembelian" className={["md:modal-md", "modal-xl"]} btn={<></>}>

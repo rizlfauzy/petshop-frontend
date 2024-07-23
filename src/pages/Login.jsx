@@ -13,10 +13,16 @@ export default function Login() {
 
   return (
     <>
+      {/* jika ada session maka otomatis redirect ke halaman dashboard */}
       {session && <Navigate to={VITE_PREFIX} replace state={{ from: location }} />}
+
+      {/* Component header untuk login */}
       <HeaderLogin title="LOGIN" />
+
       <div className="container">
+        {/* Component untuk input username dan password */}
         <FormContainer />
+        {/* Component letak icon web  */}
         <PanelContainer />
       </div>
     </>

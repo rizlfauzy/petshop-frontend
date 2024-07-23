@@ -16,6 +16,7 @@ export default function FormContainer() {
   const { swalAlert } = useAlert();
   const { setSessionData } = useSession();
 
+  // function untuk menghandle submit form login
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     try {
@@ -60,6 +61,7 @@ export default function FormContainer() {
                   id="show_password"
                   placeholder="Password"
                   onChange={(e) => {
+                    // jika checkbox di ceklis maka tampilkan password
                     setShowPassword(e.target.checked);
                     input_password_reff.current.type = e.target.checked ? "text" : "password";
                   }}
@@ -70,7 +72,7 @@ export default function FormContainer() {
           <button className="btn transparent" id="oklogin" type="submit" name="btn" value="Login">
             Login
           </button>
-          {/* make register button */}
+          {/* redirect ke halaman register */}
           <Link to={`${VITE_PREFIX}register`} className="mt-3">
             <button className="btn transparent !w-auto !border-none px-3 hover:!text-[#c3baa9] hover:!bg-transparent" id="regsiter_btn" type="button">
               Belum punya akun? Daftar disini

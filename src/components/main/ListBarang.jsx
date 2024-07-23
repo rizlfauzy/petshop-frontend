@@ -20,7 +20,6 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
       }));
       dispatch(set_show_qty(true));
       is_pro_hasil != null && set_is_pro_hasil(true);
-      console.log(is_pro_hasil);
       set_is_edit(true);
     },
     [dispatch, list_barang, set_barang_qty, set_is_edit, is_pro_hasil, set_is_pro_hasil]

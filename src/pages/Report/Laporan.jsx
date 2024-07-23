@@ -288,7 +288,7 @@ export default function Laporan({ icon, title }) {
               page: 1,
               select: ["barcode", "nama", "nama_satuan", "nama_kategori", "aktif"],
               order: [["barcode", "ASC"]],
-              where: {},
+              where: {aktif: true},
               likes: ["barcode", "nama"],
               keyword: "",
               func_item: {

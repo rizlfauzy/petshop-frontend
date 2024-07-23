@@ -44,7 +44,6 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
   const handle_input_barang = useCallback(() => {
     try {
       if (barang_qty.qty < 1) throw new Error("Qty barang tidak boleh kurang dari 1");
-      console.log(barang_qty);
       if (Number(barang_qty.qty) > Number(barang_qty.stock)) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
       // cek barang sudah ada di list barang atau belum
       const is_exist = list_barang?.find((item) => item.barcode === barang_qty.barcode);

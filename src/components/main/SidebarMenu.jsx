@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const { VITE_PREFIX } = import.meta.env;
 
-export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header }) {
+export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header, icon_chevron, set_icon_chevron, }) {
   const { run, isLoading, data } = useAsync();
   const dispatch = useDispatch();
   const item = useSelector((state) => state.conf.item);
@@ -46,25 +46,33 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
       const sub_menu = document.querySelector(e.currentTarget.parentElement.dataset.target);
       sub_menu.previousElementSibling.parentElement.classList.toggle("collapsed");
       sub_menu.classList.toggle("hidden");
+      const grup_menu = item?.data?.grup_menu?.filter((gr) => gr.linkmenu == "#").map((gr) => ({ headermenu: gr.headermenu, icon: "chevron-right" }));
       if (!sub_menu.classList.contains("hidden")) {
         sidebar_ref.current.classList.add("open");
         sidebar_overlay_ref.current.classList.add("open");
         btn_sidebar.current.classList.remove("bx-menu");
         btn_sidebar.current.classList.add("bx-menu-alt-right");
-      }
+        const arr_menu = sub_menu.id.split("_");
+        arr_menu.pop();
+        const filter_grup = grup_menu.filter(gr => gr.headermenu != arr_menu.join("_"));
+        set_icon_chevron([...filter_grup, { headermenu: arr_menu.join("_"), icon: "chevron-down" }]);
+      } else set_icon_chevron(grup_menu);
     },
-    [sidebar_ref, sidebar_overlay_ref, btn_sidebar]
+    [sidebar_ref, sidebar_overlay_ref, btn_sidebar, set_icon_chevron, item]
   );
 
   return item?.data?.grup_menu?.map((gr) => {
     if (gr.linkmenu == "#")
       return (
         <li ref={li_header} className="nav-list-item collapsed" data-tooltip={`tooltip_${gr.headermenu}`} data-toggle="collapse" data-target={`#${gr.headermenu}_menu`} key={gr.urut_global}>
-          <a className="list-item-menu text-white " href="#" onClick={on_click_dropdown} >
+          <a className="list-item-menu text-white " href="#" onClick={on_click_dropdown}>
             <div className="w-[50px] h-[40px] grid place-items-center">
               <FontAwesomeIcon icon={gr.iconmenu} className="links_icon text-[18px] min-w-[50px]" />
             </div>
             <span className="links_name">{gr.grupmenu}</span>
+            <div className="w-[40px] h-[40px] grid place-items-center ml-auto">
+              <FontAwesomeIcon icon={icon_chevron?.find((ic) => ic.headermenu == gr.headermenu)?.icon || "chevron-right"} className="text-[14px] min-w-[40px]" />
+            </div>
           </a>
           <div id={`${gr.headermenu}_menu`} className={`dropdown_menu hidden`}>
             <ul className="nav-sublist">

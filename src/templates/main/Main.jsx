@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import useSession from "../../hooks/useSession";
 import Header from "./Header";
-import Footer from "./Footer";
 import Sidebar from "./Sidebar";
 import PropTypes from "prop-types";
 import Loading from "../../components/Loading";
@@ -62,7 +61,6 @@ export default function Main({ children, title }) {
         <div className="main-content-wrap sidenav" style={{ width: "calc(100% - 78px)", marginTop: 0 }}>
           <div className="main-content">{children}</div>
           <div className="flex-grow-1"></div>
-          <Footer />
         </div>
       </div>
     </>

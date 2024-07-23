@@ -1,4 +1,3 @@
-import FooterLogin from "../templates/login/FooterLogin";
 import HeaderLogin from "../templates/login/HeaderLogin";
 
 import { useLocation, Navigate } from "react-router-dom";
@@ -20,7 +19,6 @@ export default function Login() {
         <FormContainer />
         <PanelContainer />
       </div>
-      <FooterLogin />
     </>
   );
 }

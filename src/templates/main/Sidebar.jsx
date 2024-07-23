@@ -1,6 +1,6 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
-import { useRef, useCallback, useLayoutEffect } from "react";
+import { useRef, useCallback, useLayoutEffect, useState } from "react";
 import { set_show_modal, set_show_logout, set_hide_all_modal } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
@@ -15,9 +15,8 @@ const { VITE_PREFIX } = import.meta.env;
 export default function Sidebar() {
   const { run } = useAsync();
   const dispatch = useDispatch();
-  const item = useSelector((state) => state.conf.item);
-  const show_modal = useSelector((state) => state.conf.show_modal);
-  const show_modal_logout = useSelector((state) => state.conf.show_modal_logout);
+  const {show_modal, show_modal_logout, item} = useSelector((state) => state.conf);
+  const [icon_chevron, set_icon_chevron] = useState(item?.data?.grup_menu?.filter((gr) => gr.linkmenu == "#").map((gr) => ({ headermenu: gr.headermenu, icon: "chevron-right" })));
   const navigate = useNavigate();
   const sidebar_ref = useRef(null);
   const sidebar_overlay_ref = useRef(null);
@@ -53,8 +52,9 @@ export default function Sidebar() {
       btn_sidebar.current.classList.add("bx-menu");
       document.querySelectorAll(".nav-list-item").forEach(item => item.classList.add("collapsed"));
       document.querySelectorAll(".dropdown_menu").forEach(item => item.classList.add("hidden"));
+      set_icon_chevron(item?.data?.grup_menu?.filter((gr) => gr.linkmenu == "#").map((gr) => ({ headermenu: gr.headermenu, icon: "chevron-right" })));
     }
-  }, []);
+  }, [item]);
 
   const on_click_logout = useCallback(async () => {
     dispatch(set_hide_all_modal());
@@ -89,7 +89,7 @@ export default function Sidebar() {
         </div>
         <div className="wrap-nav-list rtl-ps-none" data-perfect-scrollbar="" data-suppress-scroll-x="true">
           <ul className="nav-list">
-            <SidebarMenu sidebar_ref={sidebar_ref} sidebar_overlay_ref={sidebar_overlay_ref} btn_sidebar={btn_sidebar} li_header={li_header} />
+            <SidebarMenu sidebar_ref={sidebar_ref} sidebar_overlay_ref={sidebar_overlay_ref} btn_sidebar={btn_sidebar} li_header={li_header} icon_chevron={icon_chevron} set_icon_chevron={set_icon_chevron} />
             <li className="profile">
               <div className="profile-details">
                 <div className="name_job">

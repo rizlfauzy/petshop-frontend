@@ -361,7 +361,7 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
 }
 
 :is(.nav-list-item[data-toggle="collapse"] .list-item-menu, .sublist-item-menu[data-toggle="collapse"])::after {
-  content: "\f078";
+  // content: "\f078";
   /* content: '\f054'; */
   font-family: fontAwesome;
   font-weight: 400;
@@ -382,9 +382,9 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
 
 :is(.nav-list-item.collapsed[data-toggle="collapse"] .list-item-menu, .sublist-item-menu.collapsed[data-toggle="collapse"]) {
   /* content: '\f078'; */
-  &::after {
-    content: "\f054";
-  }
+  // &::after {
+  //   content: "\f054";
+  // }
 }
 
 .sublist-item-menu:hover {

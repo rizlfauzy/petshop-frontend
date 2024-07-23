@@ -698,6 +698,18 @@ video {
   margin-top: 0.75rem;
 }
 
+.mr-10 {
+  margin-right: 2.5rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
 .block {
   display: block;
 }
@@ -744,10 +756,6 @@ video {
 
 .h-\[55px\] {
   height: 55px;
-}
-
-.h-\[50px\] {
-  height: 50px;
 }
 
 .max-h-\[100vh\] {
@@ -834,8 +842,8 @@ video {
   width: 40%;
 }
 
-.w-\[40px\] {
-  width: 40px;
+.w-\[50px\] {
+  width: 50px;
 }
 
 .w-\[55px\] {
@@ -850,12 +858,16 @@ video {
   width: 100%;
 }
 
-.w-\[50px\] {
-  width: 50px;
+.w-\[40px\] {
+  width: 40px;
 }
 
 .min-w-\[50px\] {
   min-width: 50px;
+}
+
+.min-w-\[40px\] {
+  min-width: 40px;
 }
 
 .max-w-\[380px\] {
@@ -1610,7 +1622,6 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
 }
 
 :is(.nav-list-item[data-toggle=collapse] .list-item-menu,.sublist-item-menu[data-toggle=collapse])::after{
-  content:"";
   font-family:fontAwesome;
   font-weight:400;
   font-style:normal;
@@ -1626,10 +1637,6 @@ input[type=date].non_calendar::-webkit-inner-spin-button,input[type=date].non_ca
   margin-right:10px;
   margin-left:auto;
   font-size:12px
-}
-
-:is(.nav-list-item.collapsed[data-toggle=collapse] .list-item-menu,.sublist-item-menu.collapsed[data-toggle=collapse])::after{
-  content:""
 }
 
 .sublist-item-menu:hover{

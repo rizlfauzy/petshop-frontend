@@ -6,13 +6,13 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { set_show_qty } from "../../hooks/useStore";
 
-export default function ListBarang({ set_list_barang, list_barang, set_barang_qty, set_is_edit, is_req_harga = true, is_pro_hasil = null, set_is_pro_hasil = null}) {
+export default function ListBarang({ set_list_barang, list_barang, set_barang_qty, set_is_edit, is_req_harga = true, is_pro_hasil = null, set_is_pro_hasil = null, is_find_approved = null}) {
   const { format_rupiah } = useFormating();
   const dispatch = useDispatch();
 
   const handle_edit_barang = useCallback(
     (e) => {
-      const barcode = e.target.dataset.barcode || e.target.parentElement.dataset.barcode || e.target.parentElement.parentElement.dataset.barcode;
+      const barcode = e.currentTarget.dataset.barcode;
       const barang = list_barang.find((item) => item.barcode === barcode);
       set_barang_qty((prev) => ({
         ...prev,
@@ -27,7 +27,7 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
 
   const handle_delete_barang = useCallback(
     (e) => {
-      const barcode = e.target.dataset.barcode || e.target.parentElement.dataset.barcode || e.target.parentElement.parentElement.dataset.barcode;
+      const barcode = e.currentTarget.dataset.barcode;
       const new_list_barang = list_barang.filter((item) => item.barcode !== barcode);
       set_list_barang(new_list_barang);
       is_pro_hasil != null && set_is_pro_hasil(false);
@@ -62,7 +62,7 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
                         <th className="text-left align-middle">Action</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tbody_list_barang">
                       {list_barang.length > 0 ? (
                         list_barang.map((item) => {
                           return (
@@ -79,10 +79,22 @@ export default function ListBarang({ set_list_barang, list_barang, set_barang_qt
                               )}
                               <td className="text-left align-middle">
                                 <div className="flex justify-center items-center gap-2">
-                                  <button className="btn-sm !bg-yellow-500 hover:!bg-yellow-700 active:!bg-yellow-900 w-12" data-barcode={item?.barcode} onClick={handle_edit_barang}>
+                                  <button
+                                    className="btn-sm !bg-yellow-500 hover:!bg-yellow-700 active:!bg-yellow-900 disabled:hover:!bg-[#a7a7a769] w-12 btn_edit_barang_rusak"
+                                    id={`edit_list_barang_${item?.barcode}`}
+                                    data-barcode={item?.barcode}
+                                    onClick={handle_edit_barang}
+                                    disabled={is_find_approved != null && is_find_approved}
+                                  >
                                     <FontAwesomeIcon icon={faEdit} className="text-white" />
                                   </button>
-                                  <button className="btn-sm !bg-red-500 hover:!bg-red-700 active:!bg-red-900 w-12" data-barcode={item?.barcode} onClick={handle_delete_barang}>
+                                  <button
+                                    className="btn-sm !bg-red-500 hover:!bg-red-700 active:!bg-red-900 disabled:hover:!bg-[#a7a7a769] w-12 btn_delete_barang_rusak"
+                                    id={`delete_list_barang_${item?.barcode}`}
+                                    data-barcode={item?.barcode}
+                                    onClick={handle_delete_barang}
+                                    disabled={is_find_approved != null && is_find_approved}
+                                  >
                                     <FontAwesomeIcon icon={faTrash} className="text-white" />
                                   </button>
                                 </div>
@@ -117,4 +129,5 @@ ListBarang.propTypes = {
   is_req_harga: PropTypes.bool,
   is_pro_hasil: PropTypes.bool,
   set_is_pro_hasil: PropTypes.func,
+  is_find_approved: PropTypes.bool,
 };

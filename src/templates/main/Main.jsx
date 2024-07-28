@@ -16,6 +16,7 @@ export default function Main({ children, title }) {
     const btn_save = document.querySelector("#save");
     const btn_update = document.querySelector("#update");
     const btn_cancel = document.querySelector("#cancel");
+    const btn_reject = document.querySelector("#reject");
     const btn_find = document.querySelector("#find");
     const btn_clear = document.querySelector("#clear");
 
@@ -26,13 +27,16 @@ export default function Main({ children, title }) {
       } else if ((e.ctrlKey && e.key === "2") && btn_update && !btn_update.classList.contains("hidden")) {
         e.preventDefault();
         btn_update.click();
-      } else if ((e.ctrlKey && e.key === "3") && btn_cancel && !btn_cancel.classList.contains("hidden")) {
+      } else if (e.ctrlKey && e.key === "3" && btn_cancel && !btn_cancel.classList.contains("hidden")) {
         e.preventDefault();
         btn_cancel.click();
-      } else if ((e.ctrlKey && e.key === "4") && btn_find && !btn_find.classList.contains("hidden")) {
+      } else if (e.ctrlKey && e.key === "3" && btn_reject && !btn_reject.classList.contains("hidden")) {
+        e.preventDefault();
+        btn_reject.click();
+      } else if (e.ctrlKey && e.key === "4" && btn_find && !btn_find.classList.contains("hidden")) {
         e.preventDefault();
         btn_find.click();
-      } else if ((e.ctrlKey && e.key === "5") && btn_clear && !btn_clear.classList.contains("hidden")) {
+      } else if (e.ctrlKey && e.key === "5" && btn_clear && !btn_clear.classList.contains("hidden")) {
         e.preventDefault();
         btn_clear.click();
       }
@@ -40,6 +44,7 @@ export default function Main({ children, title }) {
     btn_save && !btn_save.classList.contains("hidden") && document.addEventListener("keydown", on_keydown)
     btn_update && !btn_update.classList.contains("hidden") && document.addEventListener("keydown", on_keydown);
     btn_cancel && !btn_cancel.classList.contains("hidden") && document.addEventListener("keydown", on_keydown);
+    btn_reject && !btn_reject.classList.contains("hidden") && document.addEventListener("keydown", on_keydown);
     btn_find && !btn_find.classList.contains("hidden") && document.addEventListener("keydown", on_keydown);
     btn_clear && !btn_clear.classList.contains("hidden") && document.addEventListener("keydown", on_keydown);
 
@@ -47,6 +52,7 @@ export default function Main({ children, title }) {
       btn_save && !btn_save.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
       btn_update && !btn_update.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
       btn_cancel && !btn_cancel.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
+      btn_reject && !btn_reject.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
       btn_find && !btn_find.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
       btn_clear && !btn_clear.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
     }

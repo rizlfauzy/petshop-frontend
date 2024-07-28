@@ -15,6 +15,7 @@ const conf = createSlice({
     show_modal_pembelian: false,
     show_modal_penjualan: false,
     show_modal_barang_rusak: false,
+    show_modal_barang_rusak_non_approved: false,
     show_modal_repack_barang: false,
     show_modal_qty: false,
     show_loading: false,
@@ -61,6 +62,9 @@ const conf = createSlice({
     set_show_barang_rusak: (state, action) => {
       state.show_modal_barang_rusak = action.payload;
     },
+    set_show_barang_rusak_non_approved: (state, action) => {
+      state.show_modal_barang_rusak_non_approved = action.payload;
+    },
     set_show_repack_barang: (state, action) => {
       state.show_modal_repack_barang = action.payload;
     },
@@ -79,6 +83,7 @@ const conf = createSlice({
       state.show_modal_pembelian = false;
       state.show_modal_penjualan = false;
       state.show_modal_barang_rusak = false;
+      state.show_modal_barang_rusak_non_approved = false;
       state.show_modal_repack_barang = false;
       state.show_modal_qty = false;
     },
@@ -97,5 +102,5 @@ const store = configureStore({
   },
 });
 
-export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang, set_show_import, set_show_pembelian, set_show_penjualan, set_show_qty, set_show_barang_rusak, set_show_repack_barang } = conf.actions;
+export const { create_item, set_show_modal, set_show_loading, set_graph, set_show_logout, set_show_user, set_show_grup, set_hide_all_modal, set_show_satuan, set_show_kategori, set_show_barang, set_show_import, set_show_pembelian, set_show_penjualan, set_show_qty, set_show_barang_rusak, set_show_barang_rusak_non_approved, set_show_repack_barang } = conf.actions;
 export default store;

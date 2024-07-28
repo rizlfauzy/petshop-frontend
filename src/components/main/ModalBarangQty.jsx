@@ -41,8 +41,8 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
 
   const handle_input_barang = useCallback(() => {
     try {
-      if (barang_qty.qty < 1) throw new Error("Qty barang tidak boleh kurang dari 1");
-      if (is_reduction && barang_qty.qty > barang_qty.stock) throw new Error("Qty barang tidak boleh melebihi stock");
+      if (Number(barang_qty.qty) < 1) throw new Error("Qty barang tidak boleh kurang dari 1");
+      if (is_reduction && Number(barang_qty.qty) > Number(barang_qty.stock)) throw new Error("Qty barang tidak boleh melebihi stock");
       if (list_barang_dua != null && list_barang_dua.length > 0 && list_barang_dua.find((item) => item.barcode === barang_qty.barcode)) throw new Error("Barang sudah ada di list barang !!!");
       // cek barang sudah ada di list barang atau belum
       const is_exist = list_barang?.find((item) => item.barcode === barang_qty.barcode);
@@ -50,9 +50,9 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
         const new_list_barang = list_barang.map((item) => {
           if (item.barcode === barang_qty.barcode) {
             if (is_reduction) {
-              if (is_edit ? barang_qty.qty > barang_qty.stock : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
+              if (is_edit ? Number(barang_qty.qty) > Number(barang_qty.stock) : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
             }
-            item.qty = is_edit ? barang_qty.qty : Number(item.qty) + Number(barang_qty.qty);
+            item.qty = is_edit ? Number(barang_qty.qty) : Number(item.qty) + Number(barang_qty.qty);
             item.total_harga = item.harga * item.qty;
           }
           return item;
@@ -64,10 +64,10 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
           {
             barcode: barang_qty.barcode,
             nama_barang: barang_qty.nama_barang,
-            qty: barang_qty.qty,
+            qty: Number(barang_qty.qty),
             harga: barang_qty.harga,
             total_harga: barang_qty.total_harga,
-            stock: barang_qty.stock,
+            stock: Number(barang_qty.stock),
           },
         ]);
       }

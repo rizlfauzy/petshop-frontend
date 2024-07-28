@@ -279,6 +279,7 @@ export default function MasterBarang({ icon, title }) {
       socket.emit("notif", { periode: moment().format("YYYYMM") });
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       swalAlert(e.message, "error");
     }
   }, [run, session, barang, swalAlert, handle_clear, socket, dispatch]);
@@ -301,6 +302,7 @@ export default function MasterBarang({ icon, title }) {
       socket.emit("notif", { periode: moment().format("YYYYMM") });
       handle_clear();
     } catch (e) {
+      dispatch(set_show_loading(false));
       swalAlert(e.message, "error");
     }
   }, [run, session, barang, swalAlert, handle_clear, barcode, socket, dispatch]);

@@ -3,7 +3,7 @@ import { fetch_data } from "../../hooks/useFetch";
 import { useCallback, useRef, useState } from "react";
 import useAlert from "../../hooks/useAlert";
 import useSession from "../../hooks/useSession";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
@@ -73,11 +73,11 @@ export default function FormContainer() {
             Login
           </button>
           {/* redirect ke halaman register */}
-          <Link to={`${VITE_PREFIX}register`} className="mt-3">
+          {/* <Link to={`${VITE_PREFIX}register`} className="mt-3">
             <button className="btn transparent !w-auto !border-none px-3 hover:!text-[#c3baa9] hover:!bg-transparent" id="regsiter_btn" type="button">
               Belum punya akun? Daftar disini
             </button>
-          </Link>
+          </Link> */}
         </form>
         <p className="social-text"></p>
       </div>

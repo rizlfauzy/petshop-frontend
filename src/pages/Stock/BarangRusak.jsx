@@ -71,7 +71,7 @@ export default function BarangRusak({ icon, title }) {
           ...prev,
           ...data,
           total_harga: 0,
-          harga: data.harga_jual,
+          harga: data.harga_modal,
           qty: 0,
           stock,
         }));

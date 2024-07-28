@@ -628,7 +628,7 @@ export default function MasterBarang({ icon, title }) {
               page: 1,
               select: ["barcode", "nama", "nama_satuan", "nama_kategori"],
               order: [["barcode", "ASC"]],
-              where: `aktif = true and repack = false`,
+              where: `aktif = true and repack = false and barcode <> '${barang.barcode}'`,
               likes: ["barcode", "nama", "nama_satuan", "nama_kategori"],
               keyword: "",
             }}

@@ -943,6 +943,10 @@ video {
   cursor: pointer;
 }
 
+.cursor-text {
+  cursor: text;
+}
+
 .resize {
   resize: both;
 }
@@ -3216,8 +3220,9 @@ td.action_select{
   color: rgb(127 29 29 / var(--tw-text-opacity));
 }
 
-.disabled\:cursor-not-allowed:disabled {
-  cursor: not-allowed;
+.disabled\:bg-\[\#eee\]:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(238 238 238 / var(--tw-bg-opacity));
 }
 
 .disabled\:bg-green-200:disabled {
@@ -3230,42 +3235,9 @@ td.action_select{
   background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 }
 
-.disabled\:bg-gray-200:disabled {
-  --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
-}
-
-.disabled\:bg-\[\#eee\]:disabled {
-  --tw-bg-opacity: 1;
-  background-color: rgb(238 238 238 / var(--tw-bg-opacity));
-}
-
 .disabled\:text-gray-50:disabled {
   --tw-text-opacity: 1;
   color: rgb(249 250 251 / var(--tw-text-opacity));
-}
-
-.disabled\:hover\:bg-slate-700:hover:disabled {
-  --tw-bg-opacity: 1;
-  background-color: rgb(51 65 85 / var(--tw-bg-opacity));
-}
-
-.disabled\:hover\:\!bg-slate-700:hover:disabled {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(51 65 85 / var(--tw-bg-opacity)) !important;
-}
-
-.disabled\:hover\:\!bg-\[\]:hover:disabled {
-  background-color:  !important;
-}
-
-.disabled\:hover\:\!bg-\[\#a7a7a7\]:hover:disabled {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(167 167 167 / var(--tw-bg-opacity)) !important;
-}
-
-.disabled\:hover\:\!bg-\[\#a7a7a733\]:hover:disabled {
-  background-color: #a7a7a733 !important;
 }
 
 .disabled\:hover\:\!bg-\[\#a7a7a769\]:hover:disabled {

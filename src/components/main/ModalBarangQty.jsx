@@ -7,7 +7,19 @@ import useAlert from "../../hooks/useAlert";
 import { useDispatch } from "react-redux";
 import { set_show_qty } from "../../hooks/useStore";
 
-export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang, set_list_barang, is_edit, is_req_edit = true, is_pro_hasil = null, set_is_pro_hasil = null, is_reduction = false, list_barang_dua = null }) {
+export default function ModalBarangQty({
+  barang_qty,
+  set_barang_qty,
+  list_barang,
+  set_list_barang,
+  is_edit,
+  is_req_edit = true,
+  is_pro_hasil = null,
+  set_is_pro_hasil = null,
+  is_reduction = false,
+  list_barang_dua = null,
+  set_list_barang_dua = null,
+}) {
   const { format_rupiah } = useFormating();
   const input_qty_ref = useRef(null);
   const { swalAlert } = useAlert();
@@ -51,6 +63,14 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
           if (item.barcode === barang_qty.barcode) {
             if (is_reduction) {
               if (is_edit ? Number(barang_qty.qty) > Number(barang_qty.stock) : Number(item.qty) + Number(barang_qty.qty) > item.stock) throw new Error("Qty barang tidak boleh melebihi stock barang !!!");
+              if (is_edit && set_list_barang_dua != null && list_barang_dua != null && list_barang_dua.length > 0) {
+                const new_list_barang_dua = list_barang_dua.map((item) => {
+                  item.qty = Number(item.qty_repack) * Number(barang_qty.qty);
+                  item.total_harga = item.harga * item.qty;
+                  return item;
+                });
+                set_list_barang_dua(new_list_barang_dua);
+              }
             }
             item.qty = is_edit ? Number(barang_qty.qty) : Number(item.qty) + Number(barang_qty.qty);
             item.total_harga = item.harga * item.qty;
@@ -68,6 +88,7 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
             harga: barang_qty.harga,
             total_harga: barang_qty.total_harga,
             stock: Number(barang_qty.stock),
+            qty_repack: Number(barang_qty?.qty_repack) || 0,
           },
         ]);
       }
@@ -76,7 +97,7 @@ export default function ModalBarangQty({ barang_qty, set_barang_qty, list_barang
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [barang_qty, dispatch, swalAlert, list_barang, set_list_barang, is_edit, is_pro_hasil, set_is_pro_hasil, is_reduction, list_barang_dua]);
+  }, [barang_qty, dispatch, swalAlert, list_barang, set_list_barang, is_edit, is_pro_hasil, set_is_pro_hasil, is_reduction, list_barang_dua, set_list_barang_dua]);
 
   const handle_input_on_enter = useCallback(
     (e) => {
@@ -171,4 +192,5 @@ ModalBarangQty.propTypes = {
   set_is_pro_hasil: PropTypes.func,
   is_reduction: PropTypes.bool,
   list_barang_dua: PropTypes.array,
+  set_list_barang_dua: PropTypes.func,
 };

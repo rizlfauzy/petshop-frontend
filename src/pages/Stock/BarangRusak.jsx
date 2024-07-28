@@ -595,7 +595,7 @@ export default function BarangRusak({ icon, title }) {
             set={set_nomor}
             is_selected={set_is_selected_barang_rusak_unapproved}
             conf={{
-              name: "barang_rusak",
+              name: "one_barang_rusak",
               limit: 5,
               page: 1,
               select: ["nomor", "tanggal", "keterangan"],
@@ -621,7 +621,7 @@ export default function BarangRusak({ icon, title }) {
             set={set_nomor}
             is_selected={set_is_selected_barang_rusak}
             conf={{
-              name: "barang_rusak",
+              name: "one_barang_rusak",
               limit: 5,
               page: 1,
               select: ["nomor", "tanggal", "keterangan", "is_approved"],

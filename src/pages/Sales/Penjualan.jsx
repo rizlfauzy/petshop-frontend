@@ -492,7 +492,7 @@ export default function Penjualan({ icon, title }) {
             is_print={true}
             url_print="/sales/print?nomor="
             conf={{
-              name: "penjualan",
+              name: "one_sales_order",
               limit: 5,
               page: 1,
               select: ["nomor", "tanggal", "keterangan", "pemakai", "tglsimpan"],

@@ -44,6 +44,7 @@ export default function RepackBarang({ icon, title }) {
     nama_barang: "",
     qty: 0,
     stock: 0,
+    qty_repack: 0,
   });
   const { date_picker } = useDatePicker();
   const dispatch = useDispatch();
@@ -51,7 +52,7 @@ export default function RepackBarang({ icon, title }) {
   const { session } = useSession();
   const { swalAlert, swalAlertConfirm, swalAlertInput } = useAlert();
   const { show_modal_barang, show_modal_repack_barang, show_modal_qty } = useSelector((state) => state.conf);
-  const { format_rupiah } = useFormating()
+  const { format_rupiah } = useFormating();
 
   const get_stock = useCallback(
     async (barcode) => {
@@ -63,12 +64,14 @@ export default function RepackBarang({ icon, title }) {
       );
       if (data) {
         const stock = list_barang_proses.some((item) => item.barcode === data.barcode) ? data.stock - list_barang_proses.find((item) => item.barcode === data.barcode).qty : data.stock;
+        const qty_barang_induk = list_barang_proses.length > 0 ? list_barang_proses.find((item) => item.barcode == data.barang_induk)?.qty : 1;
         set_barang_qty((prev) => ({
           ...prev,
           ...data,
           total_harga: 0,
-          qty: 0,
+          qty: data.qty_repack * qty_barang_induk,
           stock,
+          qty_repack: data?.qty_repack,
         }));
       }
       return { error, message, data };
@@ -77,7 +80,7 @@ export default function RepackBarang({ icon, title }) {
   );
 
   useLayoutEffect(() => {
-    const date = date_picker({id: "tanggal", selected_date: repack_barang.tanggal});
+    const date = date_picker({ id: "tanggal", selected_date: repack_barang.tanggal });
     date.onSelect((date) => {
       const tanggal = moment(date).format("YYYY-MM-DD");
       set_repack_barang((prev) => ({
@@ -103,7 +106,7 @@ export default function RepackBarang({ icon, title }) {
       const { error, message, data } = await run(
         get_data({
           url: "/repack-barang?nomor=" + nomor,
-          headers: { authorization: `Bearer ${session.token}` },
+          headers: { authorization: `Bearer ${session?.token}` },
         })
       );
       if (error) throw new Error(message);
@@ -126,7 +129,7 @@ export default function RepackBarang({ icon, title }) {
       btn_update.current.disabled = true;
       btn_cancel.current.disabled = true;
     }
-  }, [run, nomor, is_selected_repack_barang, session.token]);
+  }, [run, nomor, is_selected_repack_barang, session]);
 
   useEffect(() => {
     async function get_barang() {
@@ -134,30 +137,30 @@ export default function RepackBarang({ icon, title }) {
       if (error) throw new Error(message);
     }
 
-    if (is_selected_barang_proses && keyword_proses != '') {
+    if (is_selected_barang_proses && keyword_proses != "") {
       dispatch(set_show_qty(true));
       set_is_selected_barang_proses(false);
       set_is_edit(false);
-      set_is_proses(true)
+      set_is_proses(true);
     } else if (is_selected_barang_proses) {
       get_barang();
       dispatch(set_show_qty(true));
       set_is_selected_barang_proses(false);
       set_is_edit(false);
-      set_is_proses(true)
+      set_is_proses(true);
     }
 
-    if (is_selected_barang_hasil && keyword_hasil != '') {
+    if (is_selected_barang_hasil && keyword_hasil != "") {
       dispatch(set_show_qty(true));
       set_is_selected_barang_hasil(false);
       set_is_edit(false);
-      set_is_hasil(true)
+      set_is_hasil(true);
     } else if (is_selected_barang_hasil) {
       get_barang();
       dispatch(set_show_qty(true));
       set_is_selected_barang_hasil(false);
       set_is_edit(false);
-      set_is_hasil(true)
+      set_is_hasil(true);
     }
   }, [barcode, dispatch, keyword_proses, keyword_hasil, is_selected_barang_proses, is_selected_barang_hasil, get_stock]);
 
@@ -170,21 +173,23 @@ export default function RepackBarang({ icon, title }) {
           if (error) throw new Error(message);
           if (!data) throw new Error("Barang tidak ditemukan !!!");
           if (e.target.id == "barcode_proses") {
+            if (data.repack) throw new Error("Barang Repack hanya boleh diinput di table hasil !!!")
             set_keyword_proses("");
             set_is_selected_barang_proses(true);
-            set_is_proses(true)
-          } else if (e.target.id == 'barcode_hasil') {
+            set_is_proses(true);
+          } else if (e.target.id == "barcode_hasil") {
+            if (list_barang_proses.length < 1) throw new Error("Barang Proses harus diinput terlebih dahulu !!!");
+            if (!data.repack) throw new Error("Barang bukan barang Repack input di table proses !!!");
             set_keyword_hasil("");
             set_is_selected_barang_hasil(true);
-            set_is_hasil(true)
+            set_is_hasil(true);
           }
         }
       } catch (e) {
         return swalAlert(e.message, "error");
       }
     },
-    [swalAlert, get_stock]
-  );
+    [swalAlert, get_stock, list_barang_proses]);
 
   const handle_clear = useCallback(() => {
     dispatch(set_show_loading(true));
@@ -199,6 +204,7 @@ export default function RepackBarang({ icon, title }) {
         nama_barang: "",
         qty: 0,
         stock: 0,
+        qty_repack: 0,
       });
       set_list_barang_proses([]);
       set_list_barang_hasil([]);
@@ -209,7 +215,7 @@ export default function RepackBarang({ icon, title }) {
       set_keyword_hasil("");
       set_is_edit(false);
       set_is_proses(false);
-      set_is_hasil(false)
+      set_is_hasil(false);
       dispatch(set_hide_all_modal());
       btn_save.current.disabled = false;
       btn_update.current.disabled = true;
@@ -229,7 +235,7 @@ export default function RepackBarang({ icon, title }) {
           data: {
             ...repack_barang,
             list_barang_proses: JSON.stringify(list_barang_proses),
-            list_barang_hasil: JSON.stringify(list_barang_hasil)
+            list_barang_hasil: JSON.stringify(list_barang_hasil),
           },
         })
       );
@@ -238,7 +244,7 @@ export default function RepackBarang({ icon, title }) {
       handle_clear();
     } catch (e) {
       dispatch(set_show_loading(false));
-      return swalAlert(e.message, "error")
+      return swalAlert(e.message, "error");
     }
   }, [dispatch, list_barang_hasil, list_barang_proses, repack_barang, session, run, swalAlert, handle_clear]);
 
@@ -308,13 +314,13 @@ export default function RepackBarang({ icon, title }) {
     const textarea = e.target;
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
-    if ((e.ctrlKey && e.key === "1") && btn_save.current.disabled === false) {
+    if (e.ctrlKey && e.key === "1" && btn_save.current.disabled === false) {
       e.preventDefault();
       btn_save.current.click();
-    } else if ((e.ctrlKey && e.key === "2") && btn_update.current.disabled === false) {
+    } else if (e.ctrlKey && e.key === "2" && btn_update.current.disabled === false) {
       e.preventDefault();
       btn_update.current.click();
-    } else if ((e.ctrlKey && e.key === "3") && btn_cancel.current.disabled === false) {
+    } else if (e.ctrlKey && e.key === "3" && btn_cancel.current.disabled === false) {
       e.preventDefault();
       btn_cancel.current.click();
     }
@@ -415,15 +421,21 @@ export default function RepackBarang({ icon, title }) {
                           </label>
                         </div>
                         <div className="relative col-half !px-0">
-                          <input type="text" className="form-control" name="nama_barang_proses" id="nama_barang_proses" required readOnly placeholder="NAMA BARANG" />
+                          <input type="text" className="form-control" name="nama_barang_proses" id="nama_barang_proses" required readOnly placeholder="NAMA BARANG PROSES" />
                           <button
                             className="btn_absolute_right !right-1 text-primary hover:text-primary"
                             type="button"
                             onClick={() => {
-                              dispatch(set_show_barang(true));
-                              set_is_proses(true);
-                              set_is_selected_barang_proses(false);
-                              set_keyword_proses("");
+                              try {
+                                if (list_barang_proses.length > 0) throw new Error("Barang Proses hanya boleh diinput sekali !!!");
+                                dispatch(set_show_barang(true));
+                                set_is_proses(true);
+                                set_is_hasil(false);
+                                set_is_selected_barang_proses(false);
+                                set_keyword_proses("");
+                              } catch (e) {
+                                return swalAlert(e.message, "error");
+                              }
                             }}
                           >
                             <FontAwesomeIcon icon={faSearch} />
@@ -454,6 +466,7 @@ export default function RepackBarang({ icon, title }) {
                 <ListBarang
                   set_list_barang={set_list_barang_proses}
                   list_barang={list_barang_proses}
+                  list_barang_dua={list_barang_hasil}
                   set_barang_qty={set_barang_qty}
                   set_is_edit={set_is_edit}
                   is_req_harga={false}
@@ -481,15 +494,21 @@ export default function RepackBarang({ icon, title }) {
                           </label>
                         </div>
                         <div className="relative col-half !px-0">
-                          <input type="text" className="form-control" name="nama_barang_hasil" id="nama_barang_hasil" required readOnly placeholder="NAMA BARANG" />
+                          <input type="text" className="form-control" name="nama_barang_hasil" id="nama_barang_hasil" required readOnly placeholder="NAMA BARANG HASIL" />
                           <button
                             className="btn_absolute_right !right-1 text-primary hover:text-primary"
                             type="button"
                             onClick={() => {
-                              dispatch(set_show_barang(true));
-                              set_is_hasil(true);
-                              set_is_selected_barang_hasil(false);
-                              set_keyword_hasil("");
+                              try {
+                                if (list_barang_proses.length < 1) throw new Error("Barang Proses harus diinput terlebih dahulu !!!");
+                                dispatch(set_show_barang(true));
+                                set_is_hasil(true);
+                                set_is_proses(false);
+                                set_is_selected_barang_hasil(false);
+                                set_keyword_hasil("");
+                              } catch (e) {
+                                return swalAlert(e.message, "error");
+                              }
                             }}
                           >
                             <FontAwesomeIcon icon={faSearch} />
@@ -529,7 +548,7 @@ export default function RepackBarang({ icon, title }) {
             set={set_nomor}
             is_selected={set_is_selected_repack_barang}
             conf={{
-              name: "repack_barang",
+              name: "one_repack_barang",
               limit: 5,
               page: 1,
               select: ["nomor", "tanggal", "keterangan"],
@@ -550,7 +569,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_barang && is_proses && (
-        <Modal modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title={"Barang PROSES"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang_proses}
@@ -560,10 +579,7 @@ export default function RepackBarang({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where:
-                list_barang_hasil.length > 0
-                  ? `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and barcode not in (${list_barang_hasil.map((item) => `'${item.barcode}'`).join(",")})`
-                  : `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}'`,
+              where: `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and nama_barang not ILIKE '%repack%'`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {
@@ -581,7 +597,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_barang && is_hasil && (
-        <Modal modal_title={"Barang"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title={"Barang HASIL"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang_hasil}
@@ -591,10 +607,7 @@ export default function RepackBarang({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where:
-                list_barang_proses.length > 0
-                  ? `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and barcode not in (${list_barang_proses.map((item) => `'${item.barcode}'`).join(",")})`
-                  : `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}'`,
+              where: `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and nama_barang ILIKE '%repack%' and barang_induk = ${list_barang_proses.length > 0 ? "'" + list_barang_proses[0].barcode + "'" : "''"}`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {
@@ -612,13 +625,14 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_qty && is_proses && (
-        <Modal modal_title="Input QTY" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="Input QTY Proses" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalBarangQty
             barang_qty={barang_qty}
             set_barang_qty={set_barang_qty}
             list_barang={list_barang_proses}
             set_list_barang={set_list_barang_proses}
             list_barang_dua={list_barang_hasil}
+            set_list_barang_dua={set_list_barang_hasil}
             is_edit={is_edit}
             is_req_edit={false}
             is_pro_hasil={is_proses}
@@ -628,7 +642,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_qty && is_hasil && (
-        <Modal modal_title="Input QTY" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="Input QTY Hasil" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
           <ModalBarangQty
             barang_qty={barang_qty}
             set_barang_qty={set_barang_qty}

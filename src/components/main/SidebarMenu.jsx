@@ -25,7 +25,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
       get_data({
         url: "/sidebar?path=" + path,
         headers: {
-          authorization: `Bearer ${session.token}`,
+          authorization: `Bearer ${session?.token}`,
         },
       })
     );

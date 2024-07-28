@@ -456,7 +456,7 @@ export default function Pembelian({ icon, title }) {
             is_print={true}
             url_print="/order/print?nomor="
             conf={{
-              name: "pembelian",
+              name: "one_pembelian",
               limit: 5,
               page: 1,
               select: ["nomor", "tanggal", "keterangan"],

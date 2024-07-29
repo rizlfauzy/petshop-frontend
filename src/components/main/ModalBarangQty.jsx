@@ -19,6 +19,7 @@ export default function ModalBarangQty({
   is_reduction = false,
   list_barang_dua = null,
   set_list_barang_dua = null,
+  is_harga_modal = false,
 }) {
   const { format_rupiah } = useFormating();
   const input_qty_ref = useRef(null);
@@ -144,7 +145,7 @@ export default function ModalBarangQty({
             <div className="col-full input-group">
               <div className="col-half p-0 input-group-prepend">
                 <label htmlFor="harga_qty" className="input-group-text">
-                  Harga
+                  Harga {is_harga_modal ? "Modal" : "Jual"}
                 </label>
               </div>
               <input type="text" className="form-control col-half" name="harga_qty" id="harga_qty" value={format_rupiah(barang_qty.harga)} readOnly />
@@ -193,4 +194,5 @@ ModalBarangQty.propTypes = {
   is_reduction: PropTypes.bool,
   list_barang_dua: PropTypes.array,
   set_list_barang_dua: PropTypes.func,
+  is_harga_modal: PropTypes.bool,
 };

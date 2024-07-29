@@ -649,7 +649,7 @@ export default function BarangRusak({ icon, title }) {
       )}
       {show_modal_qty && (
         <Modal modal_title="Input QTY" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
-          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} is_reduction={true} />
+          <ModalBarangQty barang_qty={barang_qty} set_barang_qty={set_barang_qty} list_barang={list_barang} set_list_barang={set_list_barang} is_edit={is_edit} is_reduction={true} is_harga_modal={true} />
         </Modal>
       )}
     </>

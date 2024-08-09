@@ -345,13 +345,13 @@ export default function MasterBarang({ icon, title }) {
   return (
     <>
       <HeaderPage icon={icon} title={title}>
-        <button id="export" className="btn-sm bg-green-600 hover:bg-green-800 active:bg-green-950 text-white" onClick={handle_export}>
+        {/* <button id="export" className="btn-sm bg-green-600 hover:bg-green-800 active:bg-green-950 text-white" onClick={handle_export}>
           <FontAwesomeIcon icon={faFileExcel} className="mr-[10px]" />
           Export
         </button>
         <button id="import" className="btn-sm bg-yellow-600 hover:bg-yellow-800 active:bg-yellow-950 text-white" onClick={handle_modal_import}>
           <FontAwesomeIcon icon={faFileImport} className="mr-[10px]" /> Import
-        </button>
+        </button> */}
         <button ref={btn_save} id="save" className="btn-sm bg-primary text-white" onClick={handle_save}>
           <FontAwesomeIcon icon={faSave} className="mr-[10px]" />
           Save

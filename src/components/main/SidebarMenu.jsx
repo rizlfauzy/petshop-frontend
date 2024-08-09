@@ -46,19 +46,36 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
       const sub_menu = document.querySelector(e.currentTarget.parentElement.dataset.target);
       sub_menu.previousElementSibling.parentElement.classList.toggle("collapsed");
       sub_menu.classList.toggle("hidden");
+      const arr_menu = sub_menu.id.split("_");
+      arr_menu.pop();
       const grup_menu = item?.data?.grup_menu?.filter((gr) => gr.linkmenu == "#").map((gr) => ({ headermenu: gr.headermenu, icon: "chevron-right" }));
+      const filter_grup = grup_menu.filter(gr => gr.headermenu != arr_menu.join("_"));
       if (!sub_menu.classList.contains("hidden")) {
         sidebar_ref.current.classList.add("open");
         sidebar_overlay_ref.current.classList.add("open");
         btn_sidebar.current.classList.remove("bx-menu");
         btn_sidebar.current.classList.add("bx-menu-alt-right");
-        const arr_menu = sub_menu.id.split("_");
-        arr_menu.pop();
-        const filter_grup = grup_menu.filter(gr => gr.headermenu != arr_menu.join("_"));
-        set_icon_chevron([...filter_grup, { headermenu: arr_menu.join("_"), icon: "chevron-down" }]);
-      } else set_icon_chevron(grup_menu);
+        if (!icon_chevron) set_icon_chevron([...filter_grup, { headermenu: arr_menu.join("_"), icon: "chevron-down" }]);
+        else {
+          const new_icon = icon_chevron.map(ic => {
+            if (ic.headermenu == arr_menu.join("_")) return { headermenu: ic.headermenu, icon: "chevron-down" };
+            else return ic;
+          });
+          set_icon_chevron(new_icon);
+        }
+      } else {
+        if (!icon_chevron) set_icon_chevron([...filter_grup, { headermenu: arr_menu.join("_"), icon: "chevron-right" }]);
+        else {
+          const new_icon = icon_chevron.map(ic => {
+            if (ic.headermenu == arr_menu.join("_")) return { headermenu: ic.headermenu, icon: "chevron-right" };
+            else return ic;
+          });
+          set_icon_chevron(new_icon);
+        }
+      }
+      // } else set_icon_chevron(grup_menu);
     },
-    [sidebar_ref, sidebar_overlay_ref, btn_sidebar, set_icon_chevron, item]
+    [sidebar_ref, sidebar_overlay_ref, btn_sidebar, set_icon_chevron, icon_chevron, item]
   );
 
   return item?.data?.grup_menu?.map((gr) => {

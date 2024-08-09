@@ -175,18 +175,20 @@ export default function BarangRusak({ icon, title }) {
   }, [is_selected_barang_rusak, get_barang_rusak]);
 
   useEffect(() => {
-    if (!is_selected_barang_rusak_unapproved && !show_modal_barang_rusak && !is_selected_barang_rusak && !show_modal_barang_rusak_non_approved) {
-      btn_save.current.disabled = false;
-      btn_update.current.disabled = true;
-      btn_approve.current.disabled = true;
-      btn_cancel.current.disabled = true;
-      btn_reject.current.disabled = true;
-      btn_cancel.current.classList.add("hidden");
-      btn_reject.current.classList.add("hidden");
-      textarea_keterangan.current.disabled = false;
-      btn_search_barang.current.disabled = false;
-      input_barcode.current.disabled = false;
-    }
+    setTimeout(() => {
+      if (!is_selected_barang_rusak_unapproved && !show_modal_barang_rusak && !is_selected_barang_rusak && !show_modal_barang_rusak_non_approved) {
+        btn_save.current.disabled = false;
+        btn_update.current.disabled = true;
+        btn_approve.current.disabled = true;
+        btn_cancel.current.disabled = true;
+        btn_reject.current.disabled = true;
+        btn_cancel.current.classList.add("hidden");
+        btn_reject.current.classList.add("hidden");
+        textarea_keterangan.current.disabled = false;
+        btn_search_barang.current.disabled = false;
+        input_barcode.current.disabled = false;
+      }
+    }, 500);
   }, [is_selected_barang_rusak_unapproved, is_selected_barang_rusak, show_modal_barang_rusak, show_modal_barang_rusak_non_approved]);
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import DataOmset from "../components/main/dashboard/DataOmset";
 import OmsetBulanan from "../components/main/dashboard/OmsetBulanan";
 import NotifikasiStok from "../components/main/dashboard/NotifikasiStok";
-import Informasi from "../components/main/Informasi";
+// import Informasi from "../components/main/Informasi";
 
 export default function Dashboard({ icon, title }) {
   return (
@@ -16,10 +16,10 @@ export default function Dashboard({ icon, title }) {
           </div>
           <div className="md:col-quarter col-full">
             <OmsetBulanan />
-            <NotifikasiStok />
           </div>
           <div className="md:col-quarter col-full">
-            <Informasi />
+            {/* <Informasi /> */}
+            <NotifikasiStok />
           </div>
         </div>
       </div>

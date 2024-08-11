@@ -20,6 +20,7 @@ export default function ModalBarangQty({
   list_barang_dua = null,
   set_list_barang_dua = null,
   is_harga_modal = false,
+  is_qty_disabled= false,
 }) {
   const { format_rupiah } = useFormating();
   const input_qty_ref = useRef(null);
@@ -171,7 +172,7 @@ export default function ModalBarangQty({
             </label>
           </div>
           <div className="relative col-half !px-0">
-            <input ref={input_qty_ref} type="text" className="form-control" name="qty" id="qty" value={barang_qty.qty} onChange={handle_change_qty} onKeyDown={handle_input_on_enter} />
+            <input ref={input_qty_ref} type="text" className="form-control" name="qty" id="qty" value={barang_qty.qty} onChange={handle_change_qty} onKeyDown={handle_input_on_enter} disabled={is_qty_disabled} />
             <button className="btn_absolute_right !right-2 text-primary hover:text-primary" type="button" onClick={handle_input_barang}>
               <FontAwesomeIcon icon={faArrowRight} />
             </button>
@@ -195,4 +196,5 @@ ModalBarangQty.propTypes = {
   list_barang_dua: PropTypes.array,
   set_list_barang_dua: PropTypes.func,
   is_harga_modal: PropTypes.bool,
+  is_qty_disabled: PropTypes.bool,
 };

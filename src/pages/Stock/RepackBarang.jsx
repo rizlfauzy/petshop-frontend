@@ -472,6 +472,7 @@ export default function RepackBarang({ icon, title }) {
                   is_req_harga={false}
                   is_pro_hasil={is_proses}
                   set_is_pro_hasil={set_is_proses}
+                  set_is_pro_hasil_dua={set_is_hasil}
                 />
               </div>
             </div>
@@ -536,14 +537,23 @@ export default function RepackBarang({ icon, title }) {
                     </div>
                   </div>
                 </div>
-                <ListBarang set_list_barang={set_list_barang_hasil} list_barang={list_barang_hasil} set_barang_qty={set_barang_qty} set_is_edit={set_is_edit} is_req_harga={false} is_pro_hasil={is_hasil} set_is_pro_hasil={set_is_hasil} />
+                <ListBarang
+                  set_list_barang={set_list_barang_hasil}
+                  list_barang={list_barang_hasil}
+                  set_barang_qty={set_barang_qty}
+                  set_is_edit={set_is_edit}
+                  is_req_harga={false}
+                  is_pro_hasil={is_hasil}
+                  set_is_pro_hasil={set_is_hasil}
+                  set_is_pro_hasil_dua={set_is_proses}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
       {show_modal_repack_barang && (
-        <Modal modal_title="Repack Barang" className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="Repack Barang" className={["md:modal-md", "modal-xl"]}>
           <ModalMain
             set={set_nomor}
             is_selected={set_is_selected_repack_barang}
@@ -569,7 +579,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_barang && is_proses && (
-        <Modal modal_title={"Barang PROSES"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title={"Barang PROSES"} className={["md:modal-md", "modal-xl"]}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang_proses}
@@ -597,7 +607,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_barang && is_hasil && (
-        <Modal modal_title={"Barang HASIL"} className={["md:modal-md", "modal-xl"]} btn={<></>}>
+        <Modal modal_title={"Barang HASIL"} className={["md:modal-md", "modal-xl"]}>
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang_hasil}
@@ -625,7 +635,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_qty && is_proses && (
-        <Modal modal_title="Input QTY Proses" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="Input QTY Proses" className={["md:modal-sm", "modal-xl"]}>
           <ModalBarangQty
             barang_qty={barang_qty}
             set_barang_qty={set_barang_qty}
@@ -642,7 +652,7 @@ export default function RepackBarang({ icon, title }) {
         </Modal>
       )}
       {show_modal_qty && is_hasil && (
-        <Modal modal_title="Input QTY Hasil" className={["md:modal-sm", "modal-xl"]} btn={<></>}>
+        <Modal modal_title="Input QTY Hasil" className={["md:modal-sm", "modal-xl"]}>
           <ModalBarangQty
             barang_qty={barang_qty}
             set_barang_qty={set_barang_qty}
@@ -654,6 +664,7 @@ export default function RepackBarang({ icon, title }) {
             is_pro_hasil={is_hasil}
             set_is_pro_hasil={set_is_hasil}
             is_reduction={false}
+            is_qty_disabled
           />
         </Modal>
       )}

@@ -28,7 +28,7 @@ export default function MasterOtorisasi({ icon, title }) {
   const { run } = useAsync();
   const { session } = useSession();
   const { swalAlert } = useAlert();
-  const { item, show_modal_grup } = useSelector((state) => state.conf);
+  const { show_modal_grup } = useSelector((state) => state.conf);
   const dispatch = useDispatch();
   const [grup, set_grup] = useState({
     kode_grup: "",
@@ -215,7 +215,7 @@ export default function MasterOtorisasi({ icon, title }) {
               page: 1,
               select: ["kode", "nama"],
               order: [["kode", "ASC"]],
-              where: item?.data?.mygrup == "ITS" ? { aktif: true } : "kode <> 'ITS' and aktif = 't'",
+              where: "kode <> 'ITS' and aktif = 't'",
               likes: ["kode", "nama"],
               keyword: "",
             }}

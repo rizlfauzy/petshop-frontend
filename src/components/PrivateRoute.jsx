@@ -9,7 +9,7 @@ export default function PrivateRoute({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (item?.data?.cek_menu?.open == false) navigate("/", { replace: true, state: { from: location } });
+    if (item?.data?.cek_menu?.open == false || !item?.data?.cek_menu?.open) navigate("/", { replace: true, state: { from: location } });
   }, [item?.data?.cek_menu?.open, location, navigate]);
 
   return children;

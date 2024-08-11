@@ -50,7 +50,7 @@ export default function MasterGrup({ icon, title }) {
       btn_update.current.disabled = false;
       aktif_row.current.classList.remove("!hidden");
     } else {
-      input_kode.current.disabled = false;
+      input_kode.current.disabled = true;
       btn_save.current.disabled = false;
       btn_update.current.disabled = true;
       aktif_row.current.classList.add("!hidden");
@@ -74,7 +74,7 @@ export default function MasterGrup({ icon, title }) {
       nama: "",
       aktif: true,
     });
-    input_kode.current.disabled = false;
+    input_kode.current.disabled = true;
     btn_save.current.disabled = false;
     btn_update.current.disabled = true;
     aktif_row.current.classList.add("!hidden");
@@ -163,7 +163,7 @@ export default function MasterGrup({ icon, title }) {
                         KODE GRUP
                       </label>
                     </div>
-                    <input type="text" value={grup.kode} className="form-control col-half" name="kode" id="kode" onChange={handle_change} ref={input_kode} required />
+                    <input type="text" value={grup.kode} className="form-control col-half" name="kode" id="kode" onChange={handle_change} ref={input_kode} placeholder="KODE" required />
                   </div>
                   <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
@@ -177,6 +177,7 @@ export default function MasterGrup({ icon, title }) {
                       className="form-control col-half"
                       name="nama"
                       id="nama"
+                      placeholder="NAMA"
                       onChange={handle_change}
                       onKeyDown={(e) => {
                         if (e.keyCode == 13) handle_save();

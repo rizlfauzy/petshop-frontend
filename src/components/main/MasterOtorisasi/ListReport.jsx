@@ -166,13 +166,13 @@ export default function ListReport({ list_report, set_list_report, keyword, set_
                             <td className="text-left align-middle">{item.report}</td>
                             <td className="text-left align-middle">{item.nama}</td>
                             <td className="text-center align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="barang" id="true_barang_radio" checked={checked_barang} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="barang" id="true_barang_radio" checked={checked_barang} disabled={!item.rule_barang} onChange={handle_change_checkbox} required />
                             </td>
                             <td className="text-left align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="periode" id="true_periode_radio" checked={checked_periode} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="periode" id="true_periode_radio" checked={checked_periode} disabled={!item.rule_periode} onChange={handle_change_checkbox} required />
                             </td>
                             <td className="text-left align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="pdf" id="true_pdf_radio" checked={checked_pdf} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="pdf" id="true_pdf_radio" checked={checked_pdf} disabled={!item.rule_pdf} onChange={handle_change_checkbox} required />
                             </td>
                           </tr>
                         );

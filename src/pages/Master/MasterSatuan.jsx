@@ -88,7 +88,10 @@ export default function MasterSatuan({ icon, title }) {
           url: "/satuan",
           method: "POST",
           headers: { authorization: `Bearer ${session.token}` },
-          data: satuan,
+          data: {
+            kode: satuan.kode.toUpperCase(),
+            nama: satuan.nama.toUpperCase(),
+          },
         })
       );
       if (error) throw new Error(message);
@@ -106,7 +109,11 @@ export default function MasterSatuan({ icon, title }) {
           url: "/satuan",
           method: "PUT",
           headers: { authorization: `Bearer ${session.token}` },
-          data: satuan,
+          data: {
+            kode: satuan.kode.toUpperCase(),
+            nama: satuan.nama.toUpperCase(),
+            aktif: satuan.aktif,
+          },
         })
       );
       if (error) throw new Error(message);

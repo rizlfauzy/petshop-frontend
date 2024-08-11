@@ -401,7 +401,7 @@ export default function BarangRusak({ icon, title }) {
   }, [dispatch]);
 
   const handle_find_barang_rusak_non_approved = useCallback(() => {
-    set_is_selected_barang_rusak(false);
+    // set_is_selected_barang_rusak(false);
     dispatch(set_show_barang_rusak_non_approved(true));
   }, [dispatch]);
 

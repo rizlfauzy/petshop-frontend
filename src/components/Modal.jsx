@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { set_hide_all_modal } from "../hooks/useStore";
 import { useDispatch } from "react-redux";
 import { useCallback } from "react";
-export default function Modal({ children, modal_title, className, btn }) {
+export default function Modal({ children, modal_title, className, btn = null }) {
   const dispatch = useDispatch();
   const handle_close_modal = useCallback(() => {
     dispatch(set_hide_all_modal())

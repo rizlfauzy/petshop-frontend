@@ -95,7 +95,10 @@ export default function ListReport({ list_report, set_list_report, keyword, set_
         checkbox.classList.toggle("clicked-event", e.target.checked);
         const report = checkbox.children[1].innerHTML;
         const nama = checkbox.children[2].innerHTML;
-        if (e.target.checked) list.push({ report, nama, barang: true, periode: true, pdf: true });
+        const barang = checkbox.children[3].children[0].disabled ? false : true;
+        const periode = checkbox.children[4].children[0].disabled ? false : true;
+        const pdf = checkbox.children[5].children[0].disabled ? false : true;
+        if (e.target.checked) list.push({ report, nama, barang, periode, pdf });
       });
       set_list_report(list);
       set_check_all(e.target.checked);

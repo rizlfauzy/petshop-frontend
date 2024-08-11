@@ -1,16 +1,42 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useLayoutEffect } from "react";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
+import useAsync from "../hooks/useAsync";
+import { get_data } from "../hooks/useFetch";
+import useSession from "../hooks/useSession";
+import { set_hide_all_modal, create_item } from "../hooks/useStore";
+const { VITE_PREFIX } = import.meta.env;
 
 export default function PrivateRoute({ children }) {
-  const { item } = useSelector((state) => state.conf);
   const location = useLocation();
   const navigate = useNavigate();
+  const path = location.pathname.split("/").slice(1).join("/");
+  const { run } = useAsync();
+  const { session, setSessionData } = useSession();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (item?.data?.cek_menu?.open == false) navigate("/", { replace: true, state: { from: location } });
-  }, [item?.data?.cek_menu?.open, location, navigate]);
+  useLayoutEffect(() => {
+    async function get_menu() {
+      const { message, data } = await run(
+        get_data({
+          url: "/sidebar?path=" + path,
+          headers: {
+            authorization: `Bearer ${session?.token}`,
+          },
+        })
+      );
+      if (message == "Token expired" || message == "Token not found") {
+        setSessionData(null);
+        dispatch(set_hide_all_modal());
+        navigate(`${VITE_PREFIX}}login`, { replace: true });
+        return;
+      }
+      dispatch(create_item({ data }));
+      if (Object.keys(data?.cek_menu).length == 0 || data?.cek_menu?.open == false) navigate("/", { replace: true, state: { from: location } });
+    }
+    get_menu();
+  }, [location, navigate, run, session, setSessionData, dispatch, path]);
 
   return children;
 }

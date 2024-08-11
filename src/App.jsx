@@ -35,9 +35,11 @@ function App() {
         <Route
           path={VITE_PREFIX}
           element={
-            <Main title={"DASHBOARD"}>
-              <Dashboard icon={<FontAwesomeIcon icon={"bar-chart"} className="!text-[19px]" />} title={"DASHBOARD"} />
-            </Main>
+            <PrivateRoute>
+              <Main title={"DASHBOARD"}>
+                <Dashboard icon={<FontAwesomeIcon icon={"bar-chart"} className="!text-[19px]" />} title={"DASHBOARD"} />
+              </Main>
+            </PrivateRoute>
           }
         />
         <Route

@@ -1,45 +1,13 @@
-import useAsync from "../../hooks/useAsync";
-import { get_data } from "../../hooks/useFetch";
-import { useLayoutEffect, useEffect, useCallback } from "react";
-import { create_item } from "../../hooks/useStore";
-import { useDispatch, useSelector } from "react-redux";
-import useSession from "../../hooks/useSession";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import {  useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { set_hide_all_modal } from "../../hooks/useStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const { VITE_PREFIX } = import.meta.env;
 
 export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header, icon_chevron, set_icon_chevron, }) {
-  const { run, isLoading, data } = useAsync();
-  const dispatch = useDispatch();
   const item = useSelector((state) => state.conf.item);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const path = location.pathname.split("/").length > 2 ? location.pathname.split("/").slice(1).join("/") : location.pathname.split("/").pop();
-  const { session, setSessionData } = useSession();
-
-  useLayoutEffect(() => {
-    run(
-      get_data({
-        url: "/sidebar?path=" + path,
-        headers: {
-          authorization: `Bearer ${session?.token}`,
-        },
-      })
-    );
-  }, [run, session, path]);
-
-  useEffect(() => {
-    const obj = !isLoading ? data : null;
-    dispatch(create_item(obj));
-    if (!isLoading && (data?.message == "Token expired" || data?.message == "Token not found")) {
-      setSessionData(null);
-      dispatch(set_hide_all_modal());
-      navigate(`${VITE_PREFIX}login`, { replace: true });
-    }
-  }, [data, isLoading, dispatch, navigate, setSessionData]);
 
   const on_click_dropdown = useCallback(
     (e) => {
@@ -73,7 +41,6 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
           set_icon_chevron(new_icon);
         }
       }
-      // } else set_icon_chevron(grup_menu);
     },
     [sidebar_ref, sidebar_overlay_ref, btn_sidebar, set_icon_chevron, icon_chevron, item]
   );

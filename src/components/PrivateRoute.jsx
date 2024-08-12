@@ -29,7 +29,7 @@ export default function PrivateRoute({ children }) {
       if (message == "Token expired" || message == "Token not found") {
         setSessionData(null);
         dispatch(set_hide_all_modal());
-        navigate(`${VITE_PREFIX}}login`, { replace: true });
+        navigate(`${VITE_PREFIX}login`, { replace: true });
         return;
       }
       dispatch(create_item({ data }));

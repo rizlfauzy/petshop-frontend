@@ -98,7 +98,11 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       const nomenu = checkbox.children[1].innerHTML;
       const namamenu = checkbox.children[2].innerHTML;
       const grupmenu = checkbox.children[3].innerHTML;
-      if (e.target.checked) list.push({ nomenu, namamenu, grupmenu, add: true, update: true, cancel: true, backdate: true });
+      const add = checkbox.children[4].children[0].disabled ? false : true;
+      const update = checkbox.children[5].children[0].disabled ? false : true;
+      const cancel = checkbox.children[6].children[0].disabled ? false : true;
+      const backdate = checkbox.children[7].children[0].disabled ? false : true;
+      if (e.target.checked) list.push({ nomenu, namamenu, grupmenu, add, update, cancel, backdate });
     });
     set_list_menu(list);
     set_check_all(e.target.checked);
@@ -171,16 +175,16 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                             <td className="text-left align-middle">{item.namamenu}</td>
                             <td className="text-left align-middle">{item.grupmenu}</td>
                             <td className="text-center align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="add" id="true_add_radio" checked={checked_add} onChange={handle_change_checkbox} disabled={!item.rule_add} required />
                             </td>
                             <td className="text-left align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="update" id="true_update_radio" checked={checked_update} onChange={handle_change_checkbox} disabled={!item.rule_update} required />
                             </td>
                             <td className="text-left align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} disabled={!item.rule_cancel} required />
                             </td>
                             <td className="text-left align-middle">
-                              <input type="checkbox" className="form-control m-auto" name="backdate" id="true_backdate_radio" checked={checked_backdate} onChange={handle_change_checkbox} required />
+                              <input type="checkbox" className="form-control m-auto" name="backdate" id="true_backdate_radio" checked={checked_backdate} onChange={handle_change_checkbox} disabled={!item.rule_backdate} required />
                             </td>
                           </tr>
                         );

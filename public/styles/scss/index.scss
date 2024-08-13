@@ -1129,6 +1129,9 @@ p {
 .tr_checkbox:hover {
   cursor: pointer;
   background-color: $hover-table-color !important;
+  & td.action_select {
+    background-color: $hover-table-color !important;
+  }
 }
 
 .clicked-event {

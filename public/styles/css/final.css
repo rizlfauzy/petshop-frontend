@@ -2305,6 +2305,10 @@ p{
   background-color:#f99371 !important
 }
 
+.tr_checkbox:hover td.action_select{
+  background-color:#f99371 !important
+}
+
 .clicked-event{
   background:#884d3a !important;
   color:#fff !important;

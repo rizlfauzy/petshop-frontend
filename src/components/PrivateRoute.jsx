@@ -34,9 +34,9 @@ export default function PrivateRoute({ children }) {
         return;
       }
       dispatch(create_item({ data }));
-      const grup_menu = [...data.grup_menu ?? []];
-      grup_menu?.push({ linkmenu: "empty" });
-      const cek_menu = grup_menu?.find((gr) => gr.linkmenu == path);
+      const oto_menu = [...data.oto_menu ?? []];
+      oto_menu?.push({ linkmenu: "empty" });
+      const cek_menu = oto_menu?.find((ot) => ot.linkmenu == path || ot.linkdetail == path);
       if (!cek_menu) { navigate(`${VITE_PREFIX}empty`, { replace: true, state: { from: location } }); return; }
       if ((Object.keys(data?.cek_menu).length == 0 || data?.cek_menu?.open == false) && cek_menu.linkmenu != 'empty') navigate(`${VITE_PREFIX}`, { replace: true, state: { from: location } });
     }

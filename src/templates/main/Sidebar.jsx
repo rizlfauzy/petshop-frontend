@@ -96,8 +96,8 @@ export default function Sidebar() {
             <li className="profile">
               <div className="profile-details">
                 <div className="name_job">
-                  <div className="name text-uppercase">{item?.data?.myusername}</div>
-                  <div className="job">{item?.data?.mygrup}</div>
+                  <div className="name text-uppercase">USER : {item?.data?.myusername}</div>
+                  <div className="job">GRUP : {item?.data?.mygrup}</div>
                 </div>
               </div>
               <i

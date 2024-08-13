@@ -130,7 +130,7 @@ export default function MasterOtorisasi({ icon, title }) {
       set_report({ data: d_report });
       set_check_all_report(false);
       dispatch(set_show_loading(false));
-    }, 1000);
+    }, 500);
   }, [run, session, dispatch]);
 
   const handle_save = useCallback(async () => {

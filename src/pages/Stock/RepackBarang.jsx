@@ -583,6 +583,7 @@ export default function RepackBarang({ icon, title }) {
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang_proses}
+            is_action_select
             conf={{
               name: "stock_barang",
               limit: 5,
@@ -597,7 +598,7 @@ export default function RepackBarang({ icon, title }) {
               },
             }}
           >
-            <th className="text-left align-middle">Action</th>
+            <th className="text-left align-middle action_select">Action</th>
             <th className="text-left align-middle">Barcode</th>
             <th className="text-left align-middle">Nama Barang</th>
             <th className="text-left align-middle">Satuan</th>
@@ -611,6 +612,7 @@ export default function RepackBarang({ icon, title }) {
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang_hasil}
+            is_action_select
             conf={{
               name: "stock_barang",
               limit: 5,
@@ -625,7 +627,7 @@ export default function RepackBarang({ icon, title }) {
               },
             }}
           >
-            <th className="text-left align-middle">Action</th>
+            <th className="text-left align-middle action_select">Action</th>
             <th className="text-left align-middle">Barcode</th>
             <th className="text-left align-middle">Nama Barang</th>
             <th className="text-left align-middle">Satuan</th>

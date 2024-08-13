@@ -637,7 +637,6 @@ export default function BarangRusak({ icon, title }) {
               page: 1,
               select: ["nomor", "tanggal", "keterangan", "is_approved"],
               order: [["nomor", "ASC"]],
-              // where: { batal: false },
               where: grup.value == "ITS" || grup.value == "GR-00003" ? { batal: false } : { batal: false, is_approved: true },
               likes: ["nomor"],
               keyword: "",

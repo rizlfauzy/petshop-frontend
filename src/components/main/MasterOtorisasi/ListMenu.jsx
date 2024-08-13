@@ -36,8 +36,8 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       const add = tr.children[4].children[0].checked;
       const update = tr.children[5].children[0].checked;
       const cancel = tr.children[6].children[0].checked;
-      const backdate = tr.children[7].children[0].checked;
-      if (tr.classList.contains("clicked-event")) set_list_menu((prev) => [...prev, { nomenu, namamenu, grupmenu, add, update, cancel, backdate }]);
+      // const backdate = tr.children[7].children[0].checked;
+      if (tr.classList.contains("clicked-event")) set_list_menu((prev) => [...prev, { nomenu, namamenu, grupmenu, add, update, cancel }]);
       else set_list_menu((prev) => prev.filter((item) => item.nomenu !== nomenu));
     },
     [set_list_menu]
@@ -70,8 +70,8 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       const add = tr.children[4].children[0].checked;
       const update = tr.children[5].children[0].checked;
       const cancel = tr.children[6].children[0].checked;
-      const backdate = tr.children[7].children[0].checked;
-      set_list_menu((prev) => prev.map((item) => (item.nomenu === nomenu ? { ...item, add, update, cancel, backdate } : item)));
+      // const backdate = tr.children[7].children[0].checked;
+      set_list_menu((prev) => prev.map((item) => (item.nomenu === nomenu ? { ...item, add, update, cancel } : item)));
     },
     [set_list_menu]
   );
@@ -101,8 +101,8 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
       const add = checkbox.children[4].children[0].disabled ? false : true;
       const update = checkbox.children[5].children[0].disabled ? false : true;
       const cancel = checkbox.children[6].children[0].disabled ? false : true;
-      const backdate = checkbox.children[7].children[0].disabled ? false : true;
-      if (e.target.checked) list.push({ nomenu, namamenu, grupmenu, add, update, cancel, backdate });
+      // const backdate = checkbox.children[7].children[0].disabled ? false : true;
+      if (e.target.checked) list.push({ nomenu, namamenu, grupmenu, add, update, cancel });
     });
     set_list_menu(list);
     set_check_all(e.target.checked);
@@ -156,7 +156,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                     <th className="text-left align-middle">Add</th>
                     <th className="text-left align-middle">Update</th>
                     <th className="text-left align-middle">Cancel</th>
-                    <th className="text-left align-middle">Back Date</th>
+                    {/* <th className="text-left align-middle">Back Date</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -167,7 +167,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                         const checked_add = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.add : false;
                         const checked_update = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.update : false;
                         const checked_cancel = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.cancel : false;
-                        const checked_backdate = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.backdate : false;
+                        // const checked_backdate = is_checked ? list_menu.find((menu) => menu.nomenu === item.nomenu)?.backdate : false;
                         return (
                           <tr key={item.nomenu} className={`tr_menu tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
                             <td className="text-left align-middle"></td>
@@ -183,9 +183,9 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                             <td className="text-left align-middle">
                               <input type="checkbox" className="form-control m-auto" name="cancel" id="true_cancel_radio" checked={checked_cancel} onChange={handle_change_checkbox} disabled={!item.rule_cancel} required />
                             </td>
-                            <td className="text-left align-middle">
+                            {/* <td className="text-left align-middle">
                               <input type="checkbox" className="form-control m-auto" name="backdate" id="true_backdate_radio" checked={checked_backdate} onChange={handle_change_checkbox} disabled={!item.rule_backdate} required />
-                            </td>
+                            </td> */}
                           </tr>
                         );
                       })

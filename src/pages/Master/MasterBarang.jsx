@@ -481,14 +481,14 @@ export default function MasterBarang({ icon, title }) {
                   </div>
                 )}
                 <div className="row my-2">
-                  <div className="sm:col-half col-full input-group">
+                  {/* <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="min_stock" className="input-group-text">
                         MIN. STOK
                       </label>
                     </div>
                     <input value={barang.min_stock} onChange={handle_change_barang} type="text" className="form-control col-half" name="min_stock" id="min_stock" required placeholder="MINIMAL STOCK" />
-                  </div>
+                  </div> */}
                   <div className="sm:col-half col-full input-group">
                     <div className="col-half p-0 input-group-prepend">
                       <label htmlFor="disc" className="input-group-text">
@@ -653,7 +653,7 @@ export default function MasterBarang({ icon, title }) {
               name: "barang",
               limit: 5,
               page: 1,
-              select: ["barcode", "nama", "nama_satuan", "nama_kategori", "min_stock", "disc", "harga_jual", "harga_modal", "aktif"],
+              select: ["barcode", "nama", "nama_satuan", "nama_kategori", "disc", "harga_jual", "harga_modal", "aktif"],
               order: [["barcode", "ASC"]],
               where: {},
               likes: ["barcode", "nama"],
@@ -673,7 +673,7 @@ export default function MasterBarang({ icon, title }) {
               <th className="text-left align-middle">Nama</th>
               <th className="text-left align-middle">Nama Satuan</th>
               <th className="text-left align-middle">Nama Kategori</th>
-              <th className="text-left align-middle">Min Stock</th>
+              {/* <th className="text-left align-middle">Min Stock</th> */}
               <th className="text-left align-middle">Disc</th>
               <th className="text-left align-middle">Harga Jual</th>
               <th className="text-left align-middle">Harga Modal</th>

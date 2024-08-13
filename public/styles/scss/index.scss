@@ -1508,6 +1508,10 @@ p {
   }
 }
 
+.header-page + .table-responsive {
+  margin-top: 3.5rem;
+}
+
 .table-responsive {
   display: block;
   width: 100%;

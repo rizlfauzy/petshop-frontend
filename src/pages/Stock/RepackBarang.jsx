@@ -173,7 +173,7 @@ export default function RepackBarang({ icon, title }) {
           if (error) throw new Error(message);
           if (!data) throw new Error("Barang tidak ditemukan !!!");
           if (e.target.id == "barcode_proses") {
-            if (data.repack) throw new Error("Barang Repack hanya boleh diinput di table hasil !!!")
+            if (data.repack) throw new Error("Barang Repack hanya boleh diinput di table hasil !!!");
             set_keyword_proses("");
             set_is_selected_barang_proses(true);
             set_is_proses(true);
@@ -189,7 +189,8 @@ export default function RepackBarang({ icon, title }) {
         return swalAlert(e.message, "error");
       }
     },
-    [swalAlert, get_stock, list_barang_proses]);
+    [swalAlert, get_stock, list_barang_proses]
+  );
 
   const handle_clear = useCallback(() => {
     dispatch(set_show_loading(true));

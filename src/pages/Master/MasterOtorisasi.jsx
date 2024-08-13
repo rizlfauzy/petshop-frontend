@@ -12,7 +12,7 @@ import ListMenu from "../../components/main/MasterOtorisasi/ListMenu";
 import { useSelector, useDispatch } from "react-redux";
 import ListReport from "../../components/main/MasterOtorisasi/ListReport";
 import Modal from "../../components/Modal";
-import { set_show_grup } from "../../hooks/useStore";
+import { set_show_grup, set_show_loading } from "../../hooks/useStore";
 
 export default function MasterOtorisasi({ icon, title }) {
   const [kode_grup, set_kode_grup] = useState("");
@@ -58,8 +58,7 @@ export default function MasterOtorisasi({ icon, title }) {
       if (data.length > 0) {
         set_check_all_menu(data.every((item) => item.add && item.update && item.cancel && item.backdate));
         set_list_menu([...data]);
-      }
-      else set_list_menu([]);
+      } else set_list_menu([]);
     }
 
     async function get_report() {
@@ -73,8 +72,7 @@ export default function MasterOtorisasi({ icon, title }) {
       if (data.length > 0) {
         set_check_all_report(data.every((item) => item.barang && item.periode && item.pdf));
         set_list_report([...data]);
-      }
-      else set_list_report([]);
+      } else set_list_report([]);
     }
 
     if (is_selected_grup) {
@@ -90,8 +88,54 @@ export default function MasterOtorisasi({ icon, title }) {
     set_is_selected_grup(false);
   }, []);
 
+  const handle_clear = useCallback(async () => {
+    dispatch(set_show_loading(true));
+    setTimeout(async () => {
+      set_grup((state) => ({ ...state, kode_grup: "", nama_grup: "" }));
+      set_is_selected_grup(false);
+
+      set_keyword_menu("");
+      const {
+        error: e_menu,
+        message: m_menu,
+        data: d_menu,
+      } = await run(
+        get_data({
+          url: "/otority/find-menu?q=",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (e_menu) throw new Error(m_menu);
+      set_list_menu([]);
+      setMenu({ data: d_menu });
+      set_check_all_menu(false);
+
+      set_list_report([]);
+      set_keyword_report("");
+      const {
+        error: e_report,
+        message: m_report,
+        data: d_report,
+      } = await run(
+        get_data({
+          url: "/otority/find-report?q=",
+          headers: {
+            authorization: `Bearer ${session.token}`,
+          },
+        })
+      );
+      if (e_report) throw new Error(m_report);
+      set_report({ data: d_report });
+      set_check_all_report(false);
+      dispatch(set_show_loading(false));
+    }, 1000);
+  }, [run, session, dispatch]);
+
   const handle_save = useCallback(async () => {
     try {
+      dispatch(set_show_loading(true));
       const { error, message } = await run(
         fetch_data({
           url: "/otority",
@@ -102,43 +146,13 @@ export default function MasterOtorisasi({ icon, title }) {
       );
       if (error) throw new Error(message);
       swalAlert(message, "success");
+      handle_clear();
     } catch (error) {
       swalAlert(error.message, "error");
+    } finally {
+      dispatch(set_show_loading(false));
     }
-  }, [list_menu, swalAlert, run, session, kode_grup, list_report]);
-
-  const handle_clear = useCallback(async () => {
-    set_grup((state) => ({ ...state, kode_grup: "", nama_grup: "" }));
-    set_is_selected_grup(false);
-
-    set_keyword_menu("");
-    const { error:e_menu, message:m_menu, data:d_menu } = await run(
-      get_data({
-        url: "/otority/find-menu?q=",
-        headers: {
-          authorization: `Bearer ${session.token}`,
-        },
-      })
-    );
-    if (e_menu) throw new Error(m_menu);
-    set_list_menu([]);
-    setMenu({data:d_menu});
-    set_check_all_menu(false);
-
-    set_list_report([]);
-    set_keyword_report("");
-    const { error:e_report, message:m_report, data:d_report } = await run(
-      get_data({
-        url: "/otority/find-report?q=",
-        headers: {
-          authorization: `Bearer ${session.token}`,
-        },
-      })
-    );
-    if (e_report) throw new Error(m_report);
-    set_report({data:d_report});
-    set_check_all_report(false);
-  }, [run, session]);
+  }, [list_menu, swalAlert, run, session, kode_grup, list_report, dispatch, handle_clear]);
 
   return (
     <>

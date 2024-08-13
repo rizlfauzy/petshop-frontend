@@ -150,7 +150,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                 <thead className="thead-dark">
                   <tr className="tr_head">
                     <th className="text-left align-middle">No</th>
-                    <th className="text-left align-middle">Kode Menu</th>
+                    <th className="text-left align-middle action_select">Kode Menu</th>
                     <th className="text-left align-middle">Nama Menu</th>
                     <th className="text-left align-middle">Grup Menu</th>
                     <th className="text-left align-middle">Add</th>
@@ -171,7 +171,7 @@ export default function ListMenu({ list_menu, set_list_menu, keyword, set_keywor
                         return (
                           <tr key={item.nomenu} className={`tr_menu tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
                             <td className="text-left align-middle"></td>
-                            <td className="text-left align-middle">{item.nomenu}</td>
+                            <td className="text-left align-middle action_select">{item.nomenu}</td>
                             <td className="text-left align-middle">{item.namamenu}</td>
                             <td className="text-left align-middle">{item.grupmenu}</td>
                             <td className="text-center align-middle">

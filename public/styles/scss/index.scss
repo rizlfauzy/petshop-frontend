@@ -43,7 +43,7 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
   width: 78px;
   background: $primary-color;
   padding: 6px 14px;
-  z-index: 99;
+  z-index: 9999;
   transition: all 0.5s ease;
   &.open {
     width: 250px;
@@ -474,7 +474,7 @@ input[type="date"].non_calendar::-webkit-calendar-picker-indicator {
 .sidebar-hoverlay {
   display: none;
   position: fixed;
-  z-index: 100;
+  z-index: 10000;
   top: 0px;
   right: 0px;
   background: #000000;
@@ -721,7 +721,7 @@ input[type="number"] {
 
 .table-responsive {
   scrollbar-width: thin;
-  scrollbar-color: #47404f #dedede;
+  // scrollbar-color: #47404f #dedede;
 }
 
 *::-webkit-scrollbar {
@@ -882,7 +882,7 @@ nav.tabbable ul li a:hover {
 /* Works on Firefox */
 * {
   scrollbar-width: revert;
-  scrollbar-color: #402218 #f0f0f0;
+  // scrollbar-color: #402218 #f0f0f0;
 }
 
 /* Works on Chrome, Edge, and Safari */
@@ -897,7 +897,7 @@ nav.tabbable ul li a:hover {
 *::-webkit-scrollbar-thumb {
   background-color: #402218;
   border-radius: 20px;
-  border: 31x solid #402218;
+  border: 31px solid #402218;
 }
 
 /* div.dataTables_wrapper {
@@ -1601,14 +1601,20 @@ input.form-control:is([type="radio"], [type="checkbox"]) {
 th.action_select {
   position: sticky;
   left: 0;
-  z-index: 99991;
+  z-index: 9991;
 }
 
 td.action_select {
   position: sticky;
   left: 0;
-  z-index: 99990;
-  background-color: rgba(233, 233, 233);
+  z-index: 9990;
+  background-color: rgba(255, 255, 255);
+}
+
+tr.clicked-event {
+  td.action_select {
+    background-color: $clicked-table-color;
+  }
 }
 
 /* Safari */

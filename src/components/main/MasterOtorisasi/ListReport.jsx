@@ -148,7 +148,7 @@ export default function ListReport({ list_report, set_list_report, keyword, set_
                 <thead className="thead-dark">
                   <tr className="tr_head">
                     <th className="text-left align-middle">No</th>
-                    <th className="text-left align-middle">Kode Report</th>
+                    <th className="text-left align-middle action_select">Kode Report</th>
                     <th className="text-left align-middle">Nama Report</th>
                     <th className="text-left align-middle">Barang</th>
                     <th className="text-left align-middle">Periode</th>
@@ -166,7 +166,7 @@ export default function ListReport({ list_report, set_list_report, keyword, set_
                         return (
                           <tr key={item.report} className={`tr_report tr_checkbox ${is_checked && "clicked-event"}`} onClick={checked_menu}>
                             <td className="text-left align-middle"></td>
-                            <td className="text-left align-middle">{item.report}</td>
+                            <td className="text-left align-middle action_select">{item.report}</td>
                             <td className="text-left align-middle">{item.nama}</td>
                             <td className="text-center align-middle">
                               <input type="checkbox" className="form-control m-auto" name="barang" id="true_barang_radio" checked={checked_barang} disabled={!item.rule_barang} onChange={handle_change_checkbox} required />

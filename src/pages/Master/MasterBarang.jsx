@@ -648,7 +648,7 @@ export default function MasterBarang({ icon, title }) {
           <ModalMain
             set={set_barcode}
             is_selected={set_is_selected_barang}
-            is_action_select={true}
+            is_action_select
             conf={{
               name: "barang",
               limit: 5,

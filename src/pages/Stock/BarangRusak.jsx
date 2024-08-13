@@ -23,6 +23,7 @@ export default function BarangRusak({ icon, title }) {
   const btn_cancel = useRef(null);
   const btn_reject = useRef(null);
   const btn_approve = useRef(null);
+  const btn_find_approve = useRef(null);
   const btn_search_barang = useRef(null);
   const textarea_keterangan = useRef(null);
   const input_barcode = useRef(null);
@@ -30,6 +31,7 @@ export default function BarangRusak({ icon, title }) {
   const [barcode, set_barcode] = useState("");
   const [nomor, set_nomor] = useState("");
   const [keyword, set_keyword] = useState("");
+  const [grup, set_grup] = useState(null);
   const [is_selected_barang, set_is_selected_barang] = useState(false);
   const [is_selected_barang_rusak, set_is_selected_barang_rusak] = useState(false);
   const [is_selected_barang_rusak_unapproved, set_is_selected_barang_rusak_unapproved] = useState(false);
@@ -134,6 +136,13 @@ export default function BarangRusak({ icon, title }) {
 
     const btn_tanggal = btn_tanggal_ref.current;
     btn_tanggal.addEventListener("click", open_date);
+
+    setTimeout(() => {
+      const grup = document.getElementById("grup");
+      set_grup(grup);
+      if (grup.value == "ITS" || grup.value == "GR-00003") btn_find_approve.current.classList.remove("hidden");
+    }, 500);
+
     return () => {
       btn_tanggal.removeEventListener("click", open_date);
       date.destroy();
@@ -440,7 +449,7 @@ export default function BarangRusak({ icon, title }) {
           <FontAwesomeIcon icon={"thumbs-up"} className="mr-[10px]" />
           Approve
         </button>
-        <button id="find_approve" className="btn-sm bg-yellow-500 hover:bg-yellow-800 text-white" onClick={handle_find_barang_rusak_non_approved}>
+        <button ref={btn_find_approve} id="find_approve" className="btn-sm bg-yellow-500 hover:bg-yellow-800 text-white hidden" onClick={handle_find_barang_rusak_non_approved}>
           <FontAwesomeIcon icon={"search-minus"} className="mr-[10px]" />
           Find Approve
         </button>
@@ -628,7 +637,8 @@ export default function BarangRusak({ icon, title }) {
               page: 1,
               select: ["nomor", "tanggal", "keterangan", "is_approved"],
               order: [["nomor", "ASC"]],
-              where: { batal: false },
+              // where: { batal: false },
+              where: grup.value == "ITS" || grup.value == "GR-00003" ? { batal: false } : { batal: false, is_approved: true },
               likes: ["nomor"],
               keyword: "",
               func_item: {

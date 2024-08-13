@@ -91,6 +91,7 @@ const conf = createSlice({
       state.show_modal_barang_rusak_non_approved = false;
       state.show_modal_repack_barang = false;
       state.show_modal_qty = false;
+      state.show_loading = false;
     },
     set_show_loading: (state, action) => {
       state.show_loading = action.payload;

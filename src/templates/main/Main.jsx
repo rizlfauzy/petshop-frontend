@@ -20,6 +20,7 @@ export default function Main({ children, title }) {
     const btn_find = document.querySelector("#find");
     const btn_clear = document.querySelector("#clear");
 
+    // saat tekan ctrl + 1, 2, 3, 4, 5 maka akan terpanggil fungsi click button berikut
     const on_keydown = (e) => {
       if ((e.ctrlKey && e.key === "1") && btn_save && !btn_save.classList.contains("hidden")){
         e.preventDefault();
@@ -57,6 +58,8 @@ export default function Main({ children, title }) {
       btn_clear && !btn_clear.classList.contains("hidden") && document.removeEventListener("keydown", on_keydown);
     }
   })
+
+  // template Main ini akan menampilkan Header, Sidebar, dan children yang di kirim di parent
   return (
     <>
       {!session && <Navigate to={`${VITE_PREFIX}login`} replace state={{ from: location }} />}

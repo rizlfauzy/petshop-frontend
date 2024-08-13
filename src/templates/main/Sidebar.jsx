@@ -4,7 +4,6 @@ import { useRef, useCallback, useLayoutEffect, useState } from "react";
 import { set_show_modal, set_show_logout, set_hide_all_modal } from "../../hooks/useStore";
 import { useDispatch, useSelector } from "react-redux";
 import useSession from "../../hooks/useSession";
-import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
 import useAlert from "../../hooks/useAlert";
 import DataSaver from "../../components/main/DataSaver";
@@ -17,7 +16,6 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const {show_modal, show_modal_logout, item} = useSelector((state) => state.conf);
   const [icon_chevron, set_icon_chevron] = useState(item?.data?.grup_menu?.filter((gr) => gr.linkmenu == "#").map((gr) => ({ headermenu: gr.headermenu, icon: "chevron-right" })));
-  const navigate = useNavigate();
   const sidebar_ref = useRef(null);
   const sidebar_overlay_ref = useRef(null);
   const btn_sidebar = useRef(null);
@@ -25,6 +23,7 @@ export default function Sidebar() {
   const { session, setSessionData } = useSession();
   const { swalAlert } = useAlert();
 
+  // mengecek apakah user memiliki akses ke beberapa tombok berikut
   useLayoutEffect(() => {
     const save_btn = document.querySelector("#save");
     const update_btn = document.querySelector("#update");
@@ -41,6 +40,7 @@ export default function Sidebar() {
     else if (date_btn) {date_btn.disabled = true;date_chooser_btn.disabled = true;}
   }, [item]);
 
+  // event saat hamburger menu di klik
   const on_click_menu = useCallback(() => {
     sidebar_ref.current.classList.toggle("open");
     sidebar_overlay_ref.current.classList.toggle("open");
@@ -56,6 +56,7 @@ export default function Sidebar() {
     }
   }, [item]);
 
+  // event saat tombol logout di klik
   const on_click_logout = useCallback(async () => {
     dispatch(set_hide_all_modal());
     try {
@@ -72,11 +73,13 @@ export default function Sidebar() {
       if (error) throw new Error(message);
       swalAlert(message, "success");
       setSessionData(null);
-      navigate(`${VITE_PREFIX}login`, { replace: true });
+      const a = document.createElement("a");
+      a.href = `${VITE_PREFIX}login`;
+      a.click();
     } catch (e) {
       swalAlert(e.message, "error");
     }
-  }, [dispatch, run, session, setSessionData, swalAlert, navigate]);
+  }, [dispatch, run, session, setSessionData, swalAlert]);
 
   return (
     <>
@@ -112,8 +115,8 @@ export default function Sidebar() {
       <div className="sidebar-hoverlay" ref={sidebar_overlay_ref} onClick={on_click_menu}></div>
       {(show_modal && show_modal_logout) && (
         <Modal
-          modal_title="Keluar Aplikasi"
-          className={["modal-sm"]}
+          modal_title="Keluar Petshop"
+          className={["sm:modal-sm", "modal-xl"]}
           btn={
             <button type="button" className="p-2 bg-primary text-white rounded-md" onClick={on_click_logout}>
               Log Out

@@ -16,6 +16,7 @@ export default function PrivateRoute({ children }) {
   const { session, setSessionData } = useSession();
   const dispatch = useDispatch();
 
+  // mengecek apakah user memiliki akses ke halaman yang diakses
   useLayoutEffect(() => {
     async function get_menu() {
       const { message, data } = await run(
@@ -33,7 +34,11 @@ export default function PrivateRoute({ children }) {
         return;
       }
       dispatch(create_item({ data }));
-      if (Object.keys(data?.cek_menu).length == 0 || data?.cek_menu?.open == false) navigate("/", { replace: true, state: { from: location } });
+      const grup_menu = [...data.grup_menu ?? []];
+      grup_menu?.push({ linkmenu: "empty" });
+      const cek_menu = grup_menu?.find((gr) => gr.linkmenu == path);
+      if (!cek_menu) { navigate(`${VITE_PREFIX}empty`, { replace: true, state: { from: location } }); return; }
+      if ((Object.keys(data?.cek_menu).length == 0 || data?.cek_menu?.open == false) && cek_menu.linkmenu != 'empty') navigate(`${VITE_PREFIX}`, { replace: true, state: { from: location } });
     }
     get_menu();
   }, [location, navigate, run, session, setSessionData, dispatch, path]);

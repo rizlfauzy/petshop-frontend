@@ -2,6 +2,7 @@ import Main from "./templates/main/Main";
 import Login from "./pages/Login";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
+import Empty from "./pages/Empty";
 import Dashboard from "./pages/Dashboard";
 import ChangePassword from "./pages/ChangePassword";
 import MasterGrup from "./pages/Master/MasterGrup";
@@ -27,13 +28,25 @@ library.add(fas);
 const { VITE_PREFIX } = import.meta.env;
 
 function App() {
+
+  // routing untuk front-end
   return (
     <Router>
       <Routes>
         <Route path={`${VITE_PREFIX}LOGIN`} element={<Login />} />
         <Route path={`${VITE_PREFIX}REGISTER`} element={<Register />} />
         <Route
-          path={VITE_PREFIX}
+          path={`${VITE_PREFIX}empty`}
+          element={
+            <PrivateRoute>
+              <Main title={"EMPTY"}>
+                <Empty icon={<FontAwesomeIcon icon={"folder-open"} className="!text-[19px]" />} title={"EMPTY"} />
+              </Main>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={`${VITE_PREFIX}`}
           element={
             <PrivateRoute>
               <Main title={"DASHBOARD"}>

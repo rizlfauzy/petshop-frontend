@@ -3,11 +3,15 @@ import {  useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLocation } from "react-router-dom";
 
 const { VITE_PREFIX } = import.meta.env;
 
 export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header, icon_chevron, set_icon_chevron, }) {
   const item = useSelector((state) => state.conf.item);
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(1).join("/");
+  console.log(location.pathname.split("/"));
 
   const on_click_dropdown = useCallback(
     (e) => {
@@ -49,7 +53,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
     if (gr.linkmenu == "#")
       return (
         <li ref={li_header} className="nav-list-item collapsed" data-tooltip={`tooltip_${gr.headermenu}`} data-toggle="collapse" data-target={`#${gr.headermenu}_menu`} key={gr.urut_global}>
-          <a className="list-item-menu text-white " href="#" onClick={on_click_dropdown}>
+          <a className="list-item-menu text-white" href="#" onClick={on_click_dropdown}>
             <div className="w-[50px] h-[40px] grid place-items-center">
               <FontAwesomeIcon icon={gr.iconmenu} className="links_icon text-[18px] min-w-[50px]" />
             </div>
@@ -92,7 +96,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
         <li className="nav-list-item" data-tooltip={`tooltip_${gr.linkmenu}`} key={gr.urut_global}>
           <Link
             to={`${VITE_PREFIX}${gr.linkmenu}`}
-            className="list-item-menu"
+            className={`list-item-menu ${path == gr.linkmenu ? "active" : ""}`}
             onClick={() => {
               sidebar_ref.current.classList.remove("open");
               sidebar_overlay_ref.current.classList.remove("open");

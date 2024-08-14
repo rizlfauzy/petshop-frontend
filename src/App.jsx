@@ -66,66 +66,68 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path={`${VITE_PREFIX}master-grup`}
-          element={
-            <PrivateRoute>
-              <Main title={"MASTER GRUP"}>
-                <MasterGrup icon={<FontAwesomeIcon icon={"users-line"} className="!text-[19px]" />} title={"MASTER GRUP"} />
-              </Main>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={`${VITE_PREFIX}master-otorisasi`}
-          element={
-            <PrivateRoute>
-              <Main title={"MASTER OTORISASI"}>
-                <MasterOtorisasi icon={<FontAwesomeIcon icon={"shield-halved"} className="!text-[19px]" />} title={"MASTER OTORISASI"} />
-              </Main>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={`${VITE_PREFIX}master-user`}
-          element={
-            <PrivateRoute>
-              <Main title={"MASTER USER"}>
-                <MasterUser icon={<FontAwesomeIcon icon={"user"} className="!text-[19px]" />} title={"MASTER USER"} />
-              </Main>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={`${VITE_PREFIX}master-satuan`}
-          element={
-            <PrivateRoute>
-              <Main title={"MASTER SATUAN"}>
-                <MasterSatuan icon={<FontAwesomeIcon icon={"s"} className="!text-[19px]" />} title={"MASTER SATUAN"} />
-              </Main>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={`${VITE_PREFIX}master-kategori`}
-          element={
-            <PrivateRoute>
-              <Main title={"MASTER KATEGORI"}>
-                <MasterKategori icon={<FontAwesomeIcon icon={"list"} className="!text-[19px]" />} title={"MASTER KATEGORI"} />
-              </Main>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={`${VITE_PREFIX}master-barang`}
-          element={
-            <PrivateRoute>
-              <Main title={"MASTER BARANG"}>
-                <MasterBarang icon={<FontAwesomeIcon icon={"box"} className="!text-[19px]" />} title={"MASTER BARANG"} />
-              </Main>
-            </PrivateRoute>
-          }
-        />
+        <Route path={`${VITE_PREFIX}master-data`}>
+          <Route
+            path={`grup`}
+            element={
+              <PrivateRoute>
+                <Main title={"MASTER GRUP"}>
+                  <MasterGrup icon={<FontAwesomeIcon icon={"users-line"} className="!text-[19px]" />} title={"MASTER GRUP"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={`otorisasi`}
+            element={
+              <PrivateRoute>
+                <Main title={"MASTER OTORISASI"}>
+                  <MasterOtorisasi icon={<FontAwesomeIcon icon={"shield-halved"} className="!text-[19px]" />} title={"MASTER OTORISASI"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={`user`}
+            element={
+              <PrivateRoute>
+                <Main title={"MASTER USER"}>
+                  <MasterUser icon={<FontAwesomeIcon icon={"user"} className="!text-[19px]" />} title={"MASTER USER"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={`satuan`}
+            element={
+              <PrivateRoute>
+                <Main title={"MASTER SATUAN"}>
+                  <MasterSatuan icon={<FontAwesomeIcon icon={"s"} className="!text-[19px]" />} title={"MASTER SATUAN"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={`kategori`}
+            element={
+              <PrivateRoute>
+                <Main title={"MASTER KATEGORI"}>
+                  <MasterKategori icon={<FontAwesomeIcon icon={"list"} className="!text-[19px]" />} title={"MASTER KATEGORI"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={`barang`}
+            element={
+              <PrivateRoute>
+                <Main title={"MASTER BARANG"}>
+                  <MasterBarang icon={<FontAwesomeIcon icon={"box"} className="!text-[19px]" />} title={"MASTER BARANG"} />
+                </Main>
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route
           path={`${VITE_PREFIX}order`}
           element={

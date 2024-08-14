@@ -185,7 +185,7 @@ export default function MasterUser({ icon, title }) {
       </HeaderPage>
       <div className="col-full table-responsive">
         <div className="row">
-          <div className="col-half">
+          <div className="md:col-half col-full">
             <div className="modal-content-main mb-2">
               <div className="modal-header-main !p-2">
                 <h5 className="mb-0 text-lg">USER</h5>

@@ -3010,7 +3010,13 @@ p{
 }
 
 .header-page+.table-responsive{
-  margin-top:3.5rem
+  margin-top:7.5rem
+}
+
+@media(min-width: 768px){
+  .header-page+.table-responsive{
+    margin-top:3.5rem
+  }
 }
 
 .table-responsive{

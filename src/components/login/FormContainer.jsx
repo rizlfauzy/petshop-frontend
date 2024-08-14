@@ -1,6 +1,6 @@
 import useAsync from "../../hooks/useAsync";
 import { fetch_data } from "../../hooks/useFetch";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useLayoutEffect } from "react";
 import useAlert from "../../hooks/useAlert";
 import useSession from "../../hooks/useSession";
 // import { Link } from "react-router-dom";
@@ -11,10 +11,16 @@ const { VITE_PREFIX } = import.meta.env;
 
 export default function FormContainer() {
   const input_password_reff = useRef(null);
+  const input_username_reff = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const { run } = useAsync();
   const { swalAlert } = useAlert();
   const { setSessionData } = useSession();
+
+  // auto focus ke input username ketika halaman login di load
+  useLayoutEffect(() => {
+    input_username_reff.current.focus();
+  }, [])
 
   // function untuk menghandle submit form login
   const handleSubmit = useCallback(async (e) => {
@@ -44,7 +50,7 @@ export default function FormContainer() {
             <div className="w-[55px] grid place-items-center">
               <FontAwesomeIcon icon={faUser} className="text-slate-400" />
             </div>
-            <input name="username" id="username" type="username" placeholder="Username" />
+            <input name="username" id="username" type="username" placeholder="Username" ref={input_username_reff} />
           </div>
           <div className="input-field">
             <div className="w-[55px] grid place-items-center">

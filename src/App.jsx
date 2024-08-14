@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Empty from "./pages/Empty";
+import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import ChangePassword from "./pages/ChangePassword";
 import MasterGrup from "./pages/Master/MasterGrup";
@@ -195,6 +196,14 @@ function App() {
                 <Laporan icon={<FontAwesomeIcon icon="file-pdf" className="!text-[19px]" />} title={"LAPORAN"} />
               </Main>
             </PrivateRoute>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Main title={"404 NOT FOUND"}>
+              <NotFound icon={<FontAwesomeIcon icon={"triangle-exclamation"} className="!text-[19px]" />} title={"404 NOT FOUND"} />
+            </Main>
           }
         />
       </Routes>

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 export default function HeaderPage({ icon, title, children }) {
   return (
     <>
-      <div className="col-full !fixed pt-2 top-0 left-20 right-0 mb-2 z-10 bg-white header-page">
+      <div className="col-full !fixed pt-2 top-0 left-20 right-0 mb-2 z-[9993] bg-white header-page">
         <div className="modal-header-main !p-[5px]">
           <div className="xl:max-w-full max-w-full flex-[0_0_100%]">
             <div className="row">

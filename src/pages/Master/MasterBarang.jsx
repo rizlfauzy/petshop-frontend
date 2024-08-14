@@ -134,7 +134,15 @@ export default function MasterBarang({ icon, title }) {
         })
       );
       if (error) throw new Error(message);
-      set_barang((prev) => ({ ...prev, ...data, disc: format_disc(data.disc), harga_jual: format_rupiah(data.harga_jual), harga_modal: format_rupiah(data.harga_modal), min_stock: format_rupiah(data.min_stock, {}), qty_repack: format_rupiah(data.qty_repack, {}) }));
+      set_barang((prev) => ({
+        ...prev,
+        ...data,
+        disc: format_disc(data.disc),
+        harga_jual: format_rupiah(data.harga_jual),
+        harga_modal: format_rupiah(data.harga_modal),
+        min_stock: format_rupiah(data.min_stock, {}),
+        qty_repack: format_rupiah(data.qty_repack, {}),
+      }));
       set_barang_induk((prev) => ({ ...prev, barcode_barang_induk: data.barang_induk, nama_barang_induk: data.nama_barang_induk, qty_repack: data.qty_repack, nama_satuan: data.nama_satuan_induk }));
       set_satuan((prev) => ({ ...prev, kode_satuan: data.kode_satuan, nama_satuan: data.nama_satuan }));
       set_kategori((prev) => ({ ...prev, kode_kategori: data.kode_kategori, nama_kategori: data.nama_kategori }));
@@ -174,7 +182,7 @@ export default function MasterBarang({ icon, title }) {
         }));
         return;
       }
-      if (name == "repack" && value == 'false') {
+      if (name == "repack" && value == "false") {
         set_barang((prev) => ({
           ...prev,
           barang_induk: "",
@@ -379,22 +387,22 @@ export default function MasterBarang({ icon, title }) {
               <div className="modal-body-main">
                 <div className="row my-2">
                   <div className="col-full input-group">
-                    <div className="col-quarter p-0 input-group-prepend">
+                    <div className="sm:col-quarter col-half p-0 input-group-prepend">
                       <label htmlFor="barcode" className="input-group-text">
                         Barcode
                       </label>
                     </div>
-                    <input value={barang.barcode} ref={input_barcode} onChange={handle_change_barang} type="text" className="form-control col-thirdperfour" name="barcode" id="barcode" required placeholder="BARCODE BARANG" />
+                    <input value={barang.barcode} ref={input_barcode} onChange={handle_change_barang} type="text" className="form-control sm:col-thirdperfour col-half" name="barcode" id="barcode" required placeholder="BARCODE BARANG" />
                   </div>
                 </div>
                 <div className="row my-2">
                   <div className="col-full input-group">
-                    <div className="col-quarter p-0 input-group-prepend">
+                    <div className="sm:col-quarter col-half p-0 input-group-prepend">
                       <label htmlFor="nama" className="input-group-text">
                         NAMA
                       </label>
                     </div>
-                    <input value={barang.nama} onChange={handle_change_barang} type="text" className="form-control col-thirdperfour" name="nama" id="nama" required placeholder="NAMA BARANG" />
+                    <input value={barang.nama} onChange={handle_change_barang} type="text" className="form-control sm:col-thirdperfour col-half" name="nama" id="nama" required placeholder="NAMA BARANG" />
                   </div>
                 </div>
                 <div className="row my-2">
@@ -523,7 +531,7 @@ export default function MasterBarang({ icon, title }) {
                 </div>
                 <div className="row my-2">
                   <div className="col-full input-group !items-start">
-                    <div className="col-quarter p-0 input-group-prepend">
+                    <div className="sm:col-quarter col-half p-0 input-group-prepend">
                       <label htmlFor="keterangan" className="input-group-text">
                         Keterengan
                       </label>
@@ -531,7 +539,7 @@ export default function MasterBarang({ icon, title }) {
                     <textarea
                       name="keterangan"
                       id="keterangan"
-                      className="form-control col-thirdperfour"
+                      className="form-control sm:col-thirdperfour col-half"
                       rows={5}
                       placeholder="Keterangan ..."
                       value={barang.keterangan}

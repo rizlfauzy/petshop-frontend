@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const { VITE_PORT, VITE_FRONTEND } = process.env;
+const { VITE_PORT, VITE_FRONTEND, VITE_BUILD_PREFIX } = process.env;
 const app = express();
 const http = require("http").createServer(app);
 
@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use(express.static("dist"));
 
-app.get("*", (req, res) => {
+app.get(`${VITE_BUILD_PREFIX}*`, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 

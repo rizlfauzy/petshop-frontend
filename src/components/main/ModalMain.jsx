@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPrint, faTimes } from "@fortawesome/free-solid-svg-icons";
 import useAlert from "../../hooks/useAlert";
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 export default function ModalMain({ set, is_selected, conf, children, is_action_select = false, is_print = false, url_print = "", is_login_modal = false }) {
   const { session, setSessionData } = useSession();
@@ -58,7 +58,7 @@ export default function ModalMain({ set, is_selected, conf, children, is_action_
         if (!is_login_modal && (e.message == "Token expired" || e.message == "Token not found")) {
           setSessionData(null);
           dispatch(set_hide_all_modal());
-          navigate(`${VITE_PREFIX}login`, { replace: true });
+          navigate(`${VITE_BUILD_PREFIX}login`, { replace: true });
         }
       }
     },

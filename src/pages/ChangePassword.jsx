@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { set_hide_all_modal } from "../hooks/useStore";
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 export default function ChangePassword({ icon, title }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +44,7 @@ export default function ChangePassword({ icon, title }) {
     if (!isLoading && (data?.message == "Token expired" || data?.message == "Token not found")) {
       setSessionData(null);
       dispatch(set_hide_all_modal());
-      navigate(`${VITE_PREFIX}login`, { replace: true });
+      navigate(`${VITE_BUILD_PREFIX}login`, { replace: true });
     }
   }, [data, isLoading, navigate, setSessionData, dispatch]);
 

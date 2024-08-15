@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import Loading from "../../components/Loading";
 import { useLayoutEffect } from "react";
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 export default function Main({ children, title }) {
   const { session } = useSession();
@@ -62,7 +62,7 @@ export default function Main({ children, title }) {
   // template Main ini akan menampilkan Header, Sidebar, dan children yang di kirim di parent
   return (
     <>
-      {!session && <Navigate to={`${VITE_PREFIX}login`} replace state={{ from: location }} />}
+      {!session && <Navigate to={`${VITE_BUILD_PREFIX}login`} replace state={{ from: location }} />}
       <Header title={title} />
       <Loading />
       <div className="app-admin-wrap layout-sidebar-large">

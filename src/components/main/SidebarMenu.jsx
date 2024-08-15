@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation } from "react-router-dom";
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header, icon_chevron, set_icon_chevron, }) {
   const item = useSelector((state) => state.conf.item);
@@ -69,7 +69,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
                 .map((it) => (
                   <li className={`nav-sublist-item nomenu_${gr.grupmenu}`} data-tooltip={`tooltip_${it.linkdetail}`} key={it.nomenu}>
                     <Link
-                      to={`${VITE_PREFIX}${it.linkdetail}`}
+                      to={`${VITE_BUILD_PREFIX}${it.linkdetail}`}
                       className="sublist-item-menu"
                       onClick={() => {
                         sidebar_ref.current.classList.remove("open");
@@ -95,7 +95,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
       return (
         <li className="nav-list-item" data-tooltip={`tooltip_${gr.linkmenu}`} key={gr.urut_global}>
           <Link
-            to={`${VITE_PREFIX}${gr.linkmenu}`}
+            to={`${VITE_BUILD_PREFIX}${gr.linkmenu}`}
             className={`list-item-menu ${path == gr.linkmenu ? "active" : ""}`}
             onClick={() => {
               sidebar_ref.current.classList.remove("open");

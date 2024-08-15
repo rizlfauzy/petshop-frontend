@@ -5,7 +5,7 @@ import useSession from "../hooks/useSession";
 import PanelContainer from "../components/PanelContainer";
 import FormContainer from "../components/login/FormContainer";
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 export default function Login() {
   const location = useLocation();
@@ -14,7 +14,7 @@ export default function Login() {
   return (
     <>
       {/* jika ada session maka otomatis redirect ke halaman dashboard */}
-      {session && <Navigate to={VITE_PREFIX} replace state={{ from: location }} />}
+      {session && <Navigate to={VITE_BUILD_PREFIX} replace state={{ from: location }} />}
 
       {/* Component header untuk login */}
       <HeaderLogin title="LOGIN" />

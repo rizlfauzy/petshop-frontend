@@ -26,7 +26,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 library.add(fas);
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 function App() {
 
@@ -34,10 +34,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path={`${VITE_PREFIX}LOGIN`} element={<Login />} />
-        <Route path={`${VITE_PREFIX}REGISTER`} element={<Register />} />
+        <Route path={`${VITE_BUILD_PREFIX}LOGIN`} element={<Login />} />
+        <Route path={`${VITE_BUILD_PREFIX}REGISTER`} element={<Register />} />
         <Route
-          path={`${VITE_PREFIX}empty`}
+          path={`${VITE_BUILD_PREFIX}empty`}
           element={
             <PrivateRoute>
               <Main title={"EMPTY"}>
@@ -47,7 +47,7 @@ function App() {
           }
         />
         <Route
-          path={`${VITE_PREFIX}`}
+          path={`${VITE_BUILD_PREFIX}`}
           element={
             <PrivateRoute>
               <Main title={"DASHBOARD"}>
@@ -57,7 +57,7 @@ function App() {
           }
         />
         <Route
-          path={`${VITE_PREFIX}password`}
+          path={`${VITE_BUILD_PREFIX}password`}
           element={
             <PrivateRoute>
               <Main title={"GANTI PASSWORD"}>
@@ -66,7 +66,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path={`${VITE_PREFIX}master-data`}>
+        <Route path={`${VITE_BUILD_PREFIX}master-data`}>
           <Route
             path={`grup`}
             element={
@@ -129,7 +129,7 @@ function App() {
           />
         </Route>
         <Route
-          path={`${VITE_PREFIX}order`}
+          path={`${VITE_BUILD_PREFIX}order`}
           element={
             <PrivateRoute>
               <Main title={"PEMBELIAN"}>
@@ -139,7 +139,7 @@ function App() {
           }
         />
         <Route
-          path={`${VITE_PREFIX}sales`}
+          path={`${VITE_BUILD_PREFIX}sales`}
           element={
             <PrivateRoute>
               <Main title={"PENJUALAN"}>
@@ -148,7 +148,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path={`${VITE_PREFIX}stok`}>
+        <Route path={`${VITE_BUILD_PREFIX}stok`}>
           <Route
             path="barang-rusak"
             element={
@@ -191,7 +191,7 @@ function App() {
           />
         </Route>
         <Route
-          path={`${VITE_PREFIX}report`}
+          path={`${VITE_BUILD_PREFIX}report`}
           element={
             <PrivateRoute>
               <Main title={"LAPORAN"}>

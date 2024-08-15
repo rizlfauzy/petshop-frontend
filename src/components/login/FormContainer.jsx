@@ -7,7 +7,7 @@ import useSession from "../../hooks/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_BUILD_PREFIX } = import.meta.env;
 
 export default function FormContainer() {
   const input_password_reff = useRef(null);
@@ -34,7 +34,7 @@ export default function FormContainer() {
       swalAlert(message, "success")
       form.reset();
       const a = document.createElement("a");
-      a.href = VITE_PREFIX;
+      a.href = VITE_BUILD_PREFIX;
       a.click();
     } catch (e) {
       swalAlert(e.message, "error");
@@ -79,7 +79,7 @@ export default function FormContainer() {
             Login
           </button>
           {/* redirect ke halaman register */}
-          {/* <Link to={`${VITE_PREFIX}register`} className="mt-3">
+          {/* <Link to={`${VITE_BUILD_PREFIX}register`} className="mt-3">
             <button className="btn transparent !w-auto !border-none px-3 hover:!text-[#c3baa9] hover:!bg-transparent" id="regsiter_btn" type="button">
               Belum punya akun? Daftar disini
             </button>

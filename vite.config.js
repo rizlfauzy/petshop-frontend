@@ -1,19 +1,22 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load variables from .env
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'dist',
+    outDir: "dist",
   },
   server: {
-    open: true
+    open: true,
   },
   resolve: {
     alias: {
-      '@': '/src',
+      "@": "/src",
     },
   },
-  base: "/"
-})
+  base: process.env.VITE_PREFIX || "/",
+});

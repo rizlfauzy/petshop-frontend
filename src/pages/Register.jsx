@@ -5,7 +5,7 @@ import useSession from "../hooks/useSession";
 import PanelContainer from "../components/PanelContainer";
 import FormContainer from "../components/register/FormContainer";
 
-const { VITE_BUILD_PREFIX } = import.meta.env;
+const { VITE_PREFIX } = import.meta.env;
 
 export default function Register() {
   const location = useLocation();
@@ -13,7 +13,7 @@ export default function Register() {
 
   return (
     <>
-      {session && <Navigate to={VITE_BUILD_PREFIX} replace state={{ from: location }} />}
+      {session && <Navigate to={VITE_PREFIX} replace state={{ from: location }} />}
       <HeaderLogin title="REGISTER" />
       <div className="container">
         <FormContainer />

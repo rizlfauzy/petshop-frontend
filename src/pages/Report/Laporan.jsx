@@ -15,7 +15,7 @@ import moment from "moment";
 import useAlert from "../../hooks/useAlert";
 import { useNavigate } from "react-router-dom";
 
-const { VITE_BUILD_PREFIX } = import.meta.env;
+const { VITE_PREFIX } = import.meta.env;
 
 export default function Laporan({ icon, title }) {
   const btn_tanggal_awal_ref = useRef(null);
@@ -174,7 +174,7 @@ export default function Laporan({ icon, title }) {
       if (e.message == "Token expired" || e.message == "Token not found") {
         setSessionData(null);
         dispatch(set_hide_all_modal());
-        navigate(`${VITE_BUILD_PREFIX}login`, { replace: true });
+        navigate(`${VITE_PREFIX}login`, { replace: true });
       }
       return swalAlert(e.message, "error");
     } finally {

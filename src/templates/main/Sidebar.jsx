@@ -9,7 +9,7 @@ import useAlert from "../../hooks/useAlert";
 import DataSaver from "../../components/main/DataSaver";
 import SidebarMenu from "../../components/main/SidebarMenu";
 
-const { VITE_BUILD_PREFIX, VITE_PREFIX } = import.meta.env;
+const { VITE_PREFIX } = import.meta.env;
 
 export default function Sidebar() {
   const { run } = useAsync();
@@ -74,7 +74,7 @@ export default function Sidebar() {
       swalAlert(message, "success");
       setSessionData(null);
       const a = document.createElement("a");
-      a.href = `${VITE_BUILD_PREFIX}login`;
+      a.href = `$login`;
       a.click();
     } catch (e) {
       swalAlert(e.message, "error");

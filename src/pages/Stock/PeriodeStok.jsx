@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { set_hide_all_modal } from "../../hooks/useStore";
 import { useNavigate } from "react-router-dom";
 
-const { VITE_BUILD_PREFIX } = import.meta.env;
+const { VITE_PREFIX } = import.meta.env;
 
 export default function PeriodeStok({ icon, title }) {
   const btn_tanggal_awal_ref = useRef(null);
@@ -75,7 +75,7 @@ export default function PeriodeStok({ icon, title }) {
     if (!isLoading && (data?.data?.message == "Token expired" || data?.data?.message == "Token not found")) {
       setSessionData(null);
       dispatch(set_hide_all_modal());
-      navigate(`${VITE_BUILD_PREFIX}login`, { replace: true });
+      navigate(`${VITE_PREFIX}login`, { replace: true });
     }
   }, [data, isLoading, navigate, setSessionData, dispatch]);
 
@@ -97,7 +97,7 @@ export default function PeriodeStok({ icon, title }) {
       if (e.message == "Token expired" || e.message == "Token not found") {
         setSessionData(null);
         dispatch(set_hide_all_modal());
-        navigate(`${VITE_BUILD_PREFIX}login`, { replace: true });
+        navigate(`${VITE_PREFIX}login`, { replace: true });
       }
       return swalAlert(e.message, "error");
     }

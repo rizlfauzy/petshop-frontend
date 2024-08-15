@@ -6,7 +6,7 @@ import useAsync from "../hooks/useAsync";
 import { get_data } from "../hooks/useFetch";
 import useSession from "../hooks/useSession";
 import { set_hide_all_modal, create_item } from "../hooks/useStore";
-const { VITE_BUILD_PREFIX, VITE_TYPE } = import.meta.env;
+const { VITE_PREFIX, VITE_TYPE } = import.meta.env;
 
 export default function PrivateRoute({ children }) {
   const location = useLocation();
@@ -30,15 +30,15 @@ export default function PrivateRoute({ children }) {
       if (message == "Token expired" || message == "Token not found") {
         setSessionData(null);
         dispatch(set_hide_all_modal());
-        navigate(`${VITE_BUILD_PREFIX}login`, { replace: true });
+        navigate(`${VITE_PREFIX}login`, { replace: true });
         return;
       }
       dispatch(create_item({ data }));
       const oto_menu = [...data.oto_menu ?? []];
       oto_menu?.push({ linkmenu: "empty" });
       const cek_menu = oto_menu?.find((ot) => ot.linkmenu == path || ot.linkdetail == path);
-      if (!cek_menu) { navigate(`${VITE_BUILD_PREFIX}empty`, { replace: true, state: { from: location } }); return; }
-      if ((Object.keys(data?.cek_menu).length == 0 || data?.cek_menu?.open == false) && cek_menu.linkmenu != 'empty') navigate(`${VITE_BUILD_PREFIX}`, { replace: true, state: { from: location } });
+      if (!cek_menu) { navigate(`${VITE_PREFIX}empty`, { replace: true, state: { from: location } }); return; }
+      if ((Object.keys(data?.cek_menu).length == 0 || data?.cek_menu?.open == false) && cek_menu.linkmenu != 'empty') navigate(`${VITE_PREFIX}`, { replace: true, state: { from: location } });
     }
     get_menu();
   }, [location, navigate, run, session, setSessionData, dispatch, path]);

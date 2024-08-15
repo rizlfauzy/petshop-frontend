@@ -5,13 +5,13 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation } from "react-router-dom";
 
-const { VITE_PREFIX } = import.meta.env;
+const { VITE_PREFIX, VITE_TYPE } = import.meta.env;
 
 export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_sidebar, li_header, icon_chevron, set_icon_chevron, }) {
   const item = useSelector((state) => state.conf.item);
   const location = useLocation();
-  const path = location.pathname.split("/").slice(1).join("/");
-  const header_path = location.pathname.split("/").slice(1, 2);
+  const path = location.pathname.split("/").slice(VITE_TYPE == 'production' ? 2 : 1).join("/");
+  const header_path = location.pathname.split("/").slice(VITE_TYPE == "production" ? 2 : 1, VITE_TYPE == "production" ? 3 : 2);
 
   const on_click_dropdown = useCallback(
     (e) => {

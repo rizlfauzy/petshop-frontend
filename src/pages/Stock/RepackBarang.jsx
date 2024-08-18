@@ -620,7 +620,7 @@ export default function RepackBarang({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and repack = true and barang_induk = ${list_barang_proses.length > 0 ? "'" + list_barang_proses[0].barcode + "'" : "''"}`,
+              where: `periode = '${moment(repack_barang.tanggal).format("YYYYMM")}' and repack = true and barang_induk = ${list_barang_proses.length > 0 ? "'" + list_barang_proses[0].barcode + "'" : "''"} and stock > 0`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {

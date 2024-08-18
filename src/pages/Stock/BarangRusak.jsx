@@ -583,7 +583,7 @@ export default function BarangRusak({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: { periode: moment(barang_rusak.tanggal).format("YYYYMM") },
+              where: `periode = '${moment(barang_rusak.tanggal).format("YYYYMM")}' and stock > 0`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {

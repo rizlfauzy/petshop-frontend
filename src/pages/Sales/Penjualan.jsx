@@ -526,7 +526,7 @@ export default function Penjualan({ icon, title }) {
               page: 1,
               select: ["barcode", "nama_barang", "nama_satuan", "nama_kategori", "stock"],
               order: [["barcode", "ASC"]],
-              where: { periode: moment(penjualan.tanggal).format("YYYYMM") },
+              where: `periode = '${moment(penjualan.tanggal).format("YYYYMM")}' and stock > 0`,
               likes: ["barcode", "nama_barang"],
               keyword: "",
               func_item: {

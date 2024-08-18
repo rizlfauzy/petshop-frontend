@@ -20,6 +20,9 @@ export default function FormContainer() {
   // auto focus ke input username ketika halaman login di load
   useLayoutEffect(() => {
     input_username_reff.current.focus();
+    const event_visibility = () => input_username_reff.current.focus();
+    document.addEventListener("visibilitychange", event_visibility);
+    return () => document.removeEventListener("visibilitychange", event_visibility);
   }, [])
 
   // function untuk menghandle submit form login

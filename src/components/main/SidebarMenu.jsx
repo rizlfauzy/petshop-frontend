@@ -78,6 +78,7 @@ export default function SidebarMenu({ sidebar_ref, sidebar_overlay_ref, btn_side
                         btn_sidebar.current.classList.add("bx-menu");
                         document.querySelectorAll(".nav-list-item").forEach((item) => item.classList.add("collapsed"));
                         document.querySelectorAll(".dropdown_menu").forEach((item) => item.classList.add("hidden"));
+                        set_icon_chevron(item?.data?.grup_menu?.filter((gr) => gr.linkmenu == "#").map((gr) => ({ headermenu: gr.headermenu, icon: "chevron-right" })));
                       }}
                     >
                       <div className="w-[50px] h-[40px] grid place-items-center">

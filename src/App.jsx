@@ -24,11 +24,33 @@ import Register from "./pages/Register";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
+import { useLayoutEffect } from "react";
 library.add(fas);
 
 const { VITE_PREFIX } = import.meta.env;
 
 function App() {
+  useLayoutEffect(() => {
+    function not_allowed_right_click(event) {
+      event.preventDefault();
+      return false;
+    }
+    function not_allowed_inspect(event) {
+      if (
+        (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl + Shift + I
+        (event.metaKey && event.altKey && event.key === "I")
+      ) {
+        event.preventDefault();
+        return false;
+      }
+    }
+    document.addEventListener("contextmenu", not_allowed_right_click);
+    document.addEventListener("keydown", not_allowed_inspect);
+    return () => {
+      document.removeEventListener("contextmenu", not_allowed_right_click);
+      document.removeEventListener("keydown", not_allowed_inspect);
+    };
+  }, []);
 
   // routing untuk front-end
   return (

@@ -88,7 +88,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path={`${VITE_PREFIX}user`}>
+        <Route path={`${VITE_PREFIX}manage-user`}>
           <Route
             path={`grup`}
             element={

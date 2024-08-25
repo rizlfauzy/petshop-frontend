@@ -88,7 +88,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path={`${VITE_PREFIX}master-data`}>
+        <Route path={`${VITE_PREFIX}user`}>
           <Route
             path={`grup`}
             element={
@@ -119,6 +119,8 @@ function App() {
               </PrivateRoute>
             }
           />
+        </Route>
+        <Route path={`${VITE_PREFIX}master-data`}>
           <Route
             path={`satuan`}
             element={

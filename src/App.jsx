@@ -172,27 +172,27 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path={`${VITE_PREFIX}barang-rusak`}
+          element={
+            <PrivateRoute>
+              <Main title={"BARANG RUSAK"}>
+                <BarangRusak icon={<FontAwesomeIcon icon={"explosion"} className="!text-[19px]" />} title={"BARANG RUSAK"} />
+              </Main>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={`${VITE_PREFIX}repack-barang`}
+          element={
+            <PrivateRoute>
+              <Main title={"REPACK BARANG"}>
+                <RepackBarang icon={<FontAwesomeIcon icon={"cubes-stacked"} className="!text-[19px]" />} title={"REPACK BARANG"} />
+              </Main>
+            </PrivateRoute>
+          }
+        />
         <Route path={`${VITE_PREFIX}stok`}>
-          <Route
-            path="barang-rusak"
-            element={
-              <PrivateRoute>
-                <Main title={"BARANG RUSAK"}>
-                  <BarangRusak icon={<FontAwesomeIcon icon={"explosion"} className="!text-[19px]" />} title={"BARANG RUSAK"} />
-                </Main>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="repack-barang"
-            element={
-              <PrivateRoute>
-                <Main title={"REPACK BARANG"}>
-                  <RepackBarang icon={<FontAwesomeIcon icon={"cubes-stacked"} className="!text-[19px]" />} title={"REPACK BARANG"} />
-                </Main>
-              </PrivateRoute>
-            }
-          />
           <Route
             path="cek-stok"
             element={
